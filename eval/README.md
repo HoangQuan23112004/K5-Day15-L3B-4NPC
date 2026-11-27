@@ -34,10 +34,12 @@ Dataset nào, xử lý gì: tóm 2–3 dòng từ `data/DATA_CARD.md`.
 
 | Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
-| 1 | | | | __/__ | | |
+| 1 | run-1@20261127-222917 | gemini-3.5-flash-lite | prompt `SYSTEM` trong `codebase/agent.py` (quy tắc 1–9) · 5 công cụ tra hồ sơ trong `codebase/tools.py` · `DAMAGECHECK_TODAY=2026-11-27` (cố định ngày tính hạn khiếu nại) · 1 lần gọi model mỗi đơn | 24/30 | 80% | chưa (can_cu_co_that 27/30) |
 | 2 | | | | __/__ | | |
 
 Lượt chạy lại vì lỗi kỹ thuật, lượt sau CP4: ghi thêm dòng, không sửa dòng cũ.
+
+Lượt 1 chạy với `DAMAGECHECK_TODAY=2026-11-27` và model `gemini-3.5-flash-lite`. Chạy lại lượt 2 phải giữ nguyên hai giá trị này để so được với lượt 1.
 
 ## 6. Lỗi chính
 
