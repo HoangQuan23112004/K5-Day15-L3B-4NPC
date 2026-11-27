@@ -15,5 +15,6 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 | Chấm cột `pass` bằng LLM (nếu có) | | | Kiểm tra thủ công __ câu thử, khớp __/__ | |
 | Slide, văn bản | | | | |
 | Kiểm chéo nhãn bằng chứng Bộ A | Codex | Đọc định nghĩa và 20 nội dung trong `evidence/kiem-cheo.md`, điền hai cột nhãn theo yêu cầu của Khoa; không mở CSV nhãn gốc trong lượt này | Chưa ghi nhận Khoa kiểm tay; Vĩnh chưa đối chiếu độ khớp. Codex đã thấy một số trích đoạn A006/A028 trong các lượt trước nên không coi là kiểm mù hoàn toàn | Lê Viết Khoa |
+| Hoàn thiện `spec.md` §5 | Codex | Đối chiếu thiết kế, prompt/luồng hiện có và benchmark để mô tả 13 kịch bản khó + 2 tấn công, đủ 4 lớp, kèm ID câu thử; ghi changelog | Đã kiểm ID/độ phủ và giữ nguyên chuẩn đạt; chưa gọi API hoặc xác nhận model xử lý đạt. Khoa cần đọc lại đặc tả | Lê Viết Khoa |
 
 **Không dùng AI để:** tạo người được phỏng vấn, trích dẫn, câu trả lời khảo sát; sửa kết quả các lượt đã chạy (`eval/run-*.csv`, `cost/simulate-*.csv`, `traces/`).
