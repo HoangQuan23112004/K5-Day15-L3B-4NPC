@@ -1,1 +1,11 @@
-id,tu_khoa,san_pham,so_sao,thang_danh_gia,nhac_vo_hong,do_van_chuyen,shop_phan_hoi,shop_chiu,shop_nhac_van_chuyen,trich_ngan
+id,tu_khoa,san_pham,so_sao,thang_danh_gia,nhac_vo_hong,do_van_chuyen,shop_phan_hoi,shop_chiu,shop_nhac_van_chuyen,shop_do_loi_van_chuyen,trich_ngan
+A001,ly thủy tinh,SP01,1,2022-07,0,,1,,,0,"cốc mỏng, cảm tưởng rót nước nóng vào là vỡ"
+A002,ly thủy tinh,SP01,1,2022-09,0,,1,,,0,"pha cà phê nước nóng thì bể (vỡ khi dùng)"
+A003,ly thủy tinh,SP01,1,2023-08,0,,1,,,0,"cốc nhựa bảo thủy tinh"
+A004,ly thủy tinh,SP01,1,2023-05,0,,1,,,1,"bỏ nhẹ cục đá mà thủng đáy cốc (vỡ khi dùng) · shop: chắc bên vận chuyển quăng quật"
+A005,ly thủy tinh,SP01,1,2024-09,0,,1,,,0,"ly mỏng; lỡ bấm đã nhận hàng nên không trả hàng được"
+A006,ly thủy tinh,SP01,1,2024-08,1,0,1,1,0,1,"nhận hàng cốc vỡ vụn, shop bọc chống sốc mỏng · shop: chắc bên vận chuyển đè vật nặng, sẽ gửi lại"
+A007,ly thủy tinh,SP01,1,2023-07,0,,1,,,0,"đặt cốc 400ml mà dung tích chỉ như 330ml"
+A008,ly thủy tinh,SP01,1,2023-08,0,,1,,,0,"550ml mà giao như 300ml"
+A009,ly thủy tinh,SP01,1,2023-08,0,,1,,,0,"shop gửi thiếu cái cọ"
+A010,ly thủy tinh,SP01,1,2024-04,0,,1,,,0,"ly mỏng, không giống quảng cáo"
