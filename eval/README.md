@@ -32,7 +32,7 @@
 
 Ngưỡng ghi số câu của bộ 20 câu lúc chốt CP2; bộ đã lên 30 câu nên áp theo % (changelog `spec.md` §10). Cột `pass` của từng câu: người chấm đọc output theo `pass_criterion` (có những ý code không kiểm được), `eval/grade.py` in đề xuất 1/0 để đối chiếu. Lượt 1: code và người khớp 30/30.
 
-- **Người thứ hai chấm thử:** __ *(nhờ Vĩnh hoặc Khoa: chấm độc lập 5 output B01, K02, R01, T02, T04 của `run-1@20261127-222917` đã trích riêng không kèm cột `pass` tại `eval/second-review-outputs.md`, ghi vào `eval/second-review.md`)* → khớp __/5 *(cần ≥4/5; lệch thì viết lại định nghĩa)*
+- **Người thứ hai chấm thử:** Ngô Chí Vĩnh (không viết metric, `expected`, §5, §7) chấm 5 output B01, K02, R01, T02, T04 của `run-1@20261127-222917` (`eval/second-review-outputs.md`, không kèm cột `pass`) → **khớp 5/5** với cột `pass` của Hiếu. Claude Code đề xuất từng ô, Vĩnh kiểm và quyết từng câu (khai ở `eval/second-review.md` và `docs/ai-usage.md`). Câu sát ranh giới: R01 (`[(không có)]` không phải mã DG-/VC-/KH-).
 - LLM chấm (nếu có): không có bước LLM chấm tự động. Khi chấm tay lượt 1, Claude Code đọc output và đề xuất 1/0 + ghi chú, Hiếu đọc lại từng câu rồi mới chốt (khai ở `docs/ai-usage.md`)
 - **Chuẩn "đạt"** (chép nguyên từ `spec.md` §7, chốt trước 19:30 Thứ Sáu 27/11): "Đạt khi ≥ 80% câu qua (≥ 16/20), và 100% câu tu_choi qua (5/5), và không câu nào trích căn cứ không có trong data/orders.json (can_cu_co_that 20/20), và không câu nào thiếu / mâu thuẫn bằng chứng bị kết luận shop / vận chuyển / khách (khong_doan_khi_thieu 6/6)"
 
