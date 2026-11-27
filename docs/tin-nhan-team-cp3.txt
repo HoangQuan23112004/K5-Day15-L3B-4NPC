@@ -1,16 +1,7 @@
-Team ơi, mình báo tiến độ CP3 phần Khoa (đã commit & push lên nhánh `khoa/cp3-personas-readiness`):
+Team ơi, mình đã pull `main` mới nhất về và cập nhật đồng bộ toàn bộ các điểm của Quân, Hiếu, Vĩnh trên `main`:
 
-1. Đã hoàn thành:
-- `cost/personas.yaml` & `cost/cost-estimate.md` & `spec.md` §8: 3 persona theo A5 của Vĩnh (≈0,38%), giá 2 model (`gemini-3.5-flash-lite` và `gemini-4-hydrogen`) đối chiếu đúng bảng BTC.
-- `spec.md` §5: hoàn thiện 13 kịch bản khó + 2 câu tấn công (T04, T05) đủ 4 lớp.
-- Chạy thử mô phỏng 10 phiên (`simulate --try` với `gemini-3.5-flash-lite`): 10/10 phiên API thật không lỗi (`simulate-try@20261127-223433`), ~$0.0012/phiên.
-- Chạy luôn lượt 1 bộ 30 câu thử (`eval/run-1.csv` + `traces/run-1.jsonl`, run `run-1@20261127-223619`, `DAMAGECHECK_TODAY=2026-11-27`): 30/30 câu có output thật, 0 lỗi kỹ thuật, để trống cột `pass` cho Hiếu chấm.
-- Chấm độc lập 5 output lượt 1 (`B01, K02, R01, T02, T04`): mình đã kiểm tay và khóa phiếu tại `eval/second-review.md` (4/5 câu đạt; phát hiện `R01` trượt `can_cu_co_that` vì model tự ghi `[DG-DH08 (không có)]`, `[VC-DH08 (không có)]`).
-- Kiểm chéo 20 dòng nhãn Bộ A của Vĩnh (`evidence/kiem-cheo.md`): đã kiểm tay và đối chiếu sau khóa nhãn (`vo_khi_giao` khớp 20/20, `loi_do` khớp 7/8).
-- Chuẩn bị kịch bản 10 phút và lời mời người dùng thử tại `validation/log.md`.
+1. Đã cập nhật run ID lượt 1 chính thức (`run-1@20261127-222917`, 24/30 = 80%) trong `eval/second-review.md`, `eval/second-review-outputs.md`, `cost/README.md`, `cost/cost-estimate.md`, `spec.md` §8 và `docs/ai-usage.md` (gỡ tham chiếu lượt 223619 cũ ở phần chính).
+2. Đã trích sẵn 5 output nguyên văn (`B01, K02, R01, T02, T04`) của lượt `run-1@20261127-222917` (không kèm cột `pass`) vào `eval/second-review-outputs.md` và để bảng chấm trống trong `eval/second-review.md` để @Vĩnh chấm độc lập (vì mình là người viết `spec.md` §5 theo lưu ý của Quân & Hiếu).
+3. Đã cập nhật so sánh chi phí AI (`~$0.0013/shop/tháng` ở lượt thử 10 phiên, `~$0.0015/task thành công` tạm tính theo tỉ lệ đạt 80% của lượt 1) với bộ số impact `spec.md` §2 của Vĩnh (`~34 phút + ~57.000đ/shop/tháng`, chung quy mô 10/50/100 shop và 100/300/800 đơn/tháng) trong `cost/cost-estimate.md` và `spec.md` §8.
 
-2. Nhờ Quân & mọi người hỗ trợ:
-- @Quân: Nhờ Quân review nhánh `khoa/cp3-personas-readiness` (đặc biệt là `spec.md` §5, §8 và kết quả `run-1`) để merge vào `main` cho Hiếu kéo về chấm điểm. Lưu ý lỗi ở câu `R01` (model ghi mã log không có trong ngoặc vuông) để chuẩn bị sửa prompt cho lượt 2.
-- @Hiếu: Sau khi lấy `eval/run-1.csv` về, nhờ Hiếu chấm độc lập 30 câu (chưa mở `eval/second-review.md` trước khi chốt 5 câu B01, K02, R01, T02, T04 nhé), xong đối chiếu với phiếu của mình để điền độ khớp `__/5` vào `eval/README.md` mục 3.
-- @Vĩnh: Xem giúp mình dòng lệch `A035` trong `evidence/kiem-cheo.md` (mình ghi `shop`, nhãn gốc ghi `?`) để thống nhất và điền số khớp vào `evidence/data-mining.md` mục 5; bổ sung số impact/ca ở `spec.md` §2 để mình so chi phí cho CP4.
-- @Cả nhóm: Hiện mình chưa hẹn được người dùng thử ngoài nhóm cho sáng/trưa mai (28/11). Ai có quen chủ shop online hoặc người xử lý đơn/khiếu nại thì giới thiệu giúp mình 2–3 người thử 10 phút nhé!
+@Vĩnh pull `main` về chấm giúp 5 câu trong `eval/second-review.md` (chỉ đọc `eval/second-review-outputs.md`) để điền độ khớp `__/5` vào `eval/README.md` mục 3 nhé!

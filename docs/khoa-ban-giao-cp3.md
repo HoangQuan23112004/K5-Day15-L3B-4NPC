@@ -1,32 +1,14 @@
-# Bàn giao của Khoa — chờ Quân/Hiếu duyệt
+# Bàn giao của Khoa — đã đồng bộ theo `main`
 
-Ngày 27/11/2026. **Nội dung nhờ duyệt được soạn sẵn; chưa có xác nhận đã gửi Quân hoặc đã được duyệt.** Không tự tạo bình luận/nhắn tin dưới tên người khác.
+Cập nhật đêm 27/11/2026 sau khi Quân merge nhánh `khoa/cp3-personas-readiness`, Hiếu chấm xong `run-1@20261127-222917` (24/30) và Vĩnh hoàn tất `spec.md` §1–§2 + kiểm chéo `A035`.
 
-## Bản nhờ Quân duyệt
+## 1. Đã xử lý xong các điểm Quân, Hiếu, Vĩnh nhắn
+- **Đồng bộ Run ID lượt 1 chính thức (`run-1@20261127-222917`):** Đã cập nhật toàn bộ `eval/second-review.md`, `eval/second-review-outputs.md`, `cost/README.md`, `cost/cost-estimate.md`, `spec.md` §8 và `docs/ai-usage.md` sang `run-1@20261127-222917` (bỏ tham chiếu `223619` làm lượt chính).
+- **Trích 5 output (`B01, K02, R01, T02, T04`) của `run-1@20261127-222917` không kèm cột `pass`:** Đã đặt tại `eval/second-review-outputs.md` và để sẵn bảng trống trong `eval/second-review.md` để **Vĩnh** chấm độc lập (vì Khoa là người viết `spec.md` §5).
+- **Đồng bộ số impact §2 & chi phí §8:** Đã cập nhật `cost/cost-estimate.md` mục 4 và `spec.md` §8 theo đúng bộ số chung với Vĩnh (10/50/100 shop; 100/300/800 đơn → 0,38 / 1,14 / 3,04 phiên/tháng; trung bình 1,14 ca/shop/tháng ≈ 34 phút + 57.000đ/shop/tháng so với chi phí AI thử nghiệm ~$0.0013/shop/tháng).
+- **Kiểm chéo 20 dòng Bộ A (`evidence/kiem-cheo.md`):** Đã khớp với bản Vĩnh cập nhật (`vo_khi_giao` 20/20, `loi_do` 7/8, thống nhất `A035 = shop`).
 
-Quân xem giúp spec §5 đã có ở commit `607f8a6`: 13 kịch bản khó + T04/T05, đủ 4 lớp, mỗi dòng dẫn ID benchmark. Đây là hành vi mong muốn, chưa phải kết quả model đạt. Nhờ Quân xác nhận nội dung khớp luồng/prompt §4 và các đường đi §6.
-
-Persona đã đổi theo A5 của Vĩnh ≈0,38%: 100/300/800 đơn mỗi tháng (tự ước tính) → 0,38/1,14/3,04 phiên; share 0,5/0,3/0,2. Số shop 10/50/100 và tỷ lệ mọi ca vỡ đều dùng sản phẩm là tự ước tính. Khoa đã gửi [repo đề](https://github.com/VinUni-AI20k/K5-L3-Day15-AI-Product-Hackathon), giá hai tầng Nhỏ/Lớn trong YAML đã khớp bảng chung BTC. Khoa chọn `gemini-3.5-flash-lite`, đã chạy 10 phiên thử API thật không lỗi, run `simulate-try@20261127-223433`; tổng token 13.826 vào / 2.955 ra, chi phí trung bình thử $0.0012/phiên. Quân cần thống nhất model/ngày cố định cho lượt 2. Không gửi key qua tài liệu.
-
-## Bàn giao cần nhận từ Hiếu
-
-Đã tạo `eval/run-1.csv` và `traces/run-1.jsonl`, run `run-1@20261127-223619`, model `gemini-3.5-flash-lite`, `DAMAGECHECK_TODAY=2026-11-27`. Đủ 30 output, lỗi kỹ thuật 0; 30 ô pass để trống. Nhờ Hiếu chấm chính thức cả bộ và cập nhật score/report. Khoa đã kiểm tay và chốt phiếu 5 câu B01, K02, R01, T02, T04 ở `eval/second-review.md` (`B01=1, K02=1, R01=0, T02=1, T04=1`). Hiếu tự chốt nhãn trước khi mở phiếu để giữ độc lập. Chưa có số khớp hai người hoặc tỉ lệ đạt cả bộ.
-
-Khoa có đóng góp §5; nhờ nhóm xác nhận điều kiện “không phải người viết spec” đối với người chấm thứ hai. Giữ nguyên metric, expected và chuẩn đạt đã chốt.
-
-## Kiểm chéo bằng chứng
-
-Hai cột nhãn 20 dòng đã được điền và Khoa xác nhận kiểm tay ở `edc6213`. Sau đó mới mở CSV nhãn gốc để tính đối chiếu: vỡ khi giao khớp 20/20; nguyên nhân khớp 7/8 trên các dòng cả hai cùng ghi có vỡ. A035: Khoa ghi shop, Vĩnh ghi ?, cần Vĩnh trao đổi; chưa sửa nhãn để tăng khớp. Lượt này có giới hạn kiểm mù đã khai báo trong bảng, không phải bằng chứng một lượt độc lập hoàn toàn.
-
-## Người dùng thử
-
-Khoa xác nhận hiện chưa có người thử. `validation/log.md` có lời mời nháp và kịch bản 10 phút; giờ đề xuất không phải lịch đã hẹn. Cần 2–3 người ngoài nhóm, ưu tiên đang bán online hoặc trực tiếp xử lý khiếu nại.
-
-## Phần còn chờ sau lần chạy này
-
-- Hiếu chấm lượt 1 rồi đối chiếu với phiếu 5 câu Khoa đã khóa ở `eval/second-review.md` để ghi độ khớp `__/5` vào `eval/README.md` mục 3.
-- Quân duyệt §5; sau chấm lượt 1, nhận nhóm lỗi để cải tiến và chạy lượt 2 cùng model/ngày. Nhãn nháp có ví dụ mã căn cứ không tồn tại, chưa tự sửa prompt để tránh làm mất mốc lượt 1.
-- Hiếu bàn giao lượt 2 đã chấm; lúc đó Khoa chạy ≥50 phiên với `--rate-from` đúng lượt để có chi phí/task thành công cho CP4. Không dùng nhãn nháp 5 câu làm tỉ lệ đạt cả bộ.
-- Vĩnh/Khoa thống nhất A035 và bổ sung impact/ca nếu có nguồn; team giới thiệu 2–3 người dùng thử.
-
-Tin nhắn ngắn để Khoa gửi team: `docs/tin-nhan-team-cp3.txt`. Chưa tự gửi tin cho ai.
+## 2. Việc tiếp theo
+- **Vĩnh:** Điền 5 dòng chấm độc lập (`B01, K02, R01, T02, T04`) trong `eval/second-review.md` (chỉ đọc output ở `eval/second-review-outputs.md`), sau đó đối chiếu với Hiếu để ghi `__/5` vào `eval/README.md` mục 3.
+- **Quân & Hiếu (CP4):** Quân sửa prompt cho nhóm lỗi mã căn cứ "ma" (`R02–R04`) và ca lẫn (`R06–R07`), chạy lượt 2 (`eval/run-2.csv`), Hiếu chấm lượt 2 rồi báo Khoa chạy `python run.py simulate --rate-from eval/run-2.csv` (≥50 phiên).
+- **Khoa:** Tuyển 2–3 người ngoài nhóm dùng thử 10 phút sáng/trưa 28/11 và chạy mô phỏng ≥50 phiên ngay khi có lượt 2.

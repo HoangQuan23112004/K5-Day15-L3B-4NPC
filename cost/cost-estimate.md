@@ -2,7 +2,7 @@
 
 Người phụ trách: Lê Viết Khoa · cập nhật 27/11/2026. CP3 thử 10 phiên trước 10:00 ngày 28/11; CP4 mô phỏng ≥50 phiên và báo cáo trước 14:30 ngày 28/11.
 
-**Đã chạy thử 10 phiên bằng API thật**, model `gemini-3.5-flash-lite`, không lỗi. Run ID `simulate-try@20261127-223433`; chi tiết `cost/simulate-try.csv`, `cost/simulate-try-summary.md`, `traces/simulate-try.jsonl`. Lượt này kiểm khung/token, **không tính bản nộp ≥50 phiên**. Chưa có eval đã chấm để tính /task thành công. Chi tiết giả định và bàn giao: [README.md](README.md).
+**Đã chạy thử 10 phiên bằng API thật**, model `gemini-3.5-flash-lite`, không lỗi. Run ID `simulate-try@20261127-223433`; chi tiết `cost/simulate-try.csv`, `cost/simulate-try-summary.md`, `traces/simulate-try.jsonl`. Lượt này kiểm khung/token, **không tính bản nộp ≥50 phiên**. Lượt eval 1 chính thức (`run-1@20261127-222917`) đã chấm đạt **24/30 (80%)**; bản nộp CP4 sẽ chạy mô phỏng ≥50 phiên lấy tỉ lệ đạt từ lượt 2. Chi tiết giả định và bàn giao: [README.md](README.md).
 
 ## 1. Đầu vào
 
@@ -16,7 +16,7 @@ Người phụ trách: Lê Viết Khoa · cập nhật 27/11/2026. CP3 thử 10 
 | Phiên / lượt | 1 ca khiếu nại giả định = 1 phiên = 1 yêu cầu | *(tự ước tính)* mọi ca đều dùng DamageCheck; chưa mô phỏng trao đổi nhiều vòng |
 | Mẫu chạy | 50 phiên, seed 42, input thuong/kho (23 câu trong bộ 30) | Cấu hình mô phỏng, không phải quy mô người đã thử; chưa biết tỉ trọng từ chối ngoài thực tế |
 | Token thực lượt try | 13.826 vào, 2.955 ra; 10 lần gọi model, 50 lần gọi công cụ | `cost/simulate-try.csv`, usage API |
-| Tỉ lệ đạt | Eval đã chấm cùng model, ưu tiên lượt 2 khi nộp CP4 | Chờ Hiếu |
+| Tỉ lệ đạt | Lượt 1 (`run-1@20261127-222917`): 24/30 (80%); CP4 sẽ cập nhật theo lượt 2 | `eval/run-1.csv`, `eval/report.md` (Hiếu chấm) |
 
 Giá chép và đối chiếu [bảng chung BTC](https://github.com/VinUni-AI20k/K5-L3-Day15-AI-Product-Hackathon/blob/main/further-reading/model-prices.md), mục Google Gemini: BTC tra ngày **25/11/2026**, nhóm đọc/đối chiếu **27/11/2026**. Đơn vị USD/1 triệu token, Standard/Paid Tier, input văn bản, output gồm thinking. Hai tầng Nhỏ/Lớn là cách BTC nhóm theo giá, không khẳng định model nào tốt hơn:
 
@@ -29,10 +29,10 @@ Giá chép và đối chiếu [bảng chung BTC](https://github.com/VinUni-AI20k
 
 ## 2. Kết quả
 
-- Lượt 10 phiên: **đã chạy API thật, 10/10 không lỗi**; lượt này không tính nộp.
-- Lượt đầy đủ ≥50 phiên / model thực đo / run ID: **chưa có**.
-- Eval cùng model / run ID / số đạt/tổng: **chưa có**.
-- Chi phí/phiên lượt thử có số đo; /tác vụ thành công chưa tính vì thiếu tỉ lệ đạt. Dự phóng tháng dưới đây chỉ từ lượt thử, chưa phải kết quả CP4.
+- Lượt 10 phiên: **đã chạy API thật, 10/10 không lỗi** (`simulate-try@20261127-223433`); lượt này không tính nộp.
+- Lượt đầy đủ ≥50 phiên / model thực đo / run ID: **chờ chạy ở CP4 sau lượt 2**.
+- Eval cùng model / run ID / số đạt/tổng: **Lượt 1 `run-1@20261127-222917` đạt 24/30 (80%)** (thuong 8/9 · kho 9/14 · tu_choi 7/7; chưa đạt chuẩn §7 vì `can_cu_co_that` 27/30).
+- Chi phí/phiên lượt thử là **$0.0012/phiên** (`gemini-3.5-flash-lite`); tạm tính với tỉ lệ đạt lượt 1 (80%) thì chi phí / task thành công khoảng **$0.0015** (với giá `gemini-4-hydrogen` là $0.0043/phiên → ~$0.0054/task thành công). Dự phóng tháng dưới đây lấy từ lượt thử 10 phiên (`cost/simulate-try-summary.md` chạy trước khi khóa điểm `run-1` nên hai cột `/task thành công` và `/câu hỏi đạt` trong file summary gốc đang để `—`):
 
 Bảng chép từ `cost/simulate-try-summary.md` (lượt thử 10 phiên):
 
@@ -60,12 +60,15 @@ Giá hai model trên một lượng token chỉ là so sánh giá; ghi rõ model
 
 ## 4. So với impact và hoàn tất CP4
 
-Vĩnh chưa đo được thời gian/tiền xử lý trực tiếp mỗi ca. Chưa thể kết luận đáng triển khai từ số giá trị đơn giả lập hoặc tiền bồi thường đề xuất.
+Theo `spec.md` §2 (Vĩnh cập nhật dùng chung bộ số với `cost/personas.yaml`): trung bình mỗi shop có **1,14 ca/tháng**, mỗi ca tốn khoảng **30 phút + 50.000đ** tiền hàng tranh chấp *(tự ước tính)* → impact mỗi shop khoảng **34 phút + 57.000đ / shop / tháng** (kịch bản cơ sở 50 shop ≈ **28,5 giờ + 2,85 triệu đồng / tháng**).
+
+So với chi phí AI (lượt thử 10 phiên trên `gemini-3.5-flash-lite`):
+- **Chi phí / người (shop) / tháng (cơ sở):** **$0.0013/shop/tháng** (và ngay cả nếu tính theo giá tầng Lớn `gemini-4-hydrogen` cũng chỉ **$0.0049/shop/tháng**), nhỏ hơn rất nhiều so với ~34 phút thời gian đối chiếu và ~57.000đ giá trị hàng tranh chấp mỗi tháng của một shop.
+- Kết luận chính thức một dòng ở CP4 sẽ được chốt sau khi chạy mô phỏng ≥50 phiên với `--rate-from eval/run-2.csv`.
 
 - [x] Đối chiếu giá hai tầng với repo đề, có link và ngày xem.
 - [x] Khoa chọn `gemini-3.5-flash-lite`, cấu hình API thật đã gọi thành công.
 - [x] Có 10 phiên thử bằng API thật cho CP3 (`simulate-try@20261127-223433`).
-- [ ] Có ≥50 phiên đầy đủ và bảng summary cho CP4; ghi phiên lỗi.
-- [ ] Có eval đã chấm cùng model và run ID để tính /task thành công.
-- [ ] So sánh impact cùng đơn vị hoặc nêu thiếu dữ liệu.
-- [ ] Đồng bộ kết quả sang spec §8 và slide, ghi changelog §10.
+- [x] Đồng bộ bộ số quy mô (10/50/100 shop, 100/300/800 đơn, 1,14 ca/shop/tháng) với `spec.md` §2 và lượt 1 `run-1@20261127-222917` (24/30 = 80%).
+- [ ] Có ≥50 phiên đầy đủ và bảng summary cho CP4 (`--rate-from eval/run-2.csv`); ghi phiên lỗi.
+- [ ] Đồng bộ kết quả ≥50 phiên sang spec §8 và slide, ghi changelog §10.
