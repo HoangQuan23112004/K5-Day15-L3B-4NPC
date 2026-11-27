@@ -1,4 +1,4 @@
-# Canvas — [tên nhóm] · Track [A–F]
+# Canvas — 4NPC · Track D
 
 > Điền ở guide bước 1.4. CP1 17:00 Thứ Sáu 27/11: nộp bản đầu, đủ 7 dòng (dòng 4 được ghi giả thuyết + nguồn sẽ kiểm).
 > CP2 19:30 Thứ Sáu 27/11: cập nhật (số bằng chứng đầu, lát cắt đã chốt) và điền dòng "Đã đổi gì so với CP1".
@@ -6,11 +6,11 @@
 
 | # | Dòng | Nhóm điền |
 |---|---|---|
-| 1 | Track + lát cắt dự kiến | |
-| 2 | Người dùng chính (một vai cụ thể — không phải "học viên nói chung") | |
-| 3 | Pain một câu: ai — đang làm gì — vướng đâu — hậu quả | |
-| 4 | Bằng chứng đầu — CP1: giả thuyết + nguồn sẽ kiểm · CP2: số đầu tiên + 1 trích dẫn | |
-| 5 | **Lát cắt MỘT CÂU** (1 người dùng · 1 việc · 1 quyết định AI · 1 kết quả) | |
-| 6 | AI tự làm đến đâu + 1 dòng lý do: sai thì ai chịu gì | |
-| 7 | Phân công có tên | |
+| 1 | Track + lát cắt dự kiến | Track D · E-commerce. **DamageCheck**: AI phân xử trách nhiệm khiếu nại hàng vỡ/hỏng cho shop online nhỏ |
+| 2 | Người dùng chính (một vai cụ thể — không phải "học viên nói chung") | Chủ shop online nhỏ, tự xử lý khiếu nại của khách khi hàng đến tay bị vỡ/hỏng |
+| 3 | Pain một câu: ai — đang làm gì — vướng đâu — hậu quả | Chủ shop nhỏ — đang xử lý khiếu nại hàng vỡ/hỏng — không có thời gian đối chiếu log đóng gói, log vận chuyển và ảnh của khách — nên hoàn tiền sai hoặc không đòi được bồi thường từ đơn vị vận chuyển, mất tiền |
+| 4 | Bằng chứng đầu — CP1: giả thuyết + nguồn sẽ kiểm · CP2: số đầu tiên + 1 trích dẫn | **Giả thuyết:** chủ shop nhỏ thường hoàn tiền luôn cho khách vì không kịp đối chiếu bằng chứng, nên bỏ lỡ phần tiền lẽ ra đòi được từ đơn vị vận chuyển. **Nguồn sẽ kiểm:** phỏng vấn chủ shop online nhỏ (`evidence/interviews/`) · khảo sát nhanh trong cộng đồng người bán online (`evidence/survey/`) · bài than phiền về hàng vỡ và bồi thường trên các diễn đàn người bán (`evidence/data-mining.md`) · điều kiện, thời hạn khiếu nại bồi thường công khai của các đơn vị vận chuyển. *(CP2: điền số đầu tiên + 1 trích dẫn thật)* |
+| 5 | **Lát cắt MỘT CÂU** (1 người dùng · 1 việc · 1 quyết định AI · 1 kết quả) | Chủ shop online nhỏ nhận khiếu nại hàng vỡ/hỏng → AI đối chiếu log đóng gói, log vận chuyển và mô tả ảnh của khách để xác định bên chịu trách nhiệm (shop / vận chuyển / khách / chưa đủ bằng chứng) → chủ shop biết nên hoàn tiền cho khách, đòi bồi thường từ đơn vị vận chuyển, hay xin thêm bằng chứng |
+| 6 | AI tự làm đến đâu + 1 dòng lý do: sai thì ai chịu gì | AI chỉ **đề xuất**: chọn bên chịu trách nhiệm, nêu bằng chứng làm căn cứ và soạn **bản nháp** tin trả lời khách / đơn đòi bồi thường. Chủ shop duyệt rồi mới gửi; AI không tự hoàn tiền, không tự gửi khiếu nại. Bằng chứng mâu thuẫn hoặc thiếu thì trả "chưa đủ bằng chứng". **Lý do:** phán sai thì chủ shop mất tiền (hoàn tiền oan, hoặc mất quyền đòi bồi thường khi quá hạn) và mất uy tín với khách hay đơn vị vận chuyển, nên quyết định cuối phải do người làm |
+| 7 | Phân công có tên | **Hoàng Dương Anh Quân** (Đội trưởng): spec §3–§5, code `codebase/`, nối model, demo · **Ngô Chí Vĩnh**: bằng chứng pain (`evidence/`), spec §1–§2 · **Phan Trung Hiếu**: dữ liệu mẫu (`data/`), bộ câu thử và metric (`eval/`), spec §7 · **Lê Viết Khoa**: mô phỏng chi phí (`cost/`), người dùng thử (`validation/`), slide |
 | — | *(CP2)* Đã đổi gì so với CP1 | |
