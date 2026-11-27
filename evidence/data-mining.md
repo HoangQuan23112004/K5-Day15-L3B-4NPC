@@ -99,7 +99,7 @@ Chính sách chính thức của Shopee (cùng nguồn với Bộ A), dùng cho 
 | Đếm gì | x / N | % | Ghi chú |
 |---|---|---|---|
 | A1 · Đánh giá 1–2 sao nói hàng đến tay bị vỡ / hỏng | 21/61 | 34% | mẫu số: mọi đánh giá 1–2 sao có chữ đã đọc · serum 9/13 · bánh quy 3/7 · bình gốm 4/11 · ly thủy tinh 5/30 |
-| A2 · … người mua cho là do vận chuyển | 0/21 | 0% | do shop đóng gói: 9 · không rõ: 12 |
+| A2 · … người mua cho là do vận chuyển | 0/21 | 0% | do shop đóng gói: 10 · không rõ: 11 *(A035 đổi `?` → shop sau kiểm chéo)* |
 | A3 · … shop đã / đề nghị hoàn tiền, gửi bù, đổi | 4/21 | 19% | shop không chịu: 6 · không rõ: 11 |
 | A4 · … shop có trả lời và nhắc tới khiếu nại đơn vị vận chuyển | 0/10 | 0% | |
 | A5 · Ước tính đánh giá nói hàng vỡ / tổng đánh giá | | 0,38% | = tỉ lệ 1–2 sao (205/18.566) × A1 (21/61) |
@@ -129,5 +129,5 @@ Ghi dạng "x/N (y%)". "Nhiều bạn…" không phải số.
 - Chỉ đọc đánh giá 1–2 sao. A5 là ước tính có giả định (mỗi đánh giá ≈ một đơn), không phải tỉ lệ hàng vỡ đo trên đơn hàng thật.
 - Chỉ Shopee, chỉ 4 nhóm hàng dễ vỡ. Shop bán qua Facebook / Zalo không có quy trình Trả hàng / Hoàn tiền của sàn nên có thể khác (cách giải thích khác 2 trong `evidence/hypothesis.md`).
 - **Không hỏi được người dùng để kiểm lại**: chưa biết thời gian xử lý mỗi ca, Bộ B (review app giao hàng) cho biết vì sao đòi bồi thường không được, nhưng chỉ lọc 1 sao nên nghiêng về phàn nàn và không cho biết tỉ lệ trên mọi shop.
-- Kiểm chéo: file `evidence/kiem-cheo.md` (20 dòng ngẫu nhiên, seed 42, không kèm nhãn gốc) — kết quả: __/20 dòng khớp *(đang chờ người kiểm)*.
+- Kiểm chéo: file `evidence/kiem-cheo.md` (20 dòng ngẫu nhiên, seed 42, không kèm nhãn gốc) — kết quả: `vo_khi_giao` **20/20** dòng khớp, `loi_do` **7/8** (người kiểm: Lê Viết Khoa, có Codex hỗ trợ, không hoàn toàn mù). Dòng lệch `A035` đổi theo người kiểm, ghi ở `evidence/kiem-cheo.md`.
 - Bộ B chỉ 20 review 1 sao của 1 app: không có ca hàng vỡ nào nên không kiểm được lý do không đòi bồi thường; review app chấm cả app lẫn dịch vụ nói chung.

@@ -7,7 +7,7 @@
 
 | Nguồn | Đạt ngưỡng? | File |
 |---|---|---|
-| Đào data (x/N, %, cách đếm chạy lại được, ≥5 ví dụ) | ☑ **Bộ A** — đánh giá 1–2 sao công khai trên Shopee: 9 sản phẩm hàng dễ vỡ, **N = 61** đánh giá, cách chọn mẫu và cách đếm commit trước khi đọc, script `evidence/count.py` · ☑ **Bộ B** (nguồn thứ hai, kiểm lại Bộ A) — 20 review 1 sao mới nhất của app GHTK trên Google Play | `evidence/data-mining.md` · `evidence/shopee-products.csv` · `evidence/shopee-reviews.csv` · `evidence/app-reviews.csv` |
+| Đào data (x/N, %, cách đếm chạy lại được, ≥5 ví dụ) | ☑ **Bộ A** — đánh giá 1–2 sao công khai trên Shopee: 9 sản phẩm hàng dễ vỡ, **N = 61** đánh giá, cách chọn mẫu và cách đếm commit trước khi đọc, script `evidence/count.py`; nhãn kiểm tay 21/21 dòng hàng vỡ, kiểm chéo 20 dòng: khớp 20/20 (`evidence/kiem-cheo.md`) · ☑ **Bộ B** (nguồn thứ hai, kiểm lại Bộ A) — 20 review 1 sao mới nhất của app GHTK trên Google Play | `evidence/data-mining.md` · `evidence/shopee-products.csv` · `evidence/shopee-reviews.csv` · `evidence/app-reviews.csv` |
 | Phỏng vấn (≥3 người ngoài nhóm, đúng người dùng) | ☐ Không làm — nhóm không liên hệ được chủ shop | — |
 | Khảo sát (≥20 người ngoài nhóm, đúng người dùng) | ☐ Không làm — cùng lý do | — |
 
@@ -21,7 +21,7 @@ BTC không cấp data cho Track D. Theo guide 1.2 và file Track D, nhóm đào 
 |---|---|---|---|
 | A1 | Đánh giá 1–2 sao nói hàng **đến tay đã vỡ / móp / hỏng** (không tính vỡ khi đang dùng) | **21/61** | **34%** |
 | | … theo nhóm hàng: serum chai thủy tinh 9/13 · bánh quy hộp 3/7 · bình gốm 4/11 · ly thủy tinh 5/30 | | |
-| A2 | Trong 21 ca vỡ: người mua nói **do shop đóng gói** · do vận chuyển · không nói | 9 · **0** · 12 /21 | 43% · 0% · 57% |
+| A2 | Trong 21 ca vỡ: người mua nói **do shop đóng gói** · do vận chuyển · không nói | 10 · **0** · 11 /21 | 48% · 0% · 52% |
 | A3 | Trong 21 ca vỡ: shop đã / đề nghị hoàn tiền, gửi bù · shop không chịu (khách chịu) · không rõ | 4 · **6** · 11 /21 | 19% · 29% · 52% |
 | A4 | Trong 10 ca vỡ shop có trả lời: phản hồi **nhắc tới khiếu nại / đòi bồi thường đơn vị vận chuyển** | **0/10** | **0%** |
 | A6 | Trong 10 ca đó: phản hồi **đổ lỗi cho vận chuyển** | 5/10 | 50% |
@@ -57,7 +57,7 @@ Phỏng vấn / khảo sát: không làm, nên không có bảng P1–P3.
 
 ## 4. Các nguồn có khớp nhau không
 
-- **Khớp — không ai có căn cứ để phân xử ca hàng vỡ.** Bộ A: khi hàng vỡ, người mua thường đổ cho đóng gói (9/21), shop có trả lời thì một nửa đổ cho vận chuyển (5/10), có 3 ca hai bên đổ lỗi cho nhau, và không bên nào đưa căn cứ. Shop phải dựa vào ảnh / video mở hàng của khách hoặc camera đóng gói của mình (`A030`, `A048`, mô tả SP02).
+- **Khớp — không ai có căn cứ để phân xử ca hàng vỡ.** Bộ A: khi hàng vỡ, người mua thường đổ cho đóng gói (10/21), shop có trả lời thì một nửa đổ cho vận chuyển (5/10), có 3 ca hai bên đổ lỗi cho nhau, và không bên nào đưa căn cứ. Shop phải dựa vào ảnh / video mở hàng của khách hoặc camera đóng gói của mình (`A030`, `A048`, mô tả SP02).
 - **Khớp một phần — đòi bồi thường từ đơn vị vận chuyển hầu như không xuất hiện.** Bộ A: 0/10 phản hồi của shop nhắc tới việc khiếu nại vận chuyển, kể cả khi chính shop đổ lỗi cho vận chuyển. Bộ B gợi ý một lý do có thể: 4/20 review nói không liên hệ được CSKH / tổng đài. Đây chỉ là **gợi ý**, chưa kiểm được: Bộ B không có ca nào nói thẳng về đòi bồi thường hàng vỡ.
 - **Lệch — với người gửi hàng, hàng vỡ không phải phàn nàn hàng đầu.** Bộ B: 0/8 phàn nàn của người gửi hàng là về hàng vỡ; họ than chủ yếu về lấy / giao chậm (5/8) và phí (3/8). Giải thích: (1) review app GHTK chấm cả dịch vụ và app nói chung, còn chậm và phí xảy ra với **mọi** đơn, hàng vỡ chỉ xảy ra với một phần nhỏ đơn hàng dễ vỡ; (2) Bộ A cho thấy hàng vỡ chỉ chiếm khoảng 0,4% đánh giá (A5) — hiếm, nhưng khi xảy ra thì gây tranh cãi. Hai nguồn vì vậy không mâu thuẫn: hàng vỡ là sự cố **ít khi xảy ra nhưng mỗi lần khó phân xử**, không phải nỗi đau thường ngày.
 
@@ -65,7 +65,7 @@ Phỏng vấn / khảo sát: không làm, nên không có bảng P1–P3.
 
 Giả thuyết ở `evidence/hypothesis.md`: **đúng một phần, phải đổi trọng tâm.**
 
-- **Đúng:** hàng vỡ khi giao xuất hiện thường xuyên trong phàn nàn về hàng dễ vỡ (A1 = 21/61 = 34%, vượt ngưỡng ≥20% đặt trước), và không bên nào xác định được lỗi ở đâu (A2: 12/21 người mua không nói nguyên nhân; 3 ca hai bên đổ lỗi cho nhau). Shop không đi đòi bồi thường từ đơn vị vận chuyển (A4 = 0/10).
+- **Đúng:** hàng vỡ khi giao xuất hiện thường xuyên trong phàn nàn về hàng dễ vỡ (A1 = 21/61 = 34%, vượt ngưỡng ≥20% đặt trước), và không bên nào xác định được lỗi ở đâu (A2: 11/21 người mua không nói nguyên nhân; 3 ca hai bên đổ lỗi cho nhau). Shop không đi đòi bồi thường từ đơn vị vận chuyển (A4 = 0/10).
 - **Chưa đạt / phải đổi:** ngưỡng "≥50% ca vỡ shop tự chịu" **không đạt**: chỉ 4/21 ca rõ là shop chịu, 6/21 là **khách chịu** (shop né, bảo "thông cảm vì quá trình giao"), 11/21 không rõ. Nên hậu quả không chỉ là "shop mất phần tiền đòi được", mà là **ai chịu thì tuỳ ai nói to hơn** — lúc shop mất tiền, lúc khách mất tiền và shop mất uy tín (đánh giá 1 sao). Bộ B không kiểm được lý do không đòi bồi thường (0 ca hàng vỡ trong mẫu).
 - **Hàm ý cho lát cắt:** giữ trọng tâm "xác định bên chịu trách nhiệm dựa trên căn cứ", nhưng giá trị chính là **phân xử có căn cứ và nhanh** (đối chiếu đóng gói, vận chuyển, lời khách), không phải "đòi được nhiều tiền bồi thường hơn". Tần suất thấp (khoảng 1 ca / tháng / 300 đơn, ước tính) nên impact nằm ở **giá trị mỗi ca** hơn là số ca.
 

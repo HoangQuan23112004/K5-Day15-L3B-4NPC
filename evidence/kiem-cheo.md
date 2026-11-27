@@ -44,5 +44,6 @@
 
 ## Kết quả (Vĩnh điền sau khi so)
 
-- `vo_khi_giao` khớp: __/20 · `loi_do` khớp: __/__
-- Dòng lệch và cách xử lý: __
+- `vo_khi_giao` khớp: **20/20** · `loi_do` khớp: **7/8** (so bằng script, 27/11/2026)
+- Dòng lệch và cách xử lý: **A035** — Vĩnh ghi `?`, Khoa ghi `shop` (người mua viết "sản phẩm như vậy cũng đem bán cho khách… gửi hàng bể" là trách shop). Vĩnh **đổi theo Khoa** cho nhất quán với `A023` ("shop vẫn cố gửi" hàng nứt, đã ghi lỗi shop). A2 đổi: do shop đóng gói 9 → 10, không rõ 12 → 11; A1 = 21/61 không đổi.
+- Lưu ý: lượt kiểm chéo có Codex hỗ trợ và Codex từng thấy vài trích đoạn (A006, A028) trước đó, nên **không phải kiểm mù hoàn toàn** (Khoa tự ghi ở trên).
