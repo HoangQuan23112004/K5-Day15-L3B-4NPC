@@ -9,13 +9,14 @@
 ## 1. Cách đếm — viết TRƯỚC khi chạy
 
 - Bản đầu: 17:45 Thứ Sáu 27/11/2026 (commit `7457ab9`). **Sửa lần 1: 17:50 cùng ngày, trước khi đọc dòng data đầu tiên.** Lý do sửa: chuyển Bộ A (Shopee) thành nguồn chính vì đúng dạng "đếm trên một bộ dữ liệu"; thêm bảng cấp sản phẩm (A0) để ước tính tần suất; Bộ B chỉ còn là nguồn bổ sung.
-- **Data dùng:** trang sản phẩm và đánh giá công khai trên Shopee Việt Nam (Bộ A), review Google Play của app giao hàng GHTK, GHN (Bộ B, đổi lúc 18:45 — xem mục Bộ B). Đọc tay ngày 27–28/11/2026.
+- **Data dùng:** trang sản phẩm và đánh giá công khai trên Shopee Việt Nam (Bộ A), review Google Play của app giao hàng GHTK (Bộ B, đổi lúc 18:45 — xem mục Bộ B). Đọc tay ngày 27–28/11/2026.
 
 ### Bộ A · Shopee — NGUỒN CHÍNH
 
 **Chọn sản phẩm (cố định trước, không chọn cho khớp):**
 - 4 từ khoá hàng dễ vỡ / dễ hỏng: `ly thủy tinh` · `bình gốm` · `serum chai thủy tinh` · `bánh quy hộp`.
 - Mỗi từ khoá: tìm trên Shopee, sắp xếp "Bán chạy", lấy **3 sản phẩm đầu tiên**. Bỏ qua sản phẩm Shopee Mall (shop lớn, không phải người dùng của nhóm) và sản phẩm không có đánh giá 1–2 sao → **12 sản phẩm**, mã `SP01`…`SP12` (`ly thủy tinh` SP01–03 · `bình gốm` SP04–06 · `serum chai thủy tinh` SP07–09 · `bánh quy hộp` SP10–12).
+- **Đổi lần 2 lúc 18:46 Thứ Sáu 27/11 (chốt cuối):** `ly thủy tinh` giữ 3 sản phẩm đã làm (SP01–03); **3 từ khoá còn lại mỗi từ khoá lấy 2 sản phẩm đầu** → **9 sản phẩm**: `bình gốm` SP04–05 · `serum chai thủy tinh` SP06–07 · `bánh quy hộp` SP08–09. Lý do: không đủ thời gian. Lúc đổi **chưa mở sản phẩm nào** của 3 từ khoá này nên kết quả không chi phối việc giảm. Các số theo từ khoá sẽ báo riêng để thấy `ly thủy tinh` có nhiều sản phẩm hơn.
 - *(Đổi lúc 18:27 Thứ Sáu 27/11, sau khi làm xong SP01–SP03 và trước khi mở sản phẩm tiếp theo: giảm từ 5 xuống 3 sản phẩm mỗi từ khoá (20 → 12) **vì không đủ thời gian** trước CP3, ưu tiên giữ đủ 4 nhóm hàng. Không đổi vì kết quả. SP01–SP03 giữ nguyên.)*
 
 **A0 · Bảng sản phẩm → `evidence/shopee-products.csv`** (mỗi sản phẩm một dòng, chép đúng số Shopee hiện):
@@ -51,8 +52,8 @@
 
 *(Đổi lúc 18:45 Thứ Sáu 27/11, khi Bộ B cũ — bài người bán tìm qua Google — **chưa đọc dòng nào**. Lý do: file Track D của đề gợi ý "review công khai trên Google Play, App Store (… app cho người bán …)"; người viết review app giao hàng phần lớn là **người gửi hàng / chủ shop**, bù đúng giới hạn lớn nhất của Bộ A là chỉ có lời người mua; mẫu có cách chọn cố định, chạy lại được, khác kết quả tìm Google thay đổi theo người tìm.)*
 
-- **Nguồn (cố định trước):** trang Google Play của **2 app giao hàng chính thức dành cho người gửi hàng / shop**: GHTK (Giao Hàng Tiết Kiệm) và GHN (Giao Hàng Nhanh). Ghi đúng tên app, link và ngày xem ở mục 2 khi mở.
-- **Chọn mẫu:** mỗi app mở "Xem tất cả bài đánh giá" → sắp xếp **"Mới nhất"** → lọc **1 sao** → đọc **30 review có chữ đầu tiên** → N ≤ 60. Nếu bản web không có bộ lọc sao thì dùng app Google Play trên điện thoại, cùng cách chọn. Chỉ lọc 1 sao nên mẫu **nghiêng về phàn nàn** (guide 1.2 cho phép, phải ghi rõ).
+- **Nguồn (cố định trước):** trang Google Play của **app giao hàng GHTK (Giao Hàng Tiết Kiệm)** dành cho người gửi hàng / shop. *(Đổi lúc 18:46, trước khi đọc review nào: bỏ GHN, giảm còn 1 app × 20 review vì không đủ thời gian.)* Ghi đúng tên app, link và ngày xem ở mục 2 khi mở.
+- **Chọn mẫu:** mở "Xem tất cả bài đánh giá" → sắp xếp **"Mới nhất"** → lọc **1 sao** → đọc **20 review có chữ đầu tiên** → N = 20. Nếu bản web không có bộ lọc sao thì dùng app Google Play trên điện thoại, cùng cách chọn. Chỉ lọc 1 sao nên mẫu **nghiêng về phàn nàn** (guide 1.2 cho phép, phải ghi rõ).
 - **Mã hoá → `evidence/app-reviews.csv`** (cột: `id, app, so_sao, ngay, nguoi_gui, chu_de, boi_thuong, ly_do, thoi_gian_ke, trich_ngan`):
   - `nguoi_gui`: 1 nếu người viết là **người gửi hàng / shop** (nói "shop mình", "gửi hàng cho khách", "đơn của khách", tiền COD); 0 nếu là người nhận, shipper, người khác; `?` nếu không rõ.
   - `chu_de` (một nhãn chính): `vo_hong` (hàng vỡ, móp, hỏng khi giao) · `that_lac` (mất, thất lạc) · `giao_cham` · `thai_do` (thái độ shipper / tổng đài) · `tien_phi` (tiền COD, phí ship, đối soát) · `loi_app` · `khac`.
