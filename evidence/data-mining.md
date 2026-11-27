@@ -81,7 +81,7 @@ Chính sách chính thức của Shopee (cùng nguồn với Bộ A), dùng cho 
   - Đền khi hàng **thiệt hại toàn bộ (≥75% giá trị)** do sự cố bất ngờ (rơi / nghiền nát sau tai nạn, cháy, nổ…), do chất lỏng, hoặc mất cắp / cướp giật.
   - **Loại trừ (trích nguyên văn):** *"Sản phẩm có tình trạng bị thiệt hại hoặc hư hỏng từ trước khi bắt đầu hiệu lực bảo hiểm hoặc thất lạc, mất, thiệt hại trong quá trình giao hàng của nhà vận chuyển."* Cũng loại trừ thực phẩm, đồ uống.
   - → **Bảo hiểm này không đền hàng vỡ khi giao.** Ca hàng vỡ khi giao vẫn phải xử lý giữa người mua, shop và đơn vị vận chuyển, qua quy trình Trả hàng / Hoàn tiền. Dùng cho `spec.md` §0, §3 và để kiểm cách giải thích khác 2 trong `evidence/hypothesis.md`.
-- Trả hàng / Hoàn tiền (link do file Track D của đề dẫn): https://help.shopee.vn/portal/4/article/79191 — __ (ngày xem · hạn khiếu nại · bằng chứng cần có · người bán phản hồi thế nào)
+- Trả hàng / Hoàn tiền (link do file Track D của đề dẫn): https://help.shopee.vn/portal/4/article/79191 — *(chưa đọc, không dùng làm bằng chứng; Quân / Hiếu có thể dùng cho dữ liệu chạy thử)*
 
 ## 2. Đọc trước, đếm sau
 
@@ -98,24 +98,30 @@ Chính sách chính thức của Shopee (cùng nguồn với Bộ A), dùng cho 
 
 | Đếm gì | x / N | % | Ghi chú |
 |---|---|---|---|
-| A1 · Đánh giá 1–2 sao nói hàng đến tay bị vỡ / hỏng | __/__ | | mẫu số: mọi đánh giá 1–2 sao có chữ đã đọc |
-| A2 · … người mua cho là do vận chuyển | __/__ | | không rõ: __ |
-| A3 · … shop đã hoàn tiền / gửi bù / đổi | __/__ | | không rõ: __ |
-| A4 · … shop có trả lời và nhắc tới khiếu nại đơn vị vận chuyển | __/__ | | |
-| A5 · Ước tính đánh giá nói hàng vỡ / tổng đánh giá | | __% | = tỉ lệ 1–2 sao (__/__) × A1 |
-| A6 · … shop trả lời và đổ lỗi cho vận chuyển | __/__ | | hai bên đổ lỗi khác nhau: __ |
-| B1 · Người bán kể ca hàng vỡ: tự chịu hoặc bị từ chối | __/__ | | bổ sung, lệch về ca xấu |
-| B2 · Lý do hay gặp nhất | __/__ | | |
+| A1 · Đánh giá 1–2 sao nói hàng đến tay bị vỡ / hỏng | 21/61 | 34% | mẫu số: mọi đánh giá 1–2 sao có chữ đã đọc · serum 9/13 · bánh quy 3/7 · bình gốm 4/11 · ly thủy tinh 5/30 |
+| A2 · … người mua cho là do vận chuyển | 0/21 | 0% | do shop đóng gói: 9 · không rõ: 12 |
+| A3 · … shop đã / đề nghị hoàn tiền, gửi bù, đổi | 4/21 | 19% | shop không chịu: 6 · không rõ: 11 |
+| A4 · … shop có trả lời và nhắc tới khiếu nại đơn vị vận chuyển | 0/10 | 0% | |
+| A5 · Ước tính đánh giá nói hàng vỡ / tổng đánh giá | | 0,38% | = tỉ lệ 1–2 sao (205/18.566) × A1 (21/61) |
+| A6 · … shop trả lời và đổ lỗi cho vận chuyển | 5/10 | 50% | hai bên đổ lỗi khác nhau: 3 (`A006`, `A049`, `A058`) |
+| A7 · Mô tả của shop cam kết đổi / hoàn khi vỡ do vận chuyển | 3/9 sản phẩm | 33% | |
+| A8 · Mô tả khuyên / yêu cầu quay video mở hàng | 2/9 sản phẩm | 22% | |
+| B · Review GHTK do người gửi hàng viết | 8/20 | 40% | 1 sao, mới nhất, 07–26/11/2026 |
+| B1 · Phàn nàn của người gửi hàng là về hàng vỡ / hỏng | 0/8 | 0% | lấy / giao chậm 5 · phí, COD 3 |
+| B2, B3 · Đền bù khi vỡ / thất lạc, lý do | — | — | không có ca nào trong mẫu |
+| B4 · Nói không liên hệ được CSKH / tổng đài | 4/20 | 20% | |
 
 Ghi dạng "x/N (y%)". "Nhiều bạn…" không phải số.
 
 ## 4. ≥5 ví dụ cụ thể (mã dòng, không tên người / shop / tài khoản)
 
-1. __ — dòng `A__`
-2.
-3.
-4.
-5.
+1. `A028` (SP03, 1 sao, 08/2025): người mua *"Nắp cốc bị nứt rất rõ, chẳng biết là do hàng lỗi trước hay do bên vận chuyển"* → nhac_vo_hong 1, do_van_chuyen `?`.
+2. `A006` (SP01, 1 sao, 08/2024): người mua chê *"Shop bọc chống sốc thì mỏng"*, shop trả lời *"chắc bên vận chuyển đè vật nặng"* → hai bên đổ lỗi khác nhau, shop đề nghị gửi lại (shop_chiu 1).
+3. `A058` (SP09, 1 sao, 10/2025): *"mua 5 hộp thì ko 1 hộp nào lành lặn"*, shop: *"do quá trình vận chuyển… không phải bên em giao hàng móp"* → hai bên đổ lỗi khác nhau, shop không đề nghị bù (shop_chiu 0).
+4. `A060` (SP09, 1 sao, 12/2025): *"gãy vỡ hết 60que… Shop kêu thông cảm vì quá trình giao"* → khách chịu (shop_chiu 0).
+5. `A048` (SP06, 1 sao, 01/2026): *"Nhận hàng bể nát chai serum"*, shop: *"Có thể trong quá trình vận chuyển… nhắn Shop kèm ảnh hoặc clip… đổi bù hoặc hoàn"* → shop đổ cho vận chuyển, vẫn tự chịu, không nhắc đòi bồi thường (A4 = 0).
+6. `A014` (SP02, 1 sao, 05/2025): *"Rớt cái bể luôn mặc dù độ cao thấp"* → vỡ khi đang dùng, **không** tính là hàng vỡ khi giao (nhac_vo_hong 0).
+7. `B017` (GHTK, 1 sao, 16/11/2026): người gửi hàng *"có đơn 20 ngày mới giao… CSKH thì không cho nt hỗ trợ… các shop lưu ý"* → nguoi_gui 1, chu_de giao_cham, khong_lien_he_cskh 1.
 
 ## 5. Giới hạn của data
 
@@ -123,4 +129,5 @@ Ghi dạng "x/N (y%)". "Nhiều bạn…" không phải số.
 - Chỉ đọc đánh giá 1–2 sao. A5 là ước tính có giả định (mỗi đánh giá ≈ một đơn), không phải tỉ lệ hàng vỡ đo trên đơn hàng thật.
 - Chỉ Shopee, chỉ 4 nhóm hàng dễ vỡ. Shop bán qua Facebook / Zalo không có quy trình Trả hàng / Hoàn tiền của sàn nên có thể khác (cách giải thích khác 2 trong `evidence/hypothesis.md`).
 - **Không hỏi được người dùng để kiểm lại**: chưa biết thời gian xử lý mỗi ca, Bộ B (review app giao hàng) cho biết vì sao đòi bồi thường không được, nhưng chỉ lọc 1 sao nên nghiêng về phàn nàn và không cho biết tỉ lệ trên mọi shop.
-- Kiểm chéo: __/20 dòng khớp.
+- Kiểm chéo: __/20 dòng khớp *(chưa làm — người kiểm: __)*.
+- Bộ B chỉ 20 review 1 sao của 1 app: không có ca hàng vỡ nào nên không kiểm được lý do không đòi bồi thường; review app chấm cả app lẫn dịch vụ nói chung.
