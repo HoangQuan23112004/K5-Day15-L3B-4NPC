@@ -16,7 +16,7 @@
 | Nhãn | `synthetic` |
 | Giới hạn | mỗi đơn cố ý rơi vào một tình huống: lỗi vận chuyển (DH01), lỗi đóng gói (DH02), lỗi phía khách (DH03), thiếu bằng chứng (DH04), bằng chứng mâu thuẫn (DH05), lỗi vận chuyển nhưng quá hạn khiếu nại (DH06), ngoài phạm vi vì sai màu (DH07). Bộ này sạch và rõ hơn hồ sơ thật: ảnh chỉ có mô tả chữ, không có ảnh thật. Hạn khiếu nại 7 và 5 ngày là giả lập *(tự ước tính)*, không phải chính sách của hãng thật |
 
-**Data `synthetic`:** viết tay, không dùng prompt hay seed. Người kiểm: __ · đã kiểm tay __/7 đơn (cần kiểm xem log mỗi đơn có dẫn đúng tới đáp án ở benchmark không). Data tự dựng **không phải bằng chứng pain**.
+**Data `synthetic`:** viết tay, không dùng prompt hay seed. Người kiểm: Phan Trung Hiếu · đã kiểm tay 7/7 đơn (đối chiếu log mỗi đơn với đáp án ở benchmark: đều dẫn đúng). Data tự dựng **không phải bằng chứng pain**.
 
 ## Dataset 2 · 8 đơn dựng từ đánh giá Shopee thật (`data/orders.json` DH08–DH15)
 
