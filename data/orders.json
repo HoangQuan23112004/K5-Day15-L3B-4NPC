@@ -1,7 +1,7 @@
 {
   "_meta": {
     "label": "synthetic",
-    "note": "Dữ liệu nhóm tự viết (Phan Trung Hiếu, 27/11/2026) để chạy thử DamageCheck. Không phải dữ liệu thật, không phải bằng chứng pain. Tên shop, khách, đơn vị vận chuyển đều giả. File chỉ chứa log; đáp án đúng nằm ở eval/benchmark.csv, không để công cụ đọc được.",
+    "note": "DH01–DH07: nhóm tự viết (synthetic). DH08–DH15: dựng từ đánh giá Shopee thật trong evidence/shopee-reviews.csv (Vĩnh đọc tay); chỉ giữ lời người mua, KHÔNG bịa log đóng gói, log vận chuyển, giá trị hay đơn vị vận chuyển — các trường đó để trống. File chỉ chứa log; đáp án đúng nằm ở eval/benchmark.csv.",
     "id_scheme": "DG-<mã đơn> = log đóng gói · VC-<mã đơn>-<n> = sự kiện vận chuyển thứ n · KH-<mã đơn> = khiếu nại + mô tả ảnh của khách"
   },
   "carriers": {
@@ -286,6 +286,134 @@
         "time": "2026-11-24 12:00",
         "text": "Mình đặt màu hồng mà shop gửi màu xanh, đổi giúp mình.",
         "photo_description": "ảnh 1: cốc nguyên vẹn, màu xanh"
+      }
+    },
+    {
+      "order_id": "DH08",
+      "source": "data_that: evidence/shopee-reviews.csv A006 (đánh giá 1 sao, 2024-08, sản phẩm SP01)",
+      "product": "Ly thủy tinh (sản phẩm SP01, Shopee)",
+      "fragile": true,
+      "value_vnd": null,
+      "carrier": null,
+      "packing_log": {},
+      "shipping_log": [],
+      "customer_claim": {
+        "id": "KH-DH08",
+        "time": "2024-08",
+        "text": "nhận hàng cốc vỡ vụn, shop bọc chống sốc mỏng",
+        "photo_description": "không có trong dữ liệu nguồn (đánh giá công khai chỉ có chữ)"
+      }
+    },
+    {
+      "order_id": "DH09",
+      "source": "data_that: evidence/shopee-reviews.csv A021 (đánh giá 1 sao, 2026-10, sản phẩm SP03)",
+      "product": "Ly thủy tinh (sản phẩm SP03, Shopee)",
+      "fragile": true,
+      "value_vnd": null,
+      "carrier": null,
+      "packing_log": {},
+      "shipping_log": [],
+      "customer_claim": {
+        "id": "KH-DH09",
+        "time": "2026-10",
+        "text": "gói hời hợt, bọc hớ hênh, đổi trả thì không cho",
+        "photo_description": "không có trong dữ liệu nguồn (đánh giá công khai chỉ có chữ)"
+      }
+    },
+    {
+      "order_id": "DH10",
+      "source": "data_that: evidence/shopee-reviews.csv A023 (đánh giá 1 sao, 2025-01, sản phẩm SP03)",
+      "product": "Ly thủy tinh (sản phẩm SP03, Shopee)",
+      "fragile": true,
+      "value_vnd": null,
+      "carrier": null,
+      "packing_log": {},
+      "shipping_log": [],
+      "customer_claim": {
+        "id": "KH-DH10",
+        "time": "2025-01",
+        "text": "đóng gói nhiều xốp nhưng bình bị nứt, shop vẫn cố gửi",
+        "photo_description": "không có trong dữ liệu nguồn (đánh giá công khai chỉ có chữ)"
+      }
+    },
+    {
+      "order_id": "DH11",
+      "source": "data_that: evidence/shopee-reviews.csv A028 (đánh giá 1 sao, 2025-08, sản phẩm SP03)",
+      "product": "Ly thủy tinh (sản phẩm SP03, Shopee)",
+      "fragile": true,
+      "value_vnd": null,
+      "carrier": null,
+      "packing_log": {},
+      "shipping_log": [],
+      "customer_claim": {
+        "id": "KH-DH11",
+        "time": "2025-08",
+        "text": "nắp cốc nứt rõ, chẳng biết do hàng lỗi trước hay do bên vận chuyển",
+        "photo_description": "không có trong dữ liệu nguồn (đánh giá công khai chỉ có chữ)"
+      }
+    },
+    {
+      "order_id": "DH12",
+      "source": "data_that: evidence/shopee-reviews.csv A030 (đánh giá 1 sao, 2024-10, sản phẩm SP03)",
+      "product": "Ly thủy tinh (sản phẩm SP03, Shopee)",
+      "fragile": true,
+      "value_vnd": null,
+      "carrier": null,
+      "packing_log": {},
+      "shipping_log": [],
+      "customer_claim": {
+        "id": "KH-DH12",
+        "time": "2024-10",
+        "text": "thiếu ống hút và bị bể 1 cốc",
+        "photo_description": "không có trong dữ liệu nguồn (đánh giá công khai chỉ có chữ)"
+      }
+    },
+    {
+      "order_id": "DH13",
+      "source": "data_that: evidence/shopee-reviews.csv A015 (đánh giá 1 sao, 2026-09, sản phẩm SP02)",
+      "product": "Ly thủy tinh (sản phẩm SP02, Shopee)",
+      "fragile": true,
+      "value_vnd": null,
+      "carrier": null,
+      "packing_log": {},
+      "shipping_log": [],
+      "customer_claim": {
+        "id": "KH-DH13",
+        "time": "2026-09",
+        "text": "đặt nắp tím giao nắp trắng",
+        "photo_description": "không có trong dữ liệu nguồn (đánh giá công khai chỉ có chữ)"
+      }
+    },
+    {
+      "order_id": "DH14",
+      "source": "data_that: evidence/shopee-reviews.csv A009 (đánh giá 1 sao, 2023-08, sản phẩm SP01)",
+      "product": "Ly thủy tinh (sản phẩm SP01, Shopee)",
+      "fragile": true,
+      "value_vnd": null,
+      "carrier": null,
+      "packing_log": {},
+      "shipping_log": [],
+      "customer_claim": {
+        "id": "KH-DH14",
+        "time": "2023-08",
+        "text": "shop gửi thiếu cái cọ",
+        "photo_description": "không có trong dữ liệu nguồn (đánh giá công khai chỉ có chữ)"
+      }
+    },
+    {
+      "order_id": "DH15",
+      "source": "data_that: evidence/shopee-reviews.csv A014 (đánh giá 1 sao, 2025-05, sản phẩm SP02)",
+      "product": "Ly thủy tinh (sản phẩm SP02, Shopee)",
+      "fragile": true,
+      "value_vnd": null,
+      "carrier": null,
+      "packing_log": {},
+      "shipping_log": [],
+      "customer_claim": {
+        "id": "KH-DH15",
+        "time": "2025-05",
+        "text": "rớt từ độ cao thấp là bể",
+        "photo_description": "không có trong dữ liệu nguồn (đánh giá công khai chỉ có chữ)"
       }
     }
   ]

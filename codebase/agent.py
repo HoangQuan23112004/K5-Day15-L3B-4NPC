@@ -63,9 +63,13 @@ Nên làm:
 
 
 def _fmt_order(order, packing, shipping, claim, deadline):
-    lines = ["ĐƠN %s · %s · %s · giá trị %sđ · vận chuyển: %s (%s)" % (
+    value = ("{:,}đ".format(order["value_vnd"]).replace(",", ".") if order.get("value_vnd") is not None
+             else "không rõ")
+    carrier = ("%s (%s)" % (order["carrier_name"], order["carrier"]) if order.get("carrier")
+               else "không rõ")
+    lines = ["ĐƠN %s · %s · %s · giá trị %s · vận chuyển: %s" % (
         order["order_id"], order["product"], "hàng dễ vỡ" if order["fragile"] else "không ghi dễ vỡ",
-        "{:,}".format(order["value_vnd"]).replace(",", "."), order["carrier_name"], order["carrier"])]
+        value, carrier)]
     lines.append("\nLOG ĐÓNG GÓI:")
     if packing:
         lines.append("[%s] %s · người đóng: %s · vật liệu: %s · video: %s · ghi chú: %s" % (

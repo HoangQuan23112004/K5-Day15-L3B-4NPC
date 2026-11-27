@@ -124,7 +124,7 @@ flowchart TD
 
 | Thời điểm | Đổi gì | Vì sao (trỏ về câu thử / lỗi / bằng chứng nào) |
 |---|---|---|
-|  |  |  |
+| 27/11 tối | Thêm 8 đơn DH08–DH15 vào `data/orders.json`, dựng từ đánh giá Shopee thật (A006, A021, A023, A028, A030, A015, A009, A014). Chỉ có lời người mua, không có log. Thêm 10 câu thử R01–R10 (`data_that`), bộ câu thử từ 20 lên 30 câu. `codebase/agent.py` hiện "không rõ" khi đơn thiếu giá trị hoặc đơn vị vận chuyển. **Không sửa** chuẩn "đạt" và `metric_spec.yaml`: ngưỡng tính theo %, số câu ghi trong ngoặc là của bộ 20 câu lúc chốt | `run.py check` báo 0/20 câu từ data thật, CP3 cần ≥1/3 (giờ 10/30) · nguồn: `evidence/shopee-reviews.csv` |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 
