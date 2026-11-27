@@ -112,7 +112,7 @@ flowchart TD
   - Log đóng gói, log vận chuyển, khiếu nại: DH01–DH07 **giả** — nhóm tự viết (`synthetic`). DH08–DH15 dựng từ **đánh giá Shopee thật** (`evidence/shopee-reviews.csv`), nhưng chỉ có lời người mua — **không có** log đóng gói, log vận chuyển, đơn vị vận chuyển (xem `data/DATA_CARD.md`).
   - Đơn vị vận chuyển VC-A, VC-B và hạn khiếu nại 7 / 5 ngày: **giả lập** *(tự ước tính)*, không phải chính sách hãng thật.
   - Ngày xử lý = ngày chạy máy (đặt `DAMAGECHECK_TODAY=YYYY-MM-DD` để chạy lại đúng một ngày).
-  - Model: đang ở **chế độ giả** cho tới khi nối model thật (CP3).
+  - Model: **đã gọi API thật** bằng `gemini-3.5-flash-lite` trong lượt thử 10 phiên và `run-1@20261127-222917` (lượt 1 chính thức); token lấy từ usage. Máy chưa cấu hình `.env` vẫn mặc định `fake`, không tính các lượt đó vào kết quả.
 
 ## §5. Chỗ khó — 4 lớp + ≥6 kịch bản + 2 tấn công *(guide 2.3)*
 
@@ -156,10 +156,10 @@ Các tình huống dưới đây mô tả **hành vi mong muốn**, đối chi�
   - Lượt 1 (`gemini-3.5-flash-lite`, `DAMAGECHECK_TODAY=2026-11-27`): thuong 8/9 · kho 9/14 · tu_choi 7/7 · can_cu_co_that 27/30 · khong_doan_khi_thieu 6/6 → **chưa đạt** (trượt can_cu_co_that: R02, R03, R04 trích mã không có trong `data/orders.json`)
 
 ## §8. Chi phí khi dùng thật *(guide 4.2)*
-- Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-__.csv` (__ phiên)
-- Chi phí / task thành công: __ (model __) · __ (model __)
-- Chi phí / tháng ở quy mô thật: thấp __ · cơ sở __ · cao __ → chi tiết `cost/cost-estimate.md`
-- So với impact / người / tháng (§2): đáng làm không, vì sao:
+- Persona + giá: `cost/personas.yaml`. 3 nhóm shop ít/vừa/nhiều đơn: 100/300/800 đơn mỗi tháng *(tự ước tính)* × A5 của Vĩnh ≈0,38% → 0,38/1,14/3,04 phiên/tháng; share 0,5/0,3/0,2. Giả định mọi ca vỡ dùng DamageCheck, 1 phiên/ca; chưa phải hành vi dùng thật.
+- Quy mô thấp/cơ sở/cao: 10/50/100 chủ shop *(tự ước tính)*. Hai tầng giá chép từ [bảng BTC](https://github.com/VinUni-AI20k/K5-L3-Day15-AI-Product-Hackathon/blob/main/further-reading/model-prices.md), BTC tra 25/11, nhóm đối chiếu 27/11: `gemini-3.5-flash-lite` (0,30 vào / 2,50 ra), `gemini-4-hydrogen` (1,50 vào / 7,50 ra), USD/1 triệu token, Standard.
+- Lượt thử `simulate-try@20261127-223433`: **10/10 phiên API thật không lỗi**, token vào 13.826 / ra 2.955, model `gemini-3.5-flash-lite`, chi phí trung bình thử $0.0012/phiên theo bảng summary. Lượt này chưa tính nộp ≥50 phiên; chưa có eval đã chấm để tính /task thành công. Mẫu try không có shop nhiều đơn. Chi tiết và bảng so giá: `cost/cost-estimate.md`; phụ thuộc: `cost/README.md`.
+- So với impact/người/tháng (§2): chưa đủ số thời gian/tiền mỗi ca để kết luận. Nguồn, cách suy ra và giới hạn review: `cost/cost-estimate.md`.
 
 ## §9. Rủi ro & an toàn
 - Dữ liệu: đã ẩn danh gì, không thu gì, không đưa gì vào model gói miễn phí:
@@ -182,6 +182,9 @@ Các tình huống dưới đây mô tả **hành vi mong muốn**, đối chi�
 | 27/11 đêm (Hiếu) | Chấm lượt 1: điền cột `pass`, `ghi_chu` trong `eval/run-1.csv` (24/30). Thêm `eval/grade.py`: áp 4 metric bằng code, chỉ in đề xuất 1/0, không ghi file. Điền §7 dòng "Kết quả", `eval/report.md` mục 1–2, `eval/README.md` mục 1–5. §7 dòng data cập nhật số câu 20 → 30 cho khớp benchmark hiện tại; **không sửa** câu chuẩn "đạt" | metric_spec ghi `grader: code` nhưng repo chưa có script chấm. Lượt 1 chấm tay trước, sau đó chạy `grade.py` đối chiếu: khớp 30/30 |
 | 27/11/2026 22:08 (Khoa, Codex hỗ trợ) | Hoàn thiện §5: 13 kịch bản khó và 2 tấn công, đủ 4 lớp; liên kết ID benchmark và nêu rõ hành vi mong muốn, chưa phải kết quả chạy | Theo yêu cầu của Khoa và các câu K01–K07, B06, T01–T05, R01–R05, R08–R10. Không gọi API, không đổi code, benchmark, metric hoặc chuẩn đạt §7 |
 | 27/11 đêm (Vĩnh) | Viết §1, §2 từ bằng chứng: Bộ A 21/61 hàng vỡ, 0/10 shop nhắc đòi bồi thường; Bộ B 0/8 về hàng vỡ. §2: 4 hướng, chọn hướng 1 (phân xử ai chịu), impact ≈ 1.000 shop × 1,1 ca × 30 phút; **đổi trọng tâm** từ "đòi bồi thường vận chuyển" sang "phân xử có căn cứ" | `evidence/summary.md` mục 5: ngưỡng "≥50% shop tự chịu" không đạt (4/21 shop, 6/21 khách chịu); shop không đi đòi bồi thường (A4 = 0/10). Không đổi lát cắt, metric hay chuẩn đạt |
+| 27/11/2026 (Khoa, Codex hỗ trợ) | Hoàn thiện persona theo A5 ≈0,38%, đối chiếu giá 2 tầng với bảng repo đề, chuẩn bị phiếu chấm 5 output/lời mời dùng thử và cập nhật §8. Tính so nhãn 20 dòng sau khi khóa nhãn | `evidence/summary.md` A5; bảng giá BTC tra 25/11; vỡ khớp 20/20, nguyên nhân 7/8 (A035 chờ thống nhất). Chưa có API key, output lượt 1, người thử hoặc xác nhận Quân duyệt; không bịa kết quả, không sửa chuẩn §7/metric |
+| 27/11/2026 (Khoa, Codex hỗ trợ) | Chọn gemini-3.5-flash-lite; chạy thử 10 phiên và bộ eval 30 câu; cập nhật hồ sơ, Khoa kiểm tay và chốt phiếu chấm độc lập 5 output, không điền pass CSV chính | `simulate-try@20261127-223433`: 10/10 không lỗi. `run-1@20261127-223619`: 30/30 có output, lỗi kỹ thuật 0. Khoa chốt phiếu 5 câu phát hiện R01 ghi mã DG-DH08/VC-DH08 không có trong hồ sơ (chấm 0). Chờ Hiếu chấm chính thức 30 câu để so độ khớp 5 câu và chạy lượt 2 trước mô phỏng ≥50 phiên; giữ nguyên chuẩn §7, code, benchmark/metric và kết quả gốc |
+| 27/11 đêm (Quân, merge nhánh `khoa/cp3-personas-readiness`) | Lấy vào main phần của Khoa: `cost/personas.yaml`, `cost/cost-estimate.md`, §8, `validation/log.md`, README "Phần nào thật", phiếu `eval/second-review.md`. **Giữ `eval/run-1.csv` / `traces/run-1.jsonl` của main** (`run-1@20261127-222917`, Hiếu đã chấm 24/30); bản `run-1@20261127-223619` của Khoa không đưa vào main (vẫn còn trong lịch sử nhánh) | Hai lượt cùng tên `run-1`. Lượt của Khoa chạy bằng prompt ở `edc6213`, trước khi sửa quy tắc 1 và 8; lượt của main chạy bằng prompt hiện tại và đã chấm. Phiếu 5 câu của Khoa chấm trên output của lượt Khoa nên chưa dùng để tính độ khớp người chấm thứ hai — cần chấm lại trên `run-1@20261127-222917` |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 
