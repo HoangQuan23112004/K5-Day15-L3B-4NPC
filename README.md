@@ -84,7 +84,7 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 | Thành phần | Thật / Giả | Ghi chú |
 |---|---|---|
-| Lời gọi AI ở quyết định trung tâm | **Thật** — đã gọi được API | Model: `gemini-3.5-flash-lite`; Khoa chạy thử 10 phiên, run `simulate-try@20261127-223433`, token lấy từ usage |
+| Lời gọi AI ở quyết định trung tâm | **Thật** — đã gọi được API | Model: `gemini-3.5-flash-lite`; đã chạy eval chính thức (`run-1`, `run-2` đạt 28/30 = 93%) và mô phỏng chi phí 50 phiên (`simulate-1@20261127-234357`, 0/50 lỗi), token lấy từ usage |
 |  |  |  |
 
 ## Dùng AI vào việc gì

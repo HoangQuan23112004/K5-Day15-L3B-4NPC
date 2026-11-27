@@ -9,9 +9,9 @@ Ngày 27/11/2026 · CP3: 10:00 ngày 28/11 · CP4: 14:30 ngày 28/11.
 | Persona | Đã điền 3 persona theo số đơn/tháng, share cộng 1; uses_per_month suy từ A5 của Vĩnh | Số shop, share, số đơn và tỷ lệ dùng là tự ước tính, chưa có khảo sát xác nhận |
 | Giá ≥2 model | Đã đối chiếu bảng BTC: tầng Nhỏ `gemini-3.5-flash-lite`, tầng Lớn `gemini-4-hydrogen`; có link và ngày xem | Khoa đã chọn chạy `gemini-3.5-flash-lite`; model còn lại dùng so giá |
 | Spec §5 | Đã có trên main ở `607f8a6`: 13 kịch bản + 2 tấn công, đủ 4 lớp | Quân đã duyệt và cập nhật quy tắc 1, 8 trước khi chạy lượt 1 |
-| Chấm độc lập 5 output lượt 1 | Đã trích 5 output (`B01, K02, R01, T02, T04`) của lượt 1 chính thức `run-1@20261127-222917` sang `eval/second-review-outputs.md` (không kèm cột `pass`) và mẫu chấm ở `eval/second-review.md` | Theo phân công của Quân (do Khoa viết §5), nhờ Vĩnh chấm độc lập 5 câu trên `run-1@20261127-222917` để điền độ khớp `__/5` vào `eval/README.md` mục 3 |
+| Chấm độc lập 5 output lượt 1 | Đã trích 5 output (`B01, K02, R01, T02, T04`) của lượt 1 chính thức `run-1@20261127-222917` sang `eval/second-review-outputs.md` (không kèm cột `pass`) và mẫu chấm ở `eval/second-review.md` | Đã hoàn tất: Vĩnh chấm độc lập trên `run-1@20261127-222917`, khớp 5/5 với Hiếu (`eval/second-review.md`) |
 | Kiểm chéo 20 dòng của Vĩnh | Đã điền và Khoa xác nhận kiểm tay; Vĩnh đã đối chiếu và thống nhất dòng A035 theo Khoa (`shop`) | Đã hoàn tất: `vo_khi_giao` khớp 20/20, `loi_do` khớp 7/8 (đã ghi vào `evidence/data-mining.md` mục 5 và `evidence/kiem-cheo.md`) |
-| Thử mô phỏng 10 phiên | Đã chạy `gemini-3.5-flash-lite`, 10/10 không lỗi, run `simulate-try@20261127-223433` | Lượt thử không tính bản nộp ≥50 phiên; lượt 1 `run-1@20261127-222917` đạt 24/30 (80%), bản ≥50 phiên ở CP4 sẽ chạy với `--rate-from eval/run-2.csv` |
+| Thử mô phỏng 10 phiên & mô phỏng chính thức 50 phiên | Đã chạy thử 10/10 phiên (`simulate-try@20261127-223433`) và **mô phỏng chính thức 50/50 phiên không lỗi** (`simulate-1@20261127-234357`, `--rate-from eval/run-2.csv`, tỉ lệ đạt lượt 2 = 28/30 = 93%) | Đã cập nhật `cost/cost-estimate.md` và `spec.md` §8, §10; còn đưa tóm tắt lên slide |
 | Hẹn 2–3 người ngoài nhóm | Có lời mời và kịch bản 10 phút ở `validation/log.md` | Khoa xác nhận chưa có người ngày 27/11; chưa gửi lời mời hoặc có lịch hẹn |
 
 ## 2. Cách suy ra tần suất
@@ -59,5 +59,5 @@ File try chỉ dùng tên cố định: không chạy lại ghi đè lượt đ�
 - Bộ đọc YAML của chính khung đọc được cấu hình, không có cảnh báo; 3 persona, share = 1, đủ 2 giá đúng bảng BTC.
 - Sinh kế hoạch ngoại tuyến 10/50 phiên, seed 42 tái lập được và đủ 3 persona trong kế hoạch đầy đủ. Đây không phải mô phỏng đã gọi API; không tạo CSV kết quả để thay thế lượt thật.
 - Kiểm nhãn 20 dòng không thay đổi so với bản đã lưu trước khi đối chiếu. §5, chuẩn §7, benchmark, metric và code khung giữ nguyên.
-- Đã gọi API thật 10 phiên: tổng token vào 13.826 / ra 2.955, lỗi 0/10; file CSV/summary/trace được giữ nguyên. Lượt thử không có mẫu shop nhiều đơn, chưa coi là kết quả mô phỏng đầy đủ.
-- Lượt 1 chính thức trên `main` là `run-1@20261127-222917` (Hiếu đã chấm 24/30 = 80%). Đã trích 5 output của `run-1@20261127-222917` sang `eval/second-review-outputs.md` để người chấm thứ hai chấm đúng lượt chính thức.
+- Đã gọi API thật 10 phiên thử (`simulate-try@20261127-223433`: token vào 13.826 / ra 2.955, lỗi 0/10) và **50 phiên chính thức** (`simulate-1@20261127-234357`: token vào 74.200 / ra 11.840, 45 lần gọi model, 227 lần gọi công cụ, lỗi 0/50, phủ đủ 3 persona 26/14/10 phiên, lấy tỉ lệ đạt 28/30 = 93% từ `eval/run-2.csv`); các file CSV/summary/trace gốc được giữ nguyên không sửa tay.
+- Lượt 1 (`run-1@20261127-222917`, 24/30 = 80%) và lượt 2 (`run-2@20261127-230337`, 28/30 = 93%, đạt chuẩn §7) đã được Hiếu chấm chính thức; Vĩnh đã chấm độc lập 5 output lượt 1 khớp 5/5 (`eval/second-review.md`).
