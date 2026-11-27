@@ -4,30 +4,48 @@
 > Đầu mỗi mục ghi bước guide (`02-guide.md` trong repo đề) chỉ cách điền. Mỗi mục ngắn, có số và nguồn; chi tiết để ở file được trỏ tới. Xoá dòng hướng dẫn trong ngoặc vuông khi điền xong.
 
 Track: [ ] A · [ ] B · [ ] C · [x] D · [ ] E — bài toán: trợ lý xác định trách nhiệm khi hàng bị vỡ/hỏng cho shop online nhỏ
-Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
+Data BTC cấp đã dùng (nếu có — không commit nguyên file): không có — Track D BTC không cấp data; bằng chứng là review công khai (`evidence/`)
 
 ## §0. Hiện tại việc này diễn ra thế nào *(guide 1.1)*
 - Luồng hiện tại của việc này, trong khoá hoặc trên app thật (3–5 bước; ảnh chụp từ tài khoản của mình, đã che thông tin):
 - Công cụ / AI đang được dùng cho việc này (nếu có) + nguồn. Không kiểm được thì ghi "chưa kiểm":
 
 ## §1. Người dùng & bằng chứng *(guide 1.1, 1.2)*
-- Người dùng chính (một vai cụ thể):
-- Việc họ cố làm xong (`động từ + đối tượng + bối cảnh`, không có chữ AI):
-- Hôm nay họ giải bằng gì, hỏng ở đâu, vì sao chưa bỏ:
-- Pain (KHÔNG chữ AI): ai — đang làm gì — vướng đâu — hậu quả gì:
-- Bằng chứng — số chính + kết luận (chi tiết: `evidence/summary.md`): __
+- **Người dùng chính:** chủ shop online nhỏ bán **hàng dễ vỡ** (ly thủy tinh, bình gốm, chai lọ mỹ phẩm, bánh hộp…), tự đóng gói, tự gửi qua đơn vị vận chuyển và **tự trả lời khách** khi khách báo hàng đến tay bị vỡ; khoảng dưới 1.000 đơn / tháng *(tự ước tính ngưỡng "nhỏ")*.
+- **Việc họ cố làm xong:** xác định **ai phải chịu** khi khách báo hàng đến tay bị vỡ, rồi trả lời khách và quyết định có khiếu nại đơn vị vận chuyển hay không — trong lúc khách đang chờ và trước khi hết hạn khiếu nại.
+- **Hôm nay họ giải bằng gì, hỏng ở đâu, vì sao chưa bỏ:**
+  - Giải bằng: nhắn khách xin ảnh / video mở hàng, tự mở lại camera đóng gói (*"kiểm tra check cam"* — `A030`), rồi trả lời đánh giá theo mẫu. Trong 10 ca hàng vỡ shop có trả lời, **5/10** đổ cho vận chuyển, thường bằng một câu mẫu *"Có thể trong quá trình vận chuyển…"* (`A048`–`A050`).
+  - Hỏng ở: không có cách đối chiếu nhanh đóng gói, vận chuyển và lời khách, nên kết luận theo cảm tính — **3/10** ca hai bên đổ lỗi cho nhau, không ai đưa căn cứ; kết cục lúc shop tự gánh (4/21), lúc đẩy cho khách (6/21, *"Shop kêu thông cảm vì quá trình giao"* — `A060`); **0/10** phản hồi nhắc tới đòi bồi thường đơn vị vận chuyển.
+  - Vì sao chưa bỏ: hoàn / gửi bù hoặc né là **nhanh nhất** để giữ đánh giá; còn đi khiếu nại hãng thì hạn ngắn (GHTK ≤03 ngày làm việc, GHN 01 tháng — xem §3), đòi đúng bằng chứng (video mở hàng, video đóng gói) và CSKH khó liên hệ (**4/20** review 1 sao app GHTK nói không liên hệ được CSKH — `B008`, `B015`, `B017`, `B018`).
+- **Pain:** chủ shop online nhỏ bán hàng dễ vỡ — đang xử lý khiếu nại hàng đến tay bị vỡ — không có cách đối chiếu nhanh đóng gói, hành trình vận chuyển và lời khách để biết lỗi ở đâu — nên quyết theo cảm tính: lúc tự gánh tiền hàng, lúc đẩy thiệt cho khách và ăn đánh giá 1 sao, và hầu như không đòi lại được gì từ đơn vị vận chuyển.
+- **Bằng chứng — số chính + kết luận** (chi tiết: `evidence/summary.md`, cách đếm `evidence/data-mining.md`, chạy lại `python evidence/count.py`):
+  - **Bộ A** (đánh giá 1–2 sao công khai trên Shopee, 9 sản phẩm hàng dễ vỡ, N = 61; nhãn kiểm chéo 20/20): **21/61 (34%)** đánh giá xấu nói hàng đến tay đã vỡ / hỏng · trong 21 ca: người mua nói do shop đóng gói 10, do vận chuyển 0, không nói 11 · shop chịu 4, khách chịu 6, không rõ 11 · **0/10** phản hồi của shop nhắc khiếu nại vận chuyển · 3/9 sản phẩm ghi trong mô tả sẽ tự đổi / hoàn khi vỡ do vận chuyển.
+  - **Bộ B** (20 review 1 sao mới nhất app GHTK trên Google Play): 0/8 phàn nàn của người gửi hàng là về hàng vỡ — họ than chủ yếu về lấy / giao chậm (5/8) và phí (3/8); 4/20 không liên hệ được CSKH.
+  - **Kết luận:** giả thuyết **đúng một phần, phải đổi trọng tâm** — hàng vỡ là sự cố **không thường xuyên nhưng mỗi lần khó phân xử**; giá trị nằm ở **phân xử có căn cứ, nhanh**, không phải ở "đòi được nhiều bồi thường hơn". Chưa biết: mỗi ca mất bao nhiêu phút, shop có khiếu nại hãng ngoài những gì viết công khai không (chưa hỏi được chủ shop).
 
 ## §2. Impact & quyết định chọn *(guide 1.3)*
 
-| Hướng | Bao nhiêu người gặp | Bao nhiêu lần / tháng | Mỗi lần tốn gì | Impact / tháng | Làm kịp không | Chọn? |
-|---|---|---|---|---|---|---|
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
+Các hướng lấy từ chính bằng chứng ở §1: Bộ A cho hướng 1 và 4, Bộ B cho hướng 2 và 3. Đơn vị: một shop nhỏ ~300 đơn / tháng *(tự ước tính)*.
 
-- **Impact / tháng** của hướng chọn = __ người × __ lần × __ phút = __ — nguồn từng thừa số: __ (không có nguồn thì ghi rõ *(tự ước tính)*)
-- Hướng ĐÃ LOẠI + vì sao (giữ lại, đừng xoá):
-- Số lần / tháng của từng kiểu người dùng (dùng cho persona ở §8):
+| Hướng | Bao nhiêu người gặp | Bao nhiêu lần / tháng (1 shop) | Mỗi lần tốn gì | Impact / tháng (1 shop) | Làm kịp không | Chọn? |
+|---|---|---|---|---|---|---|
+| **1. Phân xử ai chịu khi khách báo hàng vỡ** (đối chiếu đóng gói, vận chuyển, lời khách → kết luận + bản nháp) | Shop bán hàng dễ vỡ: 21/61 đánh giá xấu của nhóm hàng này là hàng vỡ (Bộ A) | **≈ 1,1 ca** = 300 đơn × 0,38% (A5, Bộ A) | **~30 phút** *(tự ước tính)* + **~50.000đ** tiền hàng bị phân xử (trung vị giá 9 sản phẩm trong mẫu) + rủi ro 1 sao khi đẩy cho khách (6/21) | **≈ 33 phút + ~55.000đ** tiền hàng tranh chấp | **Có** — bản chạy thử đã chạy đủ luồng (§4) | **Chọn** |
+| 2. Theo dõi, giục đơn lấy / giao chậm với đơn vị vận chuyển | Người gửi hàng: 5/8 phàn nàn trong Bộ B là chậm | Cao hơn hướng 1 nhiều — chậm có thể xảy ra với mọi đơn *(chưa đo, tự ước tính: vài lần / tuần)* | Thời gian gọi / nhắn CSKH, khách huỷ đơn (`B017`) | Có thể lớn hơn hướng 1 *(chưa định lượng được)* | **Không** — cần dữ liệu hành trình thật của hãng (không có API), hãng đã có màn hình theo dõi | Loại |
+| 3. Kiểm phí ship, đối soát tiền COD | Người gửi hàng: 3/8 phàn nàn trong Bộ B là phí / COD | Mỗi kỳ đối soát *(tự ước tính: 4 lần / tháng)* | Tiền phí bị tính sai, vd 105k → 373k vì sửa cân (review GHTK ngoài mẫu, chỉ minh hoạ) | *(chưa định lượng được)* | Có, nhưng **là phép tính** — làm bằng code đối chiếu bảng giá, không cần AI quyết định | Loại |
+| 4. Soạn trả lời đánh giá 1–2 sao cho shop | Bộ A: 33/61 đánh giá xấu có shop trả lời, nhiều câu lặp theo mẫu | Thấp: 205 đánh giá 1–2 sao trên 18.566 đánh giá của 9 sản phẩm (1%) | Vài phút / đánh giá *(tự ước tính)* | Thấp | Có | Loại — chỉ đổi câu chữ, không giải quyết được ai chịu tiền |
+
+- **Impact / tháng** của hướng chọn = **1.000 shop × 1,1 ca × 30 phút ≈ 33.000 phút (~550 giờ) / tháng**, cộng **≈ 55 triệu đồng / tháng** tiền hàng được phân xử có căn cứ (1.000 × 1,1 × 50.000đ). Nguồn từng thừa số:
+  - 1.000 shop: *(tự ước tính)* — quy mô nhắm tới năm đầu. Không tìm được tổng số shop có đơn từ nguồn công khai; chỉ biết thị trường đang co lại: số gian hàng có phát sinh đơn trên Shopee, Lazada, Tiki, TikTok Shop **giảm hơn 80.000** nửa đầu 2025 so với cùng kỳ (Metric.vn, trích ở [Tuổi Trẻ 25/07/2025](https://tuoitre.vn/hang-chuc-ngan-shop-roi-san-thuong-mai-dien-tu-20250725073542881.htm), [VnBusiness 28/07/2025](https://vnbusiness.vn/hon-80000-gian-hang-khong-phat-sinh-don-thuong-mai-dien-tu-buoc-vao-giai-doan-sang-loc.html), xem 27/11/2026).
+  - 1,1 ca / tháng: 300 đơn / tháng *(tự ước tính)* × **0,38%** (A5 = 205/18.566 đánh giá 1–2 sao × 21/61 nói hàng vỡ — `evidence/data-mining.md`; giả định mỗi đánh giá ≈ một đơn, có thể lệch cả hai chiều).
+  - 30 phút / ca: *(tự ước tính)* — đọc tin khách, xin ảnh / video, mở camera đóng gói, xem hành trình, trả lời. Chưa đo được vì không phỏng vấn được chủ shop.
+  - 50.000đ / ca: trung vị giá của 9 sản phẩm trong mẫu Bộ A, theo giá hiển thị ngày 27/11/2026 (thấp nhất 3.600đ, cao nhất 195.000đ). Đơn có nhiều món thì lớn hơn (vd 5 hộp — `A058`, 60 que — `A060`).
+  - **Đọc kết quả thật thà:** với một shop, impact nhỏ (~33 phút và ~55.000đ / tháng). Hướng 1 được chọn vì là hướng duy nhất trong bảng **cần một quyết định có phán đoán** (ai chịu, dựa trên căn cứ nào) và **làm kịp** — không phải vì impact lớn nhất. Hướng 2 nhiều khả năng đau hơn nhưng không làm được trong hackathon. Chi phí AI / ca vì thế phải rất thấp mới đáng làm (§8).
+- **Hướng ĐÃ LOẠI + vì sao:** hướng 2 (chậm giao — cần dữ liệu hành trình thật, không có quyết định cho AI) · hướng 3 (phí / COD — là phép tính, làm bằng code) · hướng 4 (trả lời đánh giá — không đổi được ai chịu tiền). Ban đầu (CP1) nhóm nghĩ giá trị chính là **đòi bồi thường từ đơn vị vận chuyển**; bằng chứng cho thấy shop hầu như không đi đòi (0/10) và khách cũng hay phải chịu (6/21), nên giữ lát cắt nhưng đổi trọng tâm sang **phân xử có căn cứ** (xem `evidence/summary.md` mục 5).
+- **Số lần / tháng của từng kiểu người dùng** (cho persona ở §8 — mỗi ca hàng vỡ là một phiên dùng DamageCheck, 2–3 lượt hỏi / phiên *(tự ước tính)*: hỏi lỗi ai → soạn tin khách → soạn đơn đòi bồi thường):
+  - Shop rất nhỏ ~100 đơn / tháng → ≈ **0,4 ca / tháng**
+  - Shop nhỏ ~300 đơn / tháng → ≈ **1,1 ca / tháng**
+  - Shop vừa ~1.000 đơn / tháng → ≈ **3,8 ca / tháng**
+  - Cả ba: số đơn / tháng *(tự ước tính)* × 0,38% (A5). Tỉ lệ từng kiểu: *(tự ước tính)*, Khoa chốt trong `cost/personas.yaml`.
 
 ## §3. Giải pháp tương tự *(guide 2.1)*
 - **Bảo hiểm Thiệt hại sản phẩm trên Shopee** (MSIG qua Fuse; [trang bảo hiểm](https://insurance.shopee.vn/ec/ec-pdp.html?from=pdp&locale=VI&product_id=1967808564094407209) · [quy tắc MSIG](https://tructuyen.msig.com.vn/assets/documents/shopee/merchandise/Damage_Insurance_Wording.pdf), xem 27/11/2026 — chi tiết `evidence/data-mining.md` mục Tài liệu tham khảo): người mua tự mua kèm khi thanh toán, đền khi thiệt hại toàn bộ (≥75% giá trị) do sự cố bất ngờ, chất lỏng, mất cắp.
@@ -161,6 +179,7 @@ Các tình huống dưới đây mô tả **hành vi mong muốn**, đối chi�
 | 27/11 đêm (Quân, sau khi duyệt §5 của Khoa) | `SYSTEM` quy tắc 8 trong `codebase/agent.py`: thêm "thiếu phụ kiện" vào ví dụ ngoài phạm vi; khiếu nại vừa có phần vỡ/hỏng vừa có phần ngoài phạm vi → vẫn kết luận phần vỡ/hỏng, thêm dòng "Ngoài phạm vi:" cho phần còn lại. Sửa trước lượt 1 | Quy tắc cũ bảo bỏ dòng `Kết luận:` khi có phần ngoài phạm vi → khiếu nại gộp (R06: thiếu ống hút + bể cốc) có thể mất kết luận cho phần bể |
 | 27/11 đêm (Quân, sau `eval --try`) | Chọn model `gemini-3.5-flash-lite` (Gemini, endpoint tương thích OpenAI). `SYSTEM` quy tắc 1: ngoặc vuông chỉ dùng cho mã DG- / VC- / KH-, mỗi ngoặc một mã; thông tin đơn và hạn khiếu nại ghi bằng lời. Sửa trước lượt 1 | `gemini-3.8-flash` quá 60 giây / câu (bị ngắt). Lượt thử B01–B03 ra đúng kết luận nhưng model đặt `[HẠN KHIẾU NẠI …]`, `[ĐƠN DH02]` và nhiều mã chung một ngoặc → dễ bị metric `can_cu_co_that` tính là căn cứ bịa. Sau khi sửa: 3/3 câu chỉ có ngoặc là mã thật |
 | 27/11/2026 22:08 (Khoa, Codex hỗ trợ) | Hoàn thiện §5: 13 kịch bản khó và 2 tấn công, đủ 4 lớp; liên kết ID benchmark và nêu rõ hành vi mong muốn, chưa phải kết quả chạy | Theo yêu cầu của Khoa và các câu K01–K07, B06, T01–T05, R01–R05, R08–R10. Không gọi API, không đổi code, benchmark, metric hoặc chuẩn đạt §7 |
+| 27/11 đêm (Vĩnh) | Viết §1, §2 từ bằng chứng: Bộ A 21/61 hàng vỡ, 0/10 shop nhắc đòi bồi thường; Bộ B 0/8 về hàng vỡ. §2: 4 hướng, chọn hướng 1 (phân xử ai chịu), impact ≈ 1.000 shop × 1,1 ca × 30 phút; **đổi trọng tâm** từ "đòi bồi thường vận chuyển" sang "phân xử có căn cứ" | `evidence/summary.md` mục 5: ngưỡng "≥50% shop tự chịu" không đạt (4/21 shop, 6/21 khách chịu); shop không đi đòi bồi thường (A4 = 0/10). Không đổi lát cắt, metric hay chuẩn đạt |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 
