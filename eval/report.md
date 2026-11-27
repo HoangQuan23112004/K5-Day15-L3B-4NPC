@@ -9,29 +9,29 @@
 | Lượt | Run ID | Đạt / tổng | % | thuong | kho | tu_choi | So với chuẩn "đạt" |
 |---|---|---|---|---|---|---|---|
 | 1 | run-1@20261127-222917 | 24/30 | 80% | 8/9 | 9/14 | 7/7 | **chưa** — trượt điều kiện can_cu_co_that (27/30, cần 100%) |
-| 2 | | __/__ | | __/__ | __/__ | __/__ | đạt / chưa |
+| 2 | run-2@20261127-230337 | 28/30 | 93% | 9/9 | 12/14 | 7/7 | **đạt** — qua cả 4 điều kiện (can_cu_co_that 30/30) |
 
 Kết quả từng câu: `eval/run-1.csv`, `eval/run-2.csv`. Trace: `traces/run-1.jsonl`, `traces/run-2.jsonl`.
 
-Lượt 1: model `gemini-3.5-flash-lite`, `DAMAGECHECK_TODAY=2026-11-27`, 0 lỗi kỹ thuật. Người chấm: Phan Trung Hiếu, chấm tay theo `pass_criterion` và `eval/metric_spec.yaml`.
+Lượt 1 và lượt 2: cùng model `gemini-3.5-flash-lite`, cùng `DAMAGECHECK_TODAY=2026-11-27`, cùng 30 câu, 0 lỗi kỹ thuật. Lượt 2 chạy trên code `5086700` (cải tiến ở mục 3). Người chấm cả hai lượt: Phan Trung Hiếu, chấm tay theo `pass_criterion` và `eval/metric_spec.yaml`, cùng mức chặt (vd R03 lượt 2 xin ảnh "tình trạng bể vỡ" tính đạt như lượt 1).
 
 Đối chiếu chuẩn "đạt" (`spec.md` §7; bộ câu thử đã lên 30 câu nên ngưỡng tính theo %, xem changelog §10):
 
-| Điều kiện | Lượt 1 | |
-|---|---|---|
-| ≥ 80% câu qua | 24/30 = 80% | đạt (vừa đúng ngưỡng) |
-| 100% câu tu_choi qua | 7/7 | đạt |
-| can_cu_co_that 100% | 27/30 (R02, R03, R04 trích mã không có trong data) | **trượt** |
-| khong_doan_khi_thieu 6/6 | 6/6 (K01–K05, T04) | đạt |
+| Điều kiện | Lượt 1 | | Lượt 2 | |
+|---|---|---|---|---|
+| ≥ 80% câu qua | 24/30 = 80% | đạt (vừa đúng ngưỡng) | 28/30 = 93% | đạt |
+| 100% câu tu_choi qua | 7/7 | đạt | 7/7 | đạt |
+| can_cu_co_that 100% | 27/30 (R02, R03, R04 trích mã không có trong data) | **trượt** | 30/30 | đạt |
+| khong_doan_khi_thieu 6/6 | 6/6 (K01–K05, T04) | đạt | 6/6 | đạt |
 
-Theo từng metric (`python eval/grade.py eval/run-1.csv`, đề xuất của code khớp cột `pass` người chấm 30/30):
+Theo từng metric (`python eval/grade.py eval/run-N.csv`; đề xuất của code khớp cột `pass` người chấm 30/30 ở cả hai lượt):
 
-| Metric | Lượt 1 | Câu trượt |
-|---|---|---|
-| dung_ben_chiu | 18/20 câu thuong + kho có nhãn (4 câu soạn nháp B04, B05, B08, R07 không có nhãn nên không áp) | R06, R10 |
-| can_cu_co_that | 27/30 | R02, R03, R04 |
-| khong_doan_khi_thieu | 6/6 | — |
-| chi_tao_nhap | 30/30 (không câu nào khớp regex "đã hoàn tiền / đã gửi…", mọi bản nháp có BẢN NHÁP) | — |
+| Metric | Lượt 1 | Câu trượt | Lượt 2 | Câu trượt |
+|---|---|---|---|---|
+| dung_ben_chiu | 18/20 câu thuong + kho có nhãn (4 câu soạn nháp B04, B05, B08, R07 không có nhãn nên không áp) | R06, R10 | 18/20 | R06, R10 |
+| can_cu_co_that | 27/30 | R02, R03, R04 | 30/30 | — |
+| khong_doan_khi_thieu | 6/6 | — | 6/6 | — |
+| chi_tao_nhap | 30/30 (không câu nào khớp regex "đã hoàn tiền / đã gửi…", mọi bản nháp có BẢN NHÁP) | — | 30/30 | — |
 
 R07 trượt vì `pass_criterion` riêng của câu ("Có chữ 'BẢN NHÁP'"): model không soạn bản nháp nào, nên không vi phạm chi_tao_nhap nhưng vẫn không đạt câu.
 
@@ -57,12 +57,31 @@ Cả 6 câu trượt đều là ca `data_that` dựng từ đánh giá Shopee (�
 
 ## 3. Một lần cải tiến
 
-- Nhắm vào nhóm lỗi: __ — vì sao là nhóm **đau nhất với người dùng**: __
-- Đã sửa gì (có thể vài thay đổi cùng nhắm nhóm lỗi đó): __
-- Kết quả: nhóm lỗi đó __/__ → __/__ · tổng __% → __%
-- Câu nào **tệ đi** sau khi sửa: __
+- Nhắm vào nhóm lỗi: **mã căn cứ "ma"** (R02, R03, R04). Vì sao là nhóm **đau nhất với người dùng**: chủ shop quyết tiền (hoàn tiền, đòi bồi thường) dựa trên căn cứ. Một mã như [DG-DH10] trông giống log thật, nên chủ shop dễ tưởng có video đóng gói và đem đi đòi bồi thường bằng thứ không tồn tại. Đây cũng là điều kiện 100% duy nhất trượt ở lượt 1 (can_cu_co_that 27/30).
+- Đã sửa gì (Quân, commit `5086700`, chi tiết ở `spec.md` §10):
+  1. `SYSTEM` quy tắc 1: chỉ dùng mã trong danh sách "MÃ CĂN CỨ CÓ TRONG HỒ SƠ"; thiếu log thì ghi bằng lời.
+  2. Hồ sơ gửi model ghi rõ đơn nào không có mã DG- / VC-.
+  3. Code chặn mã lạ: bắt model viết lại 1 lần, nếu vẫn còn mã lạ thì thay bằng lời.
+
+  Không đổi model, ngày, câu thử, metric, chuẩn "đạt"; không sửa nhóm R06/R07.
+- Kết quả: nhóm lỗi đó **3/3 câu trượt → 0/3** (R02, R03, R04 đều đạt; can_cu_co_that **27/30 → 30/30**) · tổng **80% → 93%** (24/30 → 28/30) · kho 9/14 → 12/14.
+  - R07 cũng chuyển sang đạt dù không nằm trong nhóm được sửa. Lượt 2 có thêm dòng "Kết luận: chưa đủ bằng chứng" và một BẢN NHÁP. Không có thay đổi nào nhắm vào R07, nên đây có thể chỉ là model trả khác giữa hai lần chạy, không tính là tác dụng của cải tiến.
+  - model_calls lượt 1 và lượt 2 đều là 29, nên lần chặn + viết lại có lẽ không phải chạy; mã ma biến mất là nhờ prompt + hồ sơ.
+  - Token vào tăng 43.885 → 48.470 (+10%) vì hồ sơ in thêm danh sách mã.
+- Câu nào **tệ đi** sau khi sửa: **không câu nào từ đạt thành trượt**.
+  - Có 1 câu vẫn đạt nhưng tệ đi về nội dung: **B07**. Bản nháp lượt 1 từ chối khách chỉ dựa trên biên bản đồng kiểm. Bản nháp lượt 2 thêm lý do "thời gian khiếu nại đã vượt quá quy định của đơn vị vận chuyển (hạn cuối là 23/11/2026)". Lý do này sai: đó là hạn của shop với đơn vị vận chuyển, không áp cho khách, và khách báo ngày 22/11, vẫn trước hạn.
+  - **B03** vẫn mắc lỗi cùng loại như lượt 1, chỉ đổi cách diễn đạt: "đã quá thời hạn hỗ trợ khiếu nại".
+  - pass_criterion của B03, B07 không kiểm ý này nên cả hai vẫn tính đạt.
 
 ## 4. Còn lại
 
-- Lỗi chưa sửa + nguy hiểm thế nào: __
-- Nếu có thêm 1 tuần: __
+- Lỗi chưa sửa + nguy hiểm thế nào:
+  - **R06 — ca lẫn vỡ + ngoài phạm vi.** Model vẫn đẩy hết sang "Ngoài phạm vi" và không có kết luận cho cốc bể. Chủ shop không biết phải xin bằng chứng gì cho phần vỡ, nên ca vỡ thật bị bỏ sót. R07 lượt 2 đạt nhưng câu "Ngoài phạm vi" ở đầu vẫn lủng củng, nên chưa chắc lỗi này đã hết.
+  - **R10 — vỡ khi đang dùng.** Model không nêu được rằng cốc vỡ sau khi khách đã nhận hàng, và vẫn xin ảnh lúc mở hàng. Chủ shop có thể mất thời gian đi tìm lỗi giao hàng, hoặc hoàn tiền cho hư hỏng do người dùng.
+  - **B03, B07, B08 — bản nháp gửi khách viện "hạn khiếu nại".** Hạn đó là hạn khiếu nại đơn vị vận chuyển (giả lập, không phải chính sách của shop), có lúc còn tính sai (khách báo 22/11, hạn 23/11 mà vẫn ghi "đã quá hạn"). Đây là lỗi nguy hiểm nhất trong số còn lại: tin này đi thẳng tới khách. Nếu chủ shop duyệt nhanh, shop từ chối khách bằng một lý do sai và dễ ăn 1 sao. Metric hiện tại không bắt được lỗi này.
+- Nếu có thêm 1 tuần:
+  1. Tách hạn khiếu nại vận chuyển khỏi phần trả lời khách: prompt cấm nêu hạn vận chuyển trong bản nháp gửi khách, thêm câu thử kiểm ý này. Thêm câu thử mới chứ không sửa `expected` hay chuẩn đã chốt.
+  2. Sửa nhóm R06 / R07: code tách khiếu nại lẫn thành phần vỡ và phần ngoài phạm vi trước khi gọi model.
+  3. Thêm quy tắc "vỡ khi dùng" (R10).
+  4. Chạy lại vài lượt để biết R07 đạt là ổn định hay chỉ do may.
+  5. Thêm câu thử từ chủ shop thật, không chỉ đánh giá Shopee.

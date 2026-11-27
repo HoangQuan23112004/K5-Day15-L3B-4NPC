@@ -47,7 +47,7 @@ Chạy với `DAMAGECHECK_TODAY=2026-11-27` (cố định ngày tính hạn khi�
 | Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
 | 1 | run-1@20261127-222917 | gemini-3.5-flash-lite | prompt `SYSTEM` trong `codebase/agent.py` (quy tắc 1–9) · 5 công cụ tra hồ sơ trong `codebase/tools.py` · `DAMAGECHECK_TODAY=2026-11-27` (cố định ngày tính hạn khiếu nại) · 1 lần gọi model mỗi đơn | 24/30 | 80% | chưa (can_cu_co_that 27/30) |
-| 2 | | | | __/__ | | |
+| 2 | run-2@20261127-230337 | gemini-3.5-flash-lite | như lượt 1 + **một cải tiến nhắm mã căn cứ "ma"** (code `5086700`): quy tắc 1 chỉ dùng mã trong danh sách mã hợp lệ của hồ sơ, hồ sơ ghi rõ đơn không có mã DG- / VC-, code chặn mã lạ (viết lại 1 lần) · cùng `DAMAGECHECK_TODAY`, cùng 30 câu | 28/30 | 93% | **đạt** (≥ 80%, tu_choi 7/7, can_cu_co_that 30/30, khong_doan_khi_thieu 6/6) |
 
 Lượt chạy lại vì lỗi kỹ thuật, lượt sau CP4: ghi thêm dòng, không sửa dòng cũ.
 
@@ -55,4 +55,11 @@ Lượt 1 chạy với `DAMAGECHECK_TODAY=2026-11-27` và model `gemini-3.5-flas
 
 ## 6. Lỗi chính
 
-Tóm 2–3 dòng từ `eval/report.md`: nhóm lỗi lớn nhất · đã sửa gì · còn lại gì.
+- **Nhóm lỗi lớn nhất ở lượt 1:** mã căn cứ "ma" (R02, R03, R04). Hồ sơ thiếu log mà model vẫn đặt mã kiểu [DG-DH08 không có]. Đây là điều kiện duy nhất khiến lượt 1 chưa đạt (can_cu_co_that 27/30).
+- **Đã sửa:** sửa prompt quy tắc 1, hồ sơ in danh sách mã hợp lệ, code chặn mã lạ. Kết quả: can_cu_co_that 27/30 → 30/30, tổng 80% → 93%. Không câu nào từ đạt thành trượt. B07 vẫn đạt nhưng bản nháp tệ đi: viện hạn khiếu nại của đơn vị vận chuyển để từ chối khách.
+- **Còn lại:**
+  - R06: ca lẫn vỡ + ngoài phạm vi vẫn mất kết luận phần vỡ.
+  - R10: vỡ khi đang dùng không được nhận ra.
+  - B03, B07, B08: bản nháp gửi khách viện "hạn khiếu nại" của vận chuyển (B03 còn tính sai ngày). Metric chưa bắt được lỗi này, mới chỉ ghi ở `ghi_chu`.
+
+  Chi tiết ở `eval/report.md` mục 3–4.
