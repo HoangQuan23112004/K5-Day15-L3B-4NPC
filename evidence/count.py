@@ -7,8 +7,8 @@ Chạy: python evidence/count.py
   evidence/shopee-reviews.csv  (Bộ A, mỗi dòng một đánh giá) cột: id, tu_khoa, san_pham, so_sao,
       thang_danh_gia, nhac_vo_hong, do_van_chuyen, shop_phan_hoi, shop_chiu, shop_nhac_van_chuyen,
       shop_do_loi_van_chuyen, trich_ngan
-  evidence/seller-posts.csv    (Bộ B, mỗi dòng một bài) cột: id, tu_khoa, noi_tim, thang_dang,
-      nguoi_ban_ke, ket_qua, ly_do, thoi_gian_ke, trich_ngan
+  evidence/app-reviews.csv     (Bộ B, mỗi dòng một review 1 sao Google Play của app GHTK / GHN) cột:
+      id, app, so_sao, ngay, nguoi_gui, chu_de, boi_thuong, ly_do, thoi_gian_ke, trich_ngan
 Giá trị: 1 = có · 0 = không · ? = không rõ. Chỉ dùng thư viện chuẩn.
 """
 import csv
@@ -25,10 +25,11 @@ for _s in (sys.stdout, sys.stderr):
 HERE = os.path.dirname(os.path.abspath(__file__))
 FILE_P = os.path.join(HERE, "shopee-products.csv")
 FILE_A = os.path.join(HERE, "shopee-reviews.csv")
-FILE_B = os.path.join(HERE, "seller-posts.csv")
+FILE_B = os.path.join(HERE, "app-reviews.csv")
 
-KET_QUA = ("tu_chiu", "doi_duoc", "bi_tu_choi", "?")
-LY_DO = ("thieu_bang_chung", "gia_tri_nho", "qua_han", "thu_tuc_phuc_tap", "san_xu_ly", "khac", "?")
+CHU_DE = ("vo_hong", "that_lac", "giao_cham", "thai_do", "tien_phi", "loi_app", "khac")
+BOI_THUONG = ("khong_den", "den_it", "cho_lau", "duoc_den", "?")
+LY_DO = ("thieu_bang_chung", "qua_han", "da_ky_nhan", "quy_dinh_muc_den", "khac", "?")
 
 
 def pct(x, n):
@@ -69,13 +70,14 @@ def check_b(rows):
     bad = []
     for r in rows:
         i = v(r, "id")
-        if v(r, "nguoi_ban_ke") not in ("0", "1"):
-            bad.append("%s: nguoi_ban_ke phải là 0 hoặc 1" % i)
-        if v(r, "nguoi_ban_ke") == "1":
-            if v(r, "ket_qua") not in KET_QUA:
-                bad.append("%s: ket_qua phải là một trong %s" % (i, ", ".join(KET_QUA)))
-            if v(r, "ket_qua") in ("tu_chiu", "bi_tu_choi") and v(r, "ly_do") not in LY_DO:
-                bad.append("%s: ly_do phải là một trong %s" % (i, ", ".join(LY_DO)))
+        if v(r, "nguoi_gui") not in ("0", "1", "?"):
+            bad.append("%s: nguoi_gui phải là 0, 1 hoặc ?" % i)
+        if v(r, "chu_de") not in CHU_DE:
+            bad.append("%s: chu_de phải là một trong %s" % (i, ", ".join(CHU_DE)))
+        if v(r, "chu_de") in ("vo_hong", "that_lac") and v(r, "boi_thuong") not in BOI_THUONG:
+            bad.append("%s: boi_thuong phải là một trong %s" % (i, ", ".join(BOI_THUONG)))
+        if v(r, "boi_thuong") in ("khong_den", "den_it", "cho_lau") and v(r, "ly_do") not in LY_DO:
+            bad.append("%s: ly_do phải là một trong %s" % (i, ", ".join(LY_DO)))
     return bad
 
 
@@ -139,21 +141,28 @@ def report_a(rows, products):
 
 
 def report_b(rows):
-    print("=== Bộ B · Bài người bán tự kể — nguồn bổ sung, lệch về ca xấu (%s)" % os.path.basename(FILE_B))
-    sellers = [r for r in rows if v(r, "nguoi_ban_ke") == "1"]
-    ns = len(sellers)
-    print("Đã đọc %d bài · người bán kể ca hàng vỡ: %d" % (len(rows), ns))
-    kq = Counter(v(r, "ket_qua") for r in sellers)
-    lost = [r for r in sellers if v(r, "ket_qua") in ("tu_chiu", "bi_tu_choi")]
-    print("B1 tự chịu hoặc bị từ chối bồi thường:            " + pct(len(lost), ns)
-          + "  · tự chịu %d · bị từ chối %d · đòi được %d · không kể %d"
-          % (kq["tu_chiu"], kq["bi_tu_choi"], kq["doi_duoc"], kq["?"]))
-    print("B2 lý do (trên %d bài tự chịu / bị từ chối):" % len(lost))
-    ld = Counter(v(r, "ly_do") for r in lost)
-    for k, c in ld.most_common():
-        print("  %-20s %s" % (k, pct(c, len(lost))))
-    times = [(v(r, "id"), v(r, "thoi_gian_ke")) for r in sellers if v(r, "thoi_gian_ke")]
-    print("Thời gian xử lý người bán có kể: %d bài" % len(times))
+    print("=== Bộ B · Review 1 sao Google Play app giao hàng — nguồn thứ hai, nghiêng về phàn nàn (%s)"
+          % os.path.basename(FILE_B))
+    print("Đã đọc %d review · theo app: %s" % (len(rows), ", ".join(
+        "%s %d" % (k, c) for k, c in sorted(Counter(v(r, "app") for r in rows).items())) or "—"))
+    senders = [r for r in rows if v(r, "nguoi_gui") == "1"]
+    ns = len(senders)
+    print("Người gửi hàng / shop viết: %s" % pct(ns, len(rows)))
+    cd = Counter(v(r, "chu_de") for r in senders)
+    print("B1 phàn nàn của người gửi hàng là về hàng vỡ / hỏng: " + pct(cd["vo_hong"], ns)
+          + "  · thất lạc %d" % cd["that_lac"])
+    print("   chủ đề (người gửi hàng): " + ", ".join("%s %d" % (k, c) for k, c in cd.most_common()))
+    loss = [r for r in senders if v(r, "chu_de") in ("vo_hong", "that_lac")]
+    bt = Counter(v(r, "boi_thuong") for r in loss)
+    bad = [r for r in loss if v(r, "boi_thuong") in ("khong_den", "den_it", "cho_lau")]
+    print("B2 vỡ / thất lạc: không đền, đền ít hoặc chờ lâu: " + pct(len(bad), len(loss))
+          + "  · không đền %d · đền ít %d · chờ lâu %d · được đền %d · không nói %d"
+          % (bt["khong_den"], bt["den_it"], bt["cho_lau"], bt["duoc_den"], bt["?"]))
+    print("B3 lý do (trên %d review ở tử số B2):" % len(bad))
+    for k, c in Counter(v(r, "ly_do") for r in bad).most_common():
+        print("  %-20s %s" % (k, pct(c, len(bad))))
+    times = [(v(r, "id"), v(r, "thoi_gian_ke")) for r in senders if v(r, "thoi_gian_ke")]
+    print("Thời gian chờ / xử lý có kể: %d review" % len(times))
     for i, t in times:
         print("  %s: %s" % (i, t))
 
