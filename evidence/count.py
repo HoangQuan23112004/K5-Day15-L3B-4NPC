@@ -8,7 +8,7 @@ Chạy: python evidence/count.py
       thang_danh_gia, nhac_vo_hong, do_van_chuyen, shop_phan_hoi, shop_chiu, shop_nhac_van_chuyen,
       shop_do_loi_van_chuyen, trich_ngan
   evidence/app-reviews.csv     (Bộ B, mỗi dòng một review 1 sao Google Play của app GHTK / GHN) cột:
-      id, app, so_sao, ngay, nguoi_gui, chu_de, boi_thuong, ly_do, thoi_gian_ke, trich_ngan
+      id, app, so_sao, ngay, nguoi_gui, chu_de, khong_lien_he_cskh, boi_thuong, ly_do, thoi_gian_ke, trich_ngan
 Giá trị: 1 = có · 0 = không · ? = không rõ. Chỉ dùng thư viện chuẩn.
 """
 import csv
@@ -72,6 +72,8 @@ def check_b(rows):
         i = v(r, "id")
         if v(r, "nguoi_gui") not in ("0", "1", "?"):
             bad.append("%s: nguoi_gui phải là 0, 1 hoặc ?" % i)
+        if v(r, "khong_lien_he_cskh") not in ("0", "1"):
+            bad.append("%s: khong_lien_he_cskh phải là 0 hoặc 1" % i)
         if v(r, "chu_de") not in CHU_DE:
             bad.append("%s: chu_de phải là một trong %s" % (i, ", ".join(CHU_DE)))
         if v(r, "chu_de") in ("vo_hong", "that_lac") and v(r, "boi_thuong") not in BOI_THUONG:
@@ -161,7 +163,9 @@ def report_b(rows):
     print("B3 lý do (trên %d review ở tử số B2):" % len(bad))
     for k, c in Counter(v(r, "ly_do") for r in bad).most_common():
         print("  %-20s %s" % (k, pct(c, len(bad))))
-    times = [(v(r, "id"), v(r, "thoi_gian_ke")) for r in senders if v(r, "thoi_gian_ke")]
+    print("B4 nói không liên hệ được CSKH / tổng đài: "
+          + pct(sum(v(r, "khong_lien_he_cskh") == "1" for r in rows), len(rows)))
+    times = [(v(r, "id"), v(r, "thoi_gian_ke")) for r in rows if v(r, "thoi_gian_ke")]
     print("Thời gian chờ / xử lý có kể: %d review" % len(times))
     for i, t in times:
         print("  %s: %s" % (i, t))

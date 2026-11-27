@@ -54,9 +54,11 @@
 
 - **Nguồn (cố định trước):** trang Google Play của **app giao hàng GHTK (Giao Hàng Tiết Kiệm)** dành cho người gửi hàng / shop. *(Đổi lúc 18:46, trước khi đọc review nào: bỏ GHN, giảm còn 1 app × 20 review vì không đủ thời gian.)* Ghi đúng tên app, link và ngày xem ở mục 2 khi mở.
 - **Chọn mẫu:** mở "Xem tất cả bài đánh giá" → sắp xếp **"Mới nhất"** → lọc **1 sao** → đọc **20 review có chữ đầu tiên** → N = 20. Nếu bản web không có bộ lọc sao thì dùng app Google Play trên điện thoại, cùng cách chọn. Chỉ lọc 1 sao nên mẫu **nghiêng về phàn nàn** (guide 1.2 cho phép, phải ghi rõ).
-- **Mã hoá → `evidence/app-reviews.csv`** (cột: `id, app, so_sao, ngay, nguoi_gui, chu_de, boi_thuong, ly_do, thoi_gian_ke, trich_ngan`):
+- **Mã hoá → `evidence/app-reviews.csv`** (cột: `id, app, so_sao, ngay, nguoi_gui, chu_de, khong_lien_he_cskh, boi_thuong, ly_do, thoi_gian_ke, trich_ngan`):
   - `nguoi_gui`: 1 nếu người viết là **người gửi hàng / shop** (nói "shop mình", "gửi hàng cho khách", "đơn của khách", tiền COD); 0 nếu là người nhận, shipper, người khác; `?` nếu không rõ.
-  - `chu_de` (một nhãn chính): `vo_hong` (hàng vỡ, móp, hỏng khi giao) · `that_lac` (mất, thất lạc) · `giao_cham` · `thai_do` (thái độ shipper / tổng đài) · `tien_phi` (tiền COD, phí ship, đối soát) · `loi_app` · `khac`.
+  - `chu_de` (một nhãn chính = **vấn đề người viết nêu đầu tiên**): `vo_hong` (hàng vỡ, móp, hỏng khi giao) · `that_lac` (mất, thất lạc) · `giao_cham` (lấy hàng / giao hàng chậm) · `thai_do` (thái độ nhân viên, **hoặc không liên hệ được CSKH**) · `tien_phi` (tiền COD, phí ship, đối soát) · `loi_app` (OTP, đăng nhập, lỗi app) · `khac` (chỉ chê chung, vd "tệ").
+  - `khong_lien_he_cskh` (1/0, mọi review): review nói **không liên hệ / không chat được với CSKH, tổng đài**, dù đó không phải vấn đề chính.
+  - *(Làm rõ lúc 19:06 sau khi đọc 20 review GHTK, theo guide 1.2 "đọc thử rồi mới đặt nhãn": review hay nêu nhiều vấn đề nên chốt quy tắc "vấn đề nêu đầu tiên"; nhiều review than không liên hệ được CSKH nên tách thành cột riêng. Không đổi cách chọn mẫu.)*
   - `boi_thuong` (khi `chu_de` là `vo_hong` / `that_lac`): `khong_den` (bị từ chối / không được đền) · `den_it` (đền thấp hơn giá trị) · `cho_lau` (khiếu nại chưa có kết quả, kéo dài) · `duoc_den` · `?` (không nói).
   - `ly_do` (khi `boi_thuong` là `khong_den` / `den_it` / `cho_lau`): `thieu_bang_chung` · `qua_han` · `da_ky_nhan` (người nhận đã ký / đã nhận) · `quy_dinh_muc_den` (theo mức đền quy định) · `khac` · `?` (không nói).
   - `thoi_gian_ke`: thời gian chờ / xử lý nếu người viết có kể (vd "2 tuần"), không có thì để trống.
@@ -64,6 +66,7 @@
 - **Mẫu số:**
   - B1: `chu_de = vo_hong` / số review `nguoi_gui = 1` (trong phàn nàn của người gửi hàng, bao nhiêu là về hàng vỡ / hỏng).
   - B2: `boi_thuong` là `khong_den` / `den_it` / `cho_lau` / số review `nguoi_gui = 1` có `chu_de` là `vo_hong` hoặc `that_lac`.
+  - B4: `khong_lien_he_cskh = 1` / mọi review đã đọc.
   - B3: phân bố `ly_do` trên các review ở tử số B2 → kiểm cách giải thích khác trong `evidence/hypothesis.md` (`thieu_bang_chung` / `qua_han` / `da_ky_nhan` ủng hộ lát cắt; `quy_dinh_muc_den` gần với cách giải thích khác 1).
 - **Kiểm lại Bộ A thế nào:** Bộ A cho thấy shop gần như không nhắc tới đòi bồi thường vận chuyển (A4) và tự hoàn / gửi bù (A3). Bộ B cho biết, **khi shop có đòi**, kết quả ra sao và vướng ở đâu. Hai nguồn khớp nếu B2 cao (đòi thường không được) và lý do là bằng chứng / hạn; lệch thì ghi và giải thích ở `evidence/summary.md` mục 4.
 
@@ -81,6 +84,8 @@ Chính sách chính thức của Shopee (cùng nguồn với Bộ A), dùng cho 
 - Trả hàng / Hoàn tiền (link do file Track D của đề dẫn): https://help.shopee.vn/portal/4/article/79191 — __ (ngày xem · hạn khiếu nại · bằng chứng cần có · người bán phản hồi thế nào)
 
 ## 2. Đọc trước, đếm sau
+
+- **Bộ B — nguồn đã dùng:** app **GHTK** của CÔNG TY CỔ PHẦN GIAO HÀNG TIẾT KIỆM trên Google Play: https://play.google.com/store/apps/details?id=vn.giaohangtietkiem.ghtk_pro&hl=vi · lúc xem: 4,1★, 6,61 N bài đánh giá, 500 N+ lượt tải · xem 27/11/2026 · sắp xếp "Mới nhất", lọc 1 sao · 20 review đầu có chữ, từ 07/11/2026 đến 26/11/2026.
 
 Đã đọc 1 trang sản phẩm (SP01) / 6 đánh giá đầu lúc 17:55. Các *kiểu* thấy được (dùng để làm rõ cách mã hoá ở mục 1, không đổi cách chọn mẫu):
 - Đánh giá chê **chất lượng** có chữ "vỡ / bể" nhưng là vỡ **khi sử dụng** (rót nước nóng, bỏ đá) → làm rõ: không tính là hàng vỡ khi giao.
