@@ -1,2 +1,4 @@
-san_pham,tu_khoa,tong_danh_gia,so_1_sao,so_2_sao,da_ban
-SP01,ly thủy tinh,2800,18,18,50000
+san_pham,tu_khoa,tong_danh_gia,so_1_sao,so_2_sao,da_ban,cam_ket_doi_vo,yeu_cau_video
+SP01,ly thủy tinh,2788,18,18,50000,1,1
+SP02,ly thủy tinh,2731,11,7,30000,1,1
+SP03,ly thủy tinh,4331,62,44,40000,0,0

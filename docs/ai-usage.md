@@ -8,8 +8,8 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 |---|---|---|---|---|
 | Code bản chạy thử | | | | |
 | Prompt / thiết kế lời gọi mô hình | | | | |
-| Đào data (viết script đếm, gợi ý nhãn) | | | Kiểm tay __ dòng, khớp __ | |
-| Rà câu hỏi phỏng vấn / khảo sát | | Chỉ rà câu dẫn dắt | | |
+| Đào data (viết script đếm, gợi ý nhãn) | Claude Code | Đề xuất cách đếm (`evidence/data-mining.md` mục 1), viết `evidence/count.py`, chuyển đoạn đánh giá Vĩnh copy từ Shopee thành dòng CSV đã ẩn danh và **gợi ý nhãn** | Vĩnh tự chọn sản phẩm theo cách đếm, tự copy đánh giá, duyệt cách đếm trước khi đọc data; kiểm tay __ dòng nhãn, khớp __ *(điền sau khi kiểm)* | Ngô Chí Vĩnh |
+| Rà câu hỏi phỏng vấn / khảo sát | Claude Code | Soạn kịch bản phỏng vấn, form khảo sát (cuối cùng không dùng vì không liên hệ được chủ shop) | Vĩnh đọc lại | Ngô Chí Vĩnh |
 | Viết câu thử (benchmark) | | | Mỗi câu thử có `source`; câu thử AI viết được ghi rõ | |
 | Sinh data `synthetic` (nếu có) | | | Seed __ · kiểm tay __ dòng | |
 | Chấm cột `pass` bằng LLM (nếu có) | | | Kiểm tra thủ công __ câu thử, khớp __/__ | |

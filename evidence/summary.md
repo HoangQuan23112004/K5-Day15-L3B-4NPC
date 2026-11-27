@@ -43,6 +43,8 @@ Giả thuyết ở `evidence/hypothesis.md`: **đúng / sai / phải đổi** �
 
 ## Lịch hẹn (dùng cho CP2 — chỉ ghi vai và giờ, không tên)
 
+Không có lịch hẹn: nhóm không liên hệ được chủ shop để phỏng vấn và BTC không cấp data cho Track D, nên nguồn bằng chứng là **đào data** đánh giá công khai trên Shopee (`evidence/data-mining.md`). Tiến độ lúc CP2: 3/12 sản phẩm, 30 đánh giá đã mã hoá.
+
 | Vai | Giờ hẹn | Đã xong? |
 |---|---|---|
-| | | |
+| — (không phỏng vấn) | — | — |

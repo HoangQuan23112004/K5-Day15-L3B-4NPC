@@ -15,14 +15,19 @@
 
 **Chọn sản phẩm (cố định trước, không chọn cho khớp):**
 - 4 từ khoá hàng dễ vỡ / dễ hỏng: `ly thủy tinh` · `bình gốm` · `serum chai thủy tinh` · `bánh quy hộp`.
-- Mỗi từ khoá: tìm trên Shopee, sắp xếp "Bán chạy", lấy **5 sản phẩm đầu tiên**. Bỏ qua sản phẩm Shopee Mall (shop lớn, không phải người dùng của nhóm) và sản phẩm không có đánh giá 1–2 sao → 20 sản phẩm, mã `SP01`…`SP20`.
+- Mỗi từ khoá: tìm trên Shopee, sắp xếp "Bán chạy", lấy **3 sản phẩm đầu tiên**. Bỏ qua sản phẩm Shopee Mall (shop lớn, không phải người dùng của nhóm) và sản phẩm không có đánh giá 1–2 sao → **12 sản phẩm**, mã `SP01`…`SP12` (`ly thủy tinh` SP01–03 · `bình gốm` SP04–06 · `serum chai thủy tinh` SP07–09 · `bánh quy hộp` SP10–12).
+- *(Đổi lúc 18:27 Thứ Sáu 27/11, sau khi làm xong SP01–SP03 và trước khi mở sản phẩm tiếp theo: giảm từ 5 xuống 3 sản phẩm mỗi từ khoá (20 → 12) **vì không đủ thời gian** trước CP3, ưu tiên giữ đủ 4 nhóm hàng. Không đổi vì kết quả. SP01–SP03 giữ nguyên.)*
 
 **A0 · Bảng sản phẩm → `evidence/shopee-products.csv`** (mỗi sản phẩm một dòng, chép đúng số Shopee hiện):
-- `tong_danh_gia`, `so_1_sao`, `so_2_sao`: số đánh giá theo bộ lọc sao trên trang sản phẩm.
+- `tong_danh_gia`, `so_1_sao`, `so_2_sao`: số đánh giá theo bộ lọc sao trên trang sản phẩm. `tong_danh_gia` = **cộng 5 nút "5 Sao … 1 Sao"** (số "Đánh Giá" ở đầu trang có khi lệch với các nút, vd SP02 đầu trang 1,5k nhưng cộng các nút ≈ 2.731). *(Làm rõ sau khi đọc SP02.)*
 - `da_ban`: số "Đã bán" Shopee hiện (vd `1,2k` → ghi `1200`; `10k+` → ghi `10000`).
+- `cam_ket_doi_vo` (1/0): phần **mô tả sản phẩm do shop viết** cam kết đổi / hoàn tiền khi hàng vỡ, hư hỏng **do vận chuyển**.
+- `yeu_cau_video` (1/0): mô tả sản phẩm yêu cầu / khuyên người mua quay video mở hàng.
+- *(Hai cột này thêm sau khi đọc mô tả SP01: shop viết "đổi trả 1-1 trong 7 ngày… bể vỡ do quá trình vận chuyển" và "nên quay video mở hàng".)*
+- A7: `cam_ket_doi_vo = 1` / số sản phẩm · A8: `yeu_cau_video = 1` / số sản phẩm.
 
 **A1–A4 · Bảng đánh giá → `evidence/shopee-reviews.csv`:**
-- Mỗi sản phẩm: lọc "1 sao", lấy **tối đa 10 đánh giá có chữ đầu tiên theo thứ tự Shopee hiển thị**; còn thiếu thì lọc "2 sao" lấy tiếp cho đủ 10 → tối đa 200 dòng. *(Làm rõ lúc 17:55: Shopee không cho sắp xếp đánh giá theo ngày, nên đổi "mới nhất" thành "theo thứ tự Shopee hiển thị".)*
+- Mỗi sản phẩm: lọc "1 sao", lấy **tối đa 10 đánh giá có chữ đầu tiên theo thứ tự Shopee hiển thị**; còn thiếu thì lọc "2 sao" lấy tiếp cho đủ 10 → tối đa 200 dòng. *(Làm rõ sau khi đọc 6 đánh giá đầu của SP01: Shopee không cho sắp xếp đánh giá theo ngày, nên đổi "mới nhất" thành "theo thứ tự Shopee hiển thị".)*
 - Mã hoá **chỉ theo chữ** người mua và shop viết; không xem, không tải, không lưu ảnh / video của người mua.
 - Link từng sản phẩm ghi ở dòng đầu file thô `evidence/raw-shopee-SPxx.txt` (không commit, có tên tài khoản) để nhóm kiểm lại khi cần.
 - **"Có chữ"** = người mua tự viết nội dung. Đánh giá chỉ có thẻ chọn sẵn của Shopee (vd "Sản phẩm: Hàng lỗi hoặc bị hư hỏng") mà không có chữ tự viết thì **bỏ qua, không ghi**.
@@ -30,9 +35,9 @@
   - `nhac_vo_hong`: đánh giá nói hàng **lúc đến tay / lúc mở hộp** đã bị vỡ, nứt, móp, chảy, hỏng. Ghi 0 nếu chê vì lý do khác, **kể cả vỡ trong lúc sử dụng** (rót nước nóng, bỏ đá…) hoặc chỉ "sợ dễ vỡ" — đó là chất lượng sản phẩm, không phải khâu giao hàng.
   - `do_van_chuyen` (chỉ khi `nhac_vo_hong` = 1): 1 = người mua nói / ngụ ý do vận chuyển; 0 = do shop đóng gói sơ sài; `?` = không rõ.
   - `shop_phan_hoi`: shop có trả lời đánh giá.
-  - `shop_chiu` (chỉ khi `nhac_vo_hong` = 1): người mua hoặc shop cho thấy shop **đã làm hoặc đề nghị** hoàn tiền / gửi bù / đổi hàng mà không đòi người mua chịu. *(Làm rõ lúc 18:05: phản hồi của shop thường là lời đề nghị "phản hồi lại để e gửi lại", hiếm khi cho biết đã làm xong.)*
+  - `shop_chiu` (chỉ khi `nhac_vo_hong` = 1): người mua hoặc shop cho thấy shop **đã làm hoặc đề nghị** hoàn tiền / gửi bù / đổi hàng mà không đòi người mua chịu. *(Làm rõ sau khi đọc SP01: phản hồi của shop thường là lời đề nghị "phản hồi lại để e gửi lại", hiếm khi cho biết đã làm xong.)*
   - `shop_nhac_van_chuyen` (chỉ khi `nhac_vo_hong` = 1 và `shop_phan_hoi` = 1): phản hồi của shop nhắc tới việc **khiếu nại / đòi bồi thường / làm việc** với đơn vị vận chuyển. Chỉ đổ lỗi thì không tính.
-  - `shop_do_loi_van_chuyen` (khi `shop_phan_hoi` = 1, mọi đánh giá): phản hồi của shop **đổ lỗi cho vận chuyển** (vd "chắc bên vận chuyển quăng quật"). *(Thêm lúc 18:05 sau khi đọc 10 đánh giá của SP01: đã gặp 2 lần shop đổ cho vận chuyển mà không nêu căn cứ.)*
+  - `shop_do_loi_van_chuyen` (khi `shop_phan_hoi` = 1, mọi đánh giá): phản hồi của shop **đổ lỗi cho vận chuyển** (vd "chắc bên vận chuyển quăng quật"). *(Thêm sau khi đọc 10 đánh giá của SP01: đã gặp 2 lần shop đổ cho vận chuyển mà không nêu căn cứ.)*
 
 **Mẫu số:**
 - A1: `nhac_vo_hong = 1` / **mọi đánh giá 1–2 sao có chữ đã đọc**.
@@ -59,9 +64,13 @@
 
 ### Tài liệu tham khảo (không phải bằng chứng pain)
 
-Chính sách bồi thường công khai của đơn vị vận chuyển, dùng cho `spec.md` §0 (luồng hiện tại) và §2 (mỗi ca mất bao nhiêu):
-- Viettel Post — "Khi gửi hàng bị hư hỏng thì tôi được đền bù như nào?" (đăng 10/05/2024, xem 27/11/2026): https://viettelpost.com.vn/cau-hoi-thuong-gap-faqs/quy-dinh-ve-boi-thuong-thiet-hai/khi-gui-hang-bi-hu-hong-thi-toi-duoc-den-bu-nhu-nao/ — đền theo mức hư hỏng (10% / 20% / 30% / 50% giá trị, >50% đền như mất hàng), tối đa 30 triệu đồng / bưu gửi; **không bồi hoàn khi người nhận đã kiểm tra và ký nhận**.
-- __ (GHN / GHTK / J&T…)
+Chính sách chính thức của Shopee (cùng nguồn với Bộ A), dùng cho `spec.md` §0 (luồng hiện tại) và §2 (mỗi ca mất bao nhiêu):
+- Bảo hiểm Thiệt hại sản phẩm (trang bảo hiểm chính thức của Shopee, mở từ trang SP01, xem 27/11/2026): https://insurance.shopee.vn/ec/ec-pdp.html?from=pdp&locale=VI&product_id=1967808564094407209 · quy tắc đầy đủ của MSIG: https://tructuyen.msig.com.vn/assets/documents/shopee/merchandise/Damage_Insurance_Wording.pdf
+  - Do MSIG cung cấp qua môi giới Fuse; **người mua** tự chọn mua kèm ở trang Thanh toán (ví dụ trên trang: ₫50 cho món ₫2.000.000), hiệu lực 6 tháng, chỉ đền 1 lần.
+  - Đền khi hàng **thiệt hại toàn bộ (≥75% giá trị)** do sự cố bất ngờ (rơi / nghiền nát sau tai nạn, cháy, nổ…), do chất lỏng, hoặc mất cắp / cướp giật.
+  - **Loại trừ (trích nguyên văn):** *"Sản phẩm có tình trạng bị thiệt hại hoặc hư hỏng từ trước khi bắt đầu hiệu lực bảo hiểm hoặc thất lạc, mất, thiệt hại trong quá trình giao hàng của nhà vận chuyển."* Cũng loại trừ thực phẩm, đồ uống.
+  - → **Bảo hiểm này không đền hàng vỡ khi giao.** Ca hàng vỡ khi giao vẫn phải xử lý giữa người mua, shop và đơn vị vận chuyển, qua quy trình Trả hàng / Hoàn tiền. Dùng cho `spec.md` §0, §3 và để kiểm cách giải thích khác 2 trong `evidence/hypothesis.md`.
+- Trả hàng / Hoàn tiền khi hàng bị vỡ / hư hỏng: __ (link help.shopee.vn · ngày xem · hạn khiếu nại, bằng chứng cần có)
 
 ## 2. Đọc trước, đếm sau
 
@@ -70,7 +79,7 @@ Chính sách bồi thường công khai của đơn vị vận chuyển, dùng c
 - Đánh giá **chỉ có thẻ chọn sẵn** của Shopee, không có chữ tự viết → làm rõ: bỏ qua.
 - Shopee **không cho sắp xếp theo ngày** → làm rõ: lấy theo thứ tự Shopee hiển thị.
 - Phản hồi của shop có khi **đổ cho vận chuyển mà không có căn cứ** ("Chắc bên vận chuyển họ quăng quật…" cho một ca người mua nói vỡ khi bỏ đá) → giữ làm ví dụ định tính.
-- Người mua nói **"lỡ bấm đã nhận hàng thì không trả hàng được"** → khớp điều kiện "đã ký nhận thì không bồi hoàn" của Viettel Post.
+- Người mua nói **"lỡ bấm đã nhận hàng thì không trả hàng được"** → đối chiếu với điều kiện Trả hàng / Hoàn tiền của Shopee (xem Tài liệu tham khảo).
 
 ## 3. Kết quả
 

@@ -85,6 +85,9 @@ def check_p(rows):
         for k in ("tong_danh_gia", "so_1_sao", "so_2_sao", "da_ban"):
             if not v(r, k).isdigit():
                 bad.append("%s: %s phải là số nguyên (vd 1,2k → 1200)" % (v(r, "san_pham"), k))
+        for k in ("cam_ket_doi_vo", "yeu_cau_video"):
+            if v(r, k) not in ("0", "1"):
+                bad.append("%s: %s phải là 0 hoặc 1" % (v(r, "san_pham"), k))
     return bad
 
 
@@ -94,6 +97,10 @@ def report_a(rows, products):
     low = sum(int(v(r, "so_1_sao")) + int(v(r, "so_2_sao")) for r in products)
     print("A0 (%s): %d sản phẩm · tổng đánh giá %d · đánh giá 1–2 sao %s"
           % (os.path.basename(FILE_P), len(products), total, pct(low, total)))
+    print("A7 mô tả của shop cam kết đổi / hoàn khi vỡ do vận chuyển: "
+          + pct(sum(v(r, "cam_ket_doi_vo") == "1" for r in products), len(products)))
+    print("A8 mô tả của shop khuyên / yêu cầu quay video mở hàng:     "
+          + pct(sum(v(r, "yeu_cau_video") == "1" for r in products), len(products)))
     print("--- Bảng đánh giá (%s)" % os.path.basename(FILE_A))
     n = len(rows)
     print("Sản phẩm: %d · từ khoá: %d · mẫu số (đánh giá 1–2 sao có chữ đã đọc): %d"
