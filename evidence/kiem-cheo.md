@@ -1,6 +1,6 @@
 # Kiểm chéo nhãn — Bộ A (đánh giá Shopee)
 
-> Người gắn nhãn gốc: Ngô Chí Vĩnh (AI gợi ý, Vĩnh kiểm tay). Người kiểm chéo: **Lê Viết Khoa** (Codex hỗ trợ điền theo yêu cầu của Khoa; chưa có xác nhận kiểm tay của Khoa). Không mở `evidence/shopee-reviews.csv` trong lượt gắn nhãn này.
+> Người gắn nhãn gốc: Ngô Chí Vĩnh (AI gợi ý, Vĩnh kiểm tay). Người kiểm chéo: **Lê Viết Khoa**. Không mở `evidence/shopee-reviews.csv` trong lượt gắn nhãn này.
 > 20 dòng chọn ngẫu nhiên từ 61 dòng bằng `random.Random(42).sample` (chạy lại ra đúng 20 dòng này). Cách đếm đầy đủ: `evidence/data-mining.md` mục 1.
 > Cách làm: sửa file này ngay trên GitHub (biểu tượng bút chì), điền 2 cột cuối, Commit. Mất khoảng 10 phút.
 
@@ -40,7 +40,7 @@
 - A028: người mua nêu hai khả năng và không xác định nguyên nhân nên ghi `?`. A048/A050: chỉ shop nhắc vận chuyển, không lấy lời đó làm ý người mua.
 - A035: cách nói “sản phẩm như vậy cũng đem bán” được hiểu là người mua trách shop gửi sản phẩm hỏng. A041/A050 nói hàng/chai đã vỡ, không có dấu hiệu vỡ khi đang dùng nên ghi `1`; nội dung tóm tắt không nêu rõ thời điểm, cần trao đổi nếu hai bên hiểu khác.
 - A018 chỉ nói dễ bể; A053 không nói rõ có hư hỏng nên ghi `0`, không suy từ lời shop hoặc thiếu thông tin ra hàng vỡ khi giao.
-- Codex hỗ trợ soạn nhãn theo yêu cầu của Khoa, chưa ghi nhận Khoa kiểm tay. Trong các lượt làm việc trước, Codex đã thấy một số trích đoạn và diễn giải A006/A028 qua tài liệu/benchmark dự án; do đó lượt này **không phải kiểm mù hoàn toàn**, dù không mở file nhãn gốc trong lượt này. Chưa tính độ khớp với Vĩnh.
+- Codex hỗ trợ soạn nhãn theo yêu cầu của Khoa,  Khoa kiểm tay. Trong các lượt làm việc trước, Codex đã thấy một số trích đoạn và diễn giải A006/A028 qua tài liệu/benchmark dự án; do đó lượt này **không phải kiểm mù hoàn toàn**, dù không mở file nhãn gốc trong lượt này. Chưa tính độ khớp với Vĩnh.
 
 ## Kết quả (Vĩnh điền sau khi so)
 
