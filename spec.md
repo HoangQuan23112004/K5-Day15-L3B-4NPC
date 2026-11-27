@@ -7,8 +7,18 @@ Track: [ ] A · [ ] B · [ ] C · [x] D · [ ] E — bài toán: trợ lý xác 
 Data BTC cấp đã dùng (nếu có — không commit nguyên file): không có — Track D BTC không cấp data; bằng chứng là review công khai (`evidence/`)
 
 ## §0. Hiện tại việc này diễn ra thế nào *(guide 1.1)*
-- Luồng hiện tại của việc này, trong khoá hoặc trên app thật (3–5 bước; ảnh chụp từ tài khoản của mình, đã che thông tin):
-- Công cụ / AI đang được dùng cho việc này (nếu có) + nguồn. Không kiểm được thì ghi "chưa kiểm":
+- **Luồng hiện tại** khi khách báo hàng dễ vỡ đến tay bị vỡ (dựng từ bằng chứng công khai ở `evidence/` — mã dòng trong ngoặc):
+  1. **Khách phát hiện hàng vỡ lúc mở hộp** → nhắn shop, gửi yêu cầu Trả hàng / Hoàn tiền trên sàn, hoặc để lại đánh giá 1–2 sao kèm ảnh / video. Trên sàn, người bán được phản hồi yêu cầu trả hàng và sàn xem xét nếu hai bên không thống nhất (file Track D của đề, BTC kiểm trang trợ giúp Shopee 11/11/2026; nhóm chưa tự kiểm lại).
+  2. **Shop đi tìm căn cứ bằng tay:** xin khách ảnh / clip mở hàng (*"nhắn Shop kèm ảnh hoặc clip"* — `A048`; *"Không có video, shop không thể giải quyết"* — mô tả SP02) và tự mở lại camera đóng gói (*"kiểm tra check cam"* — `A030`). Không có chỗ nào gom đóng gói, hành trình vận chuyển và lời khách lại để so.
+  3. **Shop tự quyết ai chịu, thường theo cảm tính:** trong 21 ca hàng vỡ ở Bộ A, shop gửi bù / hoàn 4 ca, khách phải chịu 6 ca, 11 ca không rõ; khi trả lời đánh giá, 5/10 shop đổ cho vận chuyển bằng câu mẫu (*"Có thể trong quá trình vận chuyển…"* — `A048`–`A050`), 3/10 ca hai bên đổ lỗi cho nhau.
+  4. **(Hiếm khi) shop khiếu nại đơn vị vận chuyển:** phải tự nộp kèm video đóng gói, video mở hàng, trong hạn của từng hãng (GHTK ≤03 ngày làm việc khi người nhận từ chối vì hư hỏng; GHN 01 tháng từ ngày giao — nguồn ở §3). Bộ A: **0/10** phản hồi của shop nhắc tới bước này; Bộ B: 4/20 review 1 sao app GHTK nói không liên hệ được CSKH.
+  - *Ảnh:* nhóm không có tài khoản người bán nên không chụp được màn hình xử lý khiếu nại phía shop. Dùng trích dẫn nguyên văn có mã dòng thay cho ảnh; trang sản phẩm, đánh giá xem từ tài khoản người mua của Vĩnh, link và ngày xem ở `evidence/shopee-products.csv`.
+- **Công cụ / AI đang được dùng cho việc này + nguồn:**
+  - Shopee **Bảo hiểm Thiệt hại sản phẩm** (người mua mua kèm): **loại trừ** *"thiệt hại trong quá trình giao hàng của nhà vận chuyển"* — không dùng được cho ca này (đã kiểm 27/11/2026, link ở §3 và `evidence/data-mining.md`).
+  - Trợ lý "Trò chuyện với Shopee": chủ yếu chạy theo menu có sẵn (file Track D của đề, BTC kiểm 11/11/2026) — **nhóm chưa kiểm** nó có hỗ trợ phân xử hàng vỡ không.
+  - CSKH đơn vị vận chuyển: trong mẫu 20 review GHTK, người dùng than không chat / gọi được nhân viên (`B015`, `B018`); ngoài mẫu có review nói CSKH "toàn gặp con AI", "trả lời tự động" — **chưa kiểm** đó là công cụ gì.
+  - Phía shop: câu trả lời đánh giá lặp y hệt nhau (`A048`–`A050`) cho thấy shop dùng **mẫu soạn sẵn**; có dùng AI hay không — **chưa kiểm**.
+  - Công cụ (có AI hoặc không) giúp shop **đối chiếu căn cứ để biết ai chịu** khi hàng vỡ: nhóm chưa thấy trong các nguồn đã đọc — **chưa kiểm** rộng hơn.
 
 ## §1. Người dùng & bằng chứng *(guide 1.1, 1.2)*
 - **Người dùng chính:** chủ shop online nhỏ bán **hàng dễ vỡ** (ly thủy tinh, bình gốm, chai lọ mỹ phẩm, bánh hộp…), tự đóng gói, tự gửi qua đơn vị vận chuyển và **tự trả lời khách** khi khách báo hàng đến tay bị vỡ; khoảng dưới 1.000 đơn / tháng *(tự ước tính ngưỡng "nhỏ")*.
@@ -189,6 +199,7 @@ Các tình huống dưới đây mô tả **hành vi mong muốn**, đối chi�
 | 27/11 đêm (Vĩnh, sau tin nhắn của Khoa) | §2: đổi quy mô impact từ 1.000 shop sang **10 / 50 / 100 shop**, shop lớn 1.000 → 800 đơn, 2–3 → **1 lượt / ca**, cho khớp `cost/personas.yaml`. Impact / shop / tháng gần như không đổi (≈ 34 phút + 57.000đ) | Để §2 và §8 dùng chung một bộ số khi so chi phí / shop với impact / shop. Mọi thừa số vẫn là *(tự ước tính)* trừ A5 |
 | 27/11 đêm (Quân) — **cải tiến cho lượt 2** | Nhắm **một** nhóm lỗi: mã căn cứ "ma" (R02, R03, R04). (1) `SYSTEM` quy tắc 1: chỉ dùng mã trong danh sách "MÃ CĂN CỨ CÓ TRONG HỒ SƠ"; thiếu log thì ghi bằng lời, không viết mã DG-/VC- kể cả để nói "không có". (2) Hồ sơ gửi model ghi rõ "đơn này KHÔNG có mã DG- / VC-" và in danh sách mã hợp lệ. (3) Code chặn: output có mã không thuộc hồ sơ → yêu cầu viết lại 1 lần; vẫn còn → thay mã đó bằng lời. Hạ tầng: `ai.py` thử lại tối đa 3 lần khi API trả 429/500/503. **Không sửa** nhóm R06/R07 (để so đúng tác dụng của một lần cải tiến), không đổi model, ngày, câu thử, metric, chuẩn "đạt" | `eval/report.md` mục 2 (Hiếu): nhóm "mã ma" là điều kiện 100% duy nhất trượt (`can_cu_co_that` 27/30). Thử thật trước lượt 2: R02, R03, R04 chỉ còn trích `KH-…`; R01, B01, K02, K07, R10, T04, B06 giữ nguyên kết luận. Gặp 503 (model quá tải) giữa lúc thử nên thêm thử lại |
 | 27/11 đêm (Khoa) | Cập nhật `eval/second-review-outputs.md`, `eval/second-review.md`, `cost/README.md`, `cost/cost-estimate.md` và §8 theo lượt 1 chính thức `run-1@20261127-222917` (24/30 = 80%) và số impact §2 của Vĩnh (≈ 34 phút + 57.000đ/shop/tháng); chuyển bảng chấm 5 output trên `run-1@20261127-222917` cho Vĩnh chấm độc lập | Đồng bộ run ID `run-1@20261127-222917` trên `main` sau khi merge và đảm bảo người chấm thứ hai không phải người viết §5 |
+| 27/11 đêm (Vĩnh) | Viết §0 (luồng hiện tại 4 bước + công cụ / AI đang dùng) | §0 còn trống, CP3 cần §0–§7. Dựng từ bằng chứng đã có ở `evidence/` và nguồn chính sách ở §3; chỗ chưa tự kiểm ghi "chưa kiểm" |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 
