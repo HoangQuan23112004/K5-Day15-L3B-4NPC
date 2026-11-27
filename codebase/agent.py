@@ -30,6 +30,9 @@ QUY TẮC
    vd [DG-DH01], [VC-DH01-2], [KH-DH01]. Không bịa mã, sự kiện, ngày, số tiền.
    Ngoặc vuông CHỈ dùng cho mã DG- / VC- / KH-, mỗi ngoặc đúng một mã: nhiều mã thì [VC-DH02-1] [VC-DH02-2].
    Thông tin đơn hàng và hạn khiếu nại ghi bằng lời, không đặt trong ngoặc vuông.
+   CHỈ được dùng mã trong danh sách "MÃ CĂN CỨ CÓ TRONG HỒ SƠ". Hồ sơ thiếu log đóng gói / log vận chuyển → ghi
+   bằng lời "hồ sơ không có log đóng gói" / "hồ sơ không có log vận chuyển", KHÔNG viết mã DG- / VC- cho đơn đó,
+   kể cả để nói là "không có" (sai: [DG-DH08 không có], [VC-DH10]).
 2. Thông tin chủ shop kể thêm trong tin nhắn mà KHÔNG có trong hồ sơ (vd "khách vừa gửi thêm ảnh") chưa phải căn cứ:
    nói rõ là chưa có trong hồ sơ và cần lưu vào hồ sơ rồi kiểm lại; không dùng nó để kết luận.
 3. Chọn đúng một kết luận:
@@ -80,10 +83,10 @@ def _fmt_order(order, packing, shipping, claim, deadline):
             packing["id"], packing.get("time", ""), packing.get("packed_by", ""), packing.get("materials", ""),
             "có" if packing.get("video") else "không", packing.get("check_note", "")))
     else:
-        lines.append("(không có)")
+        lines.append("(hồ sơ không có log đóng gói — đơn này KHÔNG có mã DG-)")
     lines.append("\nLOG VẬN CHUYỂN:")
     lines += ["[%s] %s · %s · %s" % (e["id"], e.get("time", ""), e.get("status", ""), e.get("note", ""))
-              for e in shipping] or ["(không có)"]
+              for e in shipping] or ["(hồ sơ không có log vận chuyển — đơn này KHÔNG có mã VC-)"]
     lines.append("\nKHIẾU NẠI CỦA KHÁCH (lời khách, chưa kiểm chứng):")
     if claim:
         lines.append("[%s] %s · khách viết: \"%s\" · mô tả ảnh: %s" % (
@@ -97,7 +100,25 @@ def _fmt_order(order, packing, shipping, claim, deadline):
             "ĐÃ QUÁ HẠN khiếu nại" if deadline["expired"] else "còn %d ngày" % deadline["days_left"]))
     else:
         lines.append("không xác định được (thiếu ngày giao hoặc điều kiện của hãng)")
+    lines.append("\nMÃ CĂN CỨ CÓ TRONG HỒ SƠ: " + (", ".join(sorted(_codes(packing, shipping, claim))) or "(không có)"))
     return "\n".join(lines)
+
+
+CODE = re.compile(r"\b(?:DG|VC|KH)-DH\d+(?:-\d+)?\b")
+
+
+def _codes(packing, shipping, claim):
+    """Tập mã căn cứ có thật của một đơn — dùng để chặn mã "ma" trong câu trả lời."""
+    found = {e["id"] for e in shipping}
+    if packing:
+        found.add(packing["id"])
+    if claim:
+        found.add(claim["id"])
+    return found
+
+
+def _ghost_codes(reply_text, allowed):
+    return sorted(set(CODE.findall(reply_text)) - allowed)
 
 
 def _one(order_id, text, others):
@@ -105,13 +126,30 @@ def _one(order_id, text, others):
     if not order.get("found"):
         note("dừng %s: không có trong dữ liệu" % order_id)
         return "Không tìm thấy đơn %s trong dữ liệu của shop. Bạn kiểm tra lại mã đơn giúp mình." % order_id
-    dossier = _fmt_order(order, get_packing_log(order_id), get_shipping_log(order_id),
-                         get_customer_claim(order_id), check_claim_deadline(order_id))
+    packing, shipping, claim = get_packing_log(order_id), get_shipping_log(order_id), get_customer_claim(order_id)
+    dossier = _fmt_order(order, packing, shipping, claim, check_claim_deadline(order_id))
+    allowed = _codes(packing, shipping, claim)
     scope = ""
     if others:
         scope = "\n(Tin nhắn hỏi nhiều đơn: %s. Lần này CHỈ trả lời cho đơn %s.)" % (", ".join(others), order_id)
-    reply = call_model(SYSTEM, "HỒ SƠ ĐƠN:\n%s\n\nTIN CỦA CHỦ SHOP:\n%s%s" % (dossier, text, scope))
-    return reply["text"].strip()
+    user = "HỒ SƠ ĐƠN:\n%s\n\nTIN CỦA CHỦ SHOP:\n%s%s" % (dossier, text, scope)
+    out = call_model(SYSTEM, user)["text"].strip()
+
+    # Chặn mã căn cứ "ma": mã DG-/VC-/KH- không có trong hồ sơ của đơn này → yêu cầu viết lại MỘT lần.
+    ghosts = _ghost_codes(out, allowed)
+    if ghosts:
+        note("mã không có trong hồ sơ %s: %s → viết lại 1 lần" % (order_id, ", ".join(ghosts)))
+        fix = ("%s\n\nCÂU TRẢ LỜI TRƯỚC CỦA BẠN:\n%s\n\nCâu trả lời trên có mã không tồn tại trong hồ sơ: %s. "
+               "Viết lại toàn bộ câu trả lời, giữ nguyên kết luận nếu vẫn đúng theo hồ sơ, chỉ dùng mã trong "
+               "\"MÃ CĂN CỨ CÓ TRONG HỒ SƠ\"; phần hồ sơ thiếu thì ghi bằng lời, không đặt mã." % (user, out, ", ".join(ghosts)))
+        out = call_model(SYSTEM, fix)["text"].strip()
+        ghosts = _ghost_codes(out, allowed)
+        if ghosts:  # vẫn còn → thay mã ma bằng lời, không để căn cứ bịa tới tay chủ shop
+            note("vẫn còn mã không có trong hồ sơ %s: %s → thay bằng lời" % (order_id, ", ".join(ghosts)))
+            for g in ghosts:
+                out = re.sub(r"\[\s*%s[^\]]*\]" % re.escape(g), "(không có trong hồ sơ)", out)
+                out = re.sub(r"\b%s\b" % re.escape(g), "(không có trong hồ sơ)", out)
+    return out
 
 
 def answer(text: str) -> dict:

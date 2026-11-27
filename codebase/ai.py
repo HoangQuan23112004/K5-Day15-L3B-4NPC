@@ -19,6 +19,7 @@ Nối model thật: điền .env (chép từ .env.example), rồi viết nhánh 
 """
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 
@@ -81,16 +82,25 @@ URL_CLAUDE = "https://api.anthropic.com/v1/messages"
 URL_OLLAMA = "http://localhost:11434/api/chat"
 
 
+RETRY_CODES = (429, 500, 503)   # quá tải / giới hạn lượt tạm thời → thử lại, không đổi nội dung gửi
+RETRY_WAITS = (5, 15, 30)       # giây chờ trước lần thử lại thứ 1, 2, 3
+
+
 def post_json(url, headers, body, timeout=60):
-    """Gửi POST JSON, trả về JSON phản hồi."""
-    req = urllib.request.Request(
-        url, data=json.dumps(body).encode("utf-8"), method="POST",
-        headers=dict({"Content-Type": "application/json"}, **headers))
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            data = json.loads(r.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        raise RuntimeError("HTTP %d: %s" % (e.code, e.read().decode("utf-8", "replace")[:300]))
+    """Gửi POST JSON, trả về JSON phản hồi. Lỗi tạm thời (429/500/503) thử lại tối đa 3 lần."""
+    for attempt in range(len(RETRY_WAITS) + 1):
+        req = urllib.request.Request(
+            url, data=json.dumps(body).encode("utf-8"), method="POST",
+            headers=dict({"Content-Type": "application/json"}, **headers))
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                data = json.loads(r.read().decode("utf-8"))
+            break
+        except urllib.error.HTTPError as e:
+            if e.code in RETRY_CODES and attempt < len(RETRY_WAITS):
+                time.sleep(RETRY_WAITS[attempt])
+                continue
+            raise RuntimeError("HTTP %d: %s" % (e.code, e.read().decode("utf-8", "replace")[:300]))
     if SHOW_RAW:
         print(json.dumps(data, ensure_ascii=False, indent=2)[:3000])
     return data
