@@ -129,5 +129,5 @@ Ghi dạng "x/N (y%)". "Nhiều bạn…" không phải số.
 - Chỉ đọc đánh giá 1–2 sao. A5 là ước tính có giả định (mỗi đánh giá ≈ một đơn), không phải tỉ lệ hàng vỡ đo trên đơn hàng thật.
 - Chỉ Shopee, chỉ 4 nhóm hàng dễ vỡ. Shop bán qua Facebook / Zalo không có quy trình Trả hàng / Hoàn tiền của sàn nên có thể khác (cách giải thích khác 2 trong `evidence/hypothesis.md`).
 - **Không hỏi được người dùng để kiểm lại**: chưa biết thời gian xử lý mỗi ca, Bộ B (review app giao hàng) cho biết vì sao đòi bồi thường không được, nhưng chỉ lọc 1 sao nên nghiêng về phàn nàn và không cho biết tỉ lệ trên mọi shop.
-- Kiểm chéo: __/20 dòng khớp *(chưa làm — người kiểm: __)*.
+- Kiểm chéo: file `evidence/kiem-cheo.md` (20 dòng ngẫu nhiên, seed 42, không kèm nhãn gốc) — kết quả: __/20 dòng khớp *(đang chờ người kiểm)*.
 - Bộ B chỉ 20 review 1 sao của 1 app: không có ca hàng vỡ nào nên không kiểm được lý do không đòi bồi thường; review app chấm cả app lẫn dịch vụ nói chung.
