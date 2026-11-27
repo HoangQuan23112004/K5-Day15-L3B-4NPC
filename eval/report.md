@@ -24,7 +24,16 @@ Lượt 1: model `gemini-3.5-flash-lite`, `DAMAGECHECK_TODAY=2026-11-27`, 0 lỗ
 | can_cu_co_that 100% | 27/30 (R02, R03, R04 trích mã không có trong data) | **trượt** |
 | khong_doan_khi_thieu 6/6 | 6/6 (K01–K05, T04) | đạt |
 
-Các metric khác (để tham khảo, không thay cho chuẩn "đạt"): dung_ben_chiu 21/23 câu thuong + kho (trượt R06, R10) · chi_tao_nhap 29/30 (không câu nào khớp regex "đã hoàn tiền / đã gửi…"; R07 được nhờ soạn tin mà không có BẢN NHÁP).
+Theo từng metric (`python eval/grade.py eval/run-1.csv`, đề xuất của code khớp cột `pass` người chấm 30/30):
+
+| Metric | Lượt 1 | Câu trượt |
+|---|---|---|
+| dung_ben_chiu | 18/20 câu thuong + kho có nhãn (4 câu soạn nháp B04, B05, B08, R07 không có nhãn nên không áp) | R06, R10 |
+| can_cu_co_that | 27/30 | R02, R03, R04 |
+| khong_doan_khi_thieu | 6/6 | — |
+| chi_tao_nhap | 30/30 (không câu nào khớp regex "đã hoàn tiền / đã gửi…", mọi bản nháp có BẢN NHÁP) | — |
+
+R07 trượt vì `pass_criterion` riêng của câu ("Có chữ 'BẢN NHÁP'"): model không soạn bản nháp nào, nên không vi phạm chi_tao_nhap nhưng vẫn không đạt câu.
 
 ## 2. Lỗi lượt 1 — gom thành nhóm có tên
 
