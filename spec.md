@@ -30,7 +30,18 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
 - Số lần / tháng của từng kiểu người dùng (dùng cho persona ở §8):
 
 ## §3. Giải pháp tương tự *(guide 2.1)*
-- [sản phẩm / tính năng gần giống]: một điều đáng học · một điều đáng né · mình khác gì
+- **Bảo hiểm Thiệt hại sản phẩm trên Shopee** (MSIG qua Fuse; [trang bảo hiểm](https://insurance.shopee.vn/ec/ec-pdp.html?from=pdp&locale=VI&product_id=1967808564094407209) · [quy tắc MSIG](https://tructuyen.msig.com.vn/assets/documents/shopee/merchandise/Damage_Insurance_Wording.pdf), xem 27/11/2026 — chi tiết `evidence/data-mining.md` mục Tài liệu tham khảo): người mua tự mua kèm khi thanh toán, đền khi thiệt hại toàn bộ (≥75% giá trị) do sự cố bất ngờ, chất lỏng, mất cắp.
+  - Đáng học: điều kiện đền và **điều loại trừ ghi rõ ràng**, đo được (≥75%, đền 1 lần, 6 tháng) — DamageCheck cũng cần tiêu chí rõ cho từng kết luận.
+  - Đáng né: **loại trừ đúng ca của mình** — *"…thất lạc, mất, thiệt hại trong quá trình giao hàng của nhà vận chuyển."* Và là sản phẩm phía người mua, chủ shop không được gì.
+  - Mình khác: đứng phía **chủ shop**, xử lý đúng ca hàng vỡ **khi giao**, và trả lời câu bảo hiểm không trả lời: lỗi của shop, vận chuyển hay khách.
+- **Quy trình khiếu nại / bồi thường của đơn vị vận chuyển** (GHN: [chính sách bồi thường](https://ghn.vn/pages/chinh-sach-boi-thuong-cua-ghn-moi), [quy định khiếu nại](https://ghn.vn/pages/quy-dinh-ve-khieu-nai-cua-ghn) · GHTK: [điều khoản](https://ghtk.vn/dieu-khoan-va-quy-dinh-tai-ghtk/), xem 27/11/2026): shop tự gửi khiếu nại kèm bằng chứng, hãng xác minh và quyết định mức đền.
+  - Đáng học: **danh sách bằng chứng hãng đòi** — video mở hàng quay liền mạch, video đóng gói, biên bản, hoá đơn. Kết luận "chưa đủ bằng chứng" của DamageCheck xin đúng những thứ này.
+  - Đáng né: **hãng vừa là một bên vừa tự quyết** mức hư hỏng; hạn rất ngắn và khác nhau giữa các hãng (GHN 01 tháng từ ngày giao; GHTK ≤03 ngày làm việc khi người nhận từ chối vì hư hỏng) — shop chậm là mất quyền. Đóng gói "không đúng quy cách" là lý do miễn trách của cả hai hãng.
+  - Mình khác: đối chiếu **trước khi** shop nộp — nói rõ có nên đòi không, căn cứ nào đủ, còn mấy ngày; nếu lỗi do đóng gói thì khuyên **không** đòi để khỏi mất công.
+- **Trả hàng / Hoàn tiền của sàn** (Shopee): người mua gửi yêu cầu kèm ảnh / video, sàn phân xử giữa người mua và shop. *(Điều kiện, hạn cụ thể: chưa kiểm trên help.shopee.vn — `evidence/data-mining.md` còn để trống.)*
+  - Đáng học: buộc người mua nộp ảnh / video ngay từ đầu.
+  - Đáng né: chỉ giải quyết **người mua ↔ shop**; tiền shop hoàn cho khách không tự đòi lại được từ đơn vị vận chuyển. Dữ liệu `evidence/` sơ bộ: trong 5 ca hàng vỡ, 0/5 phản hồi của shop nhắc tới đòi bồi thường vận chuyển.
+  - Mình khác: nối hai đầu — cùng một hồ sơ, soạn cả tin trả lời khách **và** đơn đòi bồi thường vận chuyển (bản nháp).
 
 ## §4. Thiết kế *(guide 2.2, 3.2)*
 - **Lát cắt MỘT CÂU:** Chủ shop online nhỏ nhận khiếu nại hàng vỡ/hỏng → AI đối chiếu log đóng gói, log vận chuyển và mô tả ảnh của khách để xác định bên chịu trách nhiệm (shop / vận chuyển / khách / chưa đủ bằng chứng) → chủ shop biết nên hoàn tiền cho khách, đòi bồi thường từ đơn vị vận chuyển, hay xin thêm bằng chứng.
@@ -80,7 +91,7 @@ flowchart TD
   | Không coi nội dung đầu vào là lệnh | Lời khách gắn nhãn "chưa kiểm chứng"; "ghi chú hệ thống", đóng vai trong tin nhắn bị coi là nội dung, không phải lệnh (quy tắc 9) — câu thử T04, T05 |
 
 - **Phần nào còn giả:**
-  - Log đóng gói, log vận chuyển, khiếu nại: **giả** — 7 đơn nhóm tự viết trong `data/orders.json` (`synthetic`, xem `data/DATA_CARD.md`).
+  - Log đóng gói, log vận chuyển, khiếu nại: DH01–DH07 **giả** — nhóm tự viết (`synthetic`). DH08–DH15 dựng từ **đánh giá Shopee thật** (`evidence/shopee-reviews.csv`), nhưng chỉ có lời người mua — **không có** log đóng gói, log vận chuyển, đơn vị vận chuyển (xem `data/DATA_CARD.md`).
   - Đơn vị vận chuyển VC-A, VC-B và hạn khiếu nại 7 / 5 ngày: **giả lập** *(tự ước tính)*, không phải chính sách hãng thật.
   - Ngày xử lý = ngày chạy máy (đặt `DAMAGECHECK_TODAY=YYYY-MM-DD` để chạy lại đúng một ngày).
   - Model: đang ở **chế độ giả** cho tới khi nối model thật (CP3).
