@@ -4,20 +4,16 @@
 > Một trang. Mỗi dataset một mục. Dữ liệu chạy thử (bài mẫu, thông báo mẫu, đoạn transcript…) để trong thư mục `data/` này.
 > Không commit nguyên tài liệu khoá, dữ liệu cá nhân thật hay nguyên file data BTC cấp — chỉ đoạn trích ngắn, bản viết lại, hoặc số đã tổng hợp.
 
-## Dataset 1 · [tên]
+## Dataset 1 · Hồ sơ 7 đơn khiếu nại hàng vỡ (`data/orders.json`)
 
 | | |
 |---|---|
-| Dùng để làm gì | nguồn cho công cụ `…` · bộ câu thử · đào bằng chứng |
-| Từ đâu | data BTC cấp (`…` trong repo đề) · tài liệu khoá (trích / viết lại) · nhóm tự viết · sinh có seed |
-| Xử lý những bước gì | lọc __ · làm sạch __ · ẩn danh __ · chia __ (script: `…`) |
-| Số dòng / số đoạn | __ |
-| Phiên bản / ngày lấy | __ |
-| Nhãn | thật · `synthetic` |
-| Giới hạn | thiếu gì, lệch về phía nào |
+| Dùng để làm gì | nguồn cho công cụ tra hồ sơ đơn trong `codebase/tools.py` (log đóng gói, log vận chuyển, khiếu nại + mô tả ảnh của khách) · nền cho 20 câu thử ở `eval/benchmark.csv` |
+| Từ đâu | nhóm tự viết (Phan Trung Hiếu, 27/11/2026), mô phỏng hồ sơ một shop online nhỏ bán đồ dễ vỡ. Tên shop, khách, đơn vị vận chuyển (`VC-A`, `VC-B`) đều giả |
+| Xử lý những bước gì | viết tay, không lấy từ nguồn thật nên không cần ẩn danh · đã gỡ mọi trường đáp án (bên chịu, ghi chú mâu thuẫn) khỏi file để công cụ không lộ đáp án cho model · đáp án chỉ nằm ở `eval/benchmark.csv` |
+| Số dòng / số đoạn | 7 đơn · 7 log đóng gói · 19 sự kiện vận chuyển · 7 khiếu nại · 2 đơn vị vận chuyển |
+| Phiên bản / ngày lấy | v1 · 27/11/2026 |
+| Nhãn | `synthetic` |
+| Giới hạn | mỗi đơn cố ý rơi vào một tình huống: lỗi vận chuyển (DH01), lỗi đóng gói (DH02), lỗi phía khách (DH03), thiếu bằng chứng (DH04), bằng chứng mâu thuẫn (DH05), lỗi vận chuyển nhưng quá hạn khiếu nại (DH06), ngoài phạm vi vì sai màu (DH07). Bộ này sạch và rõ hơn hồ sơ thật: ảnh chỉ có mô tả chữ, không có ảnh thật. Hạn khiếu nại 7 và 5 ngày là giả lập *(tự ước tính)*, không phải chính sách của hãng thật |
 
-**Data `synthetic` (nhóm tự sinh):** ghi cách sinh (prompt / script), seed, người kiểm, số dòng đã kiểm tay. Data tự dựng **không phải bằng chứng pain**.
-
-## Dataset 2 · [tên]
-
-…
+**Data `synthetic`:** viết tay, không dùng prompt hay seed. Người kiểm: __ · đã kiểm tay __/7 đơn (cần kiểm xem log mỗi đơn có dẫn đúng tới đáp án ở benchmark không). Data tự dựng **không phải bằng chứng pain**.

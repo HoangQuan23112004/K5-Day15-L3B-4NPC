@@ -1,0 +1,292 @@
+{
+  "_meta": {
+    "label": "synthetic",
+    "note": "Dữ liệu nhóm tự viết (Phan Trung Hiếu, 27/11/2026) để chạy thử DamageCheck. Không phải dữ liệu thật, không phải bằng chứng pain. Tên shop, khách, đơn vị vận chuyển đều giả. File chỉ chứa log; đáp án đúng nằm ở eval/benchmark.csv, không để công cụ đọc được.",
+    "id_scheme": "DG-<mã đơn> = log đóng gói · VC-<mã đơn>-<n> = sự kiện vận chuyển thứ n · KH-<mã đơn> = khiếu nại + mô tả ảnh của khách"
+  },
+  "carriers": {
+    "VC-A": {
+      "name": "Đơn vị vận chuyển A (giả)",
+      "claim_deadline_days": 7,
+      "claim_deadline_from": "ngày giao thành công",
+      "note": "điều kiện giả lập (tự ước tính), không phải chính sách của hãng thật"
+    },
+    "VC-B": {
+      "name": "Đơn vị vận chuyển B (giả)",
+      "claim_deadline_days": 5,
+      "claim_deadline_from": "ngày giao thành công",
+      "note": "điều kiện giả lập (tự ước tính), không phải chính sách của hãng thật"
+    }
+  },
+  "orders": [
+    {
+      "order_id": "DH01",
+      "product": "Bình hoa gốm men lam cao 30cm",
+      "fragile": true,
+      "value_vnd": 450000,
+      "carrier": "VC-A",
+      "packing_log": {
+        "id": "DG-DH01",
+        "time": "2026-11-18 09:10",
+        "packed_by": "nhân viên kho 1",
+        "materials": "bọc 3 lớp xốp hơi, chèn mút góc, thùng carton 5 lớp, dán nhãn HÀNG DỄ VỠ",
+        "video": true,
+        "check_note": "video đóng gói 2 phút, quay rõ bình nguyên vẹn trước khi niêm phong"
+      },
+      "shipping_log": [
+        {
+          "id": "VC-DH01-1",
+          "time": "2026-11-18 15:00",
+          "status": "đã lấy hàng",
+          "note": "kiện nguyên vẹn"
+        },
+        {
+          "id": "VC-DH01-2",
+          "time": "2026-11-19 07:30",
+          "status": "tại kho trung chuyển",
+          "note": "kiện bị móp góc, có tiếng lạo xạo bên trong"
+        },
+        {
+          "id": "VC-DH01-3",
+          "time": "2026-11-20 10:15",
+          "status": "giao thành công",
+          "note": "người nhận ký, ghi 'thùng móp'"
+        }
+      ],
+      "customer_claim": {
+        "id": "KH-DH01",
+        "time": "2026-11-20 10:40",
+        "text": "Shop ơi bình vỡ làm 3 mảnh rồi, thùng móp một góc luôn.",
+        "photo_description": "ảnh 1: thùng carton móp góc trên bên phải; ảnh 2: bình vỡ 3 mảnh, xốp hơi còn nguyên quanh mảnh vỡ"
+      }
+    },
+    {
+      "order_id": "DH02",
+      "product": "Bộ 6 ly thủy tinh",
+      "fragile": true,
+      "value_vnd": 280000,
+      "carrier": "VC-B",
+      "packing_log": {
+        "id": "DG-DH02",
+        "time": "2026-11-21 14:00",
+        "packed_by": "chủ shop",
+        "materials": "bọc 1 lớp túi nilon, không chèn xốp giữa các ly, thùng carton 3 lớp, không dán nhãn dễ vỡ",
+        "video": false,
+        "check_note": "không quay video, không chụp ảnh"
+      },
+      "shipping_log": [
+        {
+          "id": "VC-DH02-1",
+          "time": "2026-11-21 17:20",
+          "status": "đã lấy hàng",
+          "note": "kiện nguyên vẹn"
+        },
+        {
+          "id": "VC-DH02-2",
+          "time": "2026-11-22 08:00",
+          "status": "tại kho trung chuyển",
+          "note": "bình thường"
+        },
+        {
+          "id": "VC-DH02-3",
+          "time": "2026-11-23 09:45",
+          "status": "giao thành công",
+          "note": "người nhận ký, không ghi chú"
+        }
+      ],
+      "customer_claim": {
+        "id": "KH-DH02",
+        "time": "2026-11-23 10:05",
+        "text": "Mở ra 4 ly bể hết, ly va vào nhau lạch cạch.",
+        "photo_description": "ảnh 1: thùng nguyên vẹn, không móp; ảnh 2: 4 ly vỡ trong túi nilon, không có xốp chèn"
+      }
+    },
+    {
+      "order_id": "DH03",
+      "product": "Đèn ngủ thủy tinh",
+      "fragile": true,
+      "value_vnd": 320000,
+      "carrier": "VC-A",
+      "packing_log": {
+        "id": "DG-DH03",
+        "time": "2026-11-14 10:00",
+        "packed_by": "nhân viên kho 2",
+        "materials": "bọc 2 lớp xốp hơi, hộp giấy cứng, thùng carton 5 lớp, dán nhãn HÀNG DỄ VỠ",
+        "video": true,
+        "check_note": "video đóng gói, đèn nguyên vẹn, có cắm thử sáng"
+      },
+      "shipping_log": [
+        {
+          "id": "VC-DH03-1",
+          "time": "2026-11-14 16:00",
+          "status": "đã lấy hàng",
+          "note": "kiện nguyên vẹn"
+        },
+        {
+          "id": "VC-DH03-2",
+          "time": "2026-11-16 11:00",
+          "status": "giao thành công",
+          "note": "đồng kiểm: người nhận mở hộp, xác nhận 'hàng nguyên vẹn, đèn sáng', ký nhận"
+        }
+      ],
+      "customer_claim": {
+        "id": "KH-DH03",
+        "time": "2026-11-22 20:30",
+        "text": "Đèn bị nứt rồi, shop đổi cho mình cái mới.",
+        "photo_description": "ảnh 1: chụp đèn đặt trên sàn gạch, chụp đế đèn có vết nứt và vết trầy; không có ảnh thùng hay hộp"
+      }
+    },
+    {
+      "order_id": "DH04",
+      "product": "Lọ tinh dầu thủy tinh 100ml",
+      "fragile": true,
+      "value_vnd": 190000,
+      "carrier": "VC-B",
+      "packing_log": {
+        "id": "DG-DH04",
+        "time": "2026-11-23 08:30",
+        "packed_by": "chủ shop",
+        "materials": "ghi 'đóng gói như mọi khi', không ghi vật liệu",
+        "video": false,
+        "check_note": "không quay video, không chụp ảnh"
+      },
+      "shipping_log": [
+        {
+          "id": "VC-DH04-1",
+          "time": "2026-11-23 15:00",
+          "status": "đã lấy hàng",
+          "note": "không ghi chú"
+        },
+        {
+          "id": "VC-DH04-2",
+          "time": "2026-11-25 09:00",
+          "status": "giao thành công",
+          "note": "không ghi chú"
+        }
+      ],
+      "customer_claim": {
+        "id": "KH-DH04",
+        "time": "2026-11-25 13:00",
+        "text": "Lọ bị bể, chảy hết tinh dầu.",
+        "photo_description": "ảnh 1: cận cảnh lọ vỡ đặt trên bàn; không có ảnh thùng, không có video mở hàng"
+      }
+    },
+    {
+      "order_id": "DH05",
+      "product": "Đĩa sứ trang trí 25cm",
+      "fragile": true,
+      "value_vnd": 520000,
+      "carrier": "VC-A",
+      "packing_log": {
+        "id": "DG-DH05",
+        "time": "2026-11-20 13:00",
+        "packed_by": "nhân viên kho 1",
+        "materials": "bọc 3 lớp xốp hơi, kẹp 2 tấm bìa cứng, thùng carton 5 lớp, dán nhãn HÀNG DỄ VỠ",
+        "video": true,
+        "check_note": "video đóng gói, đĩa nguyên vẹn"
+      },
+      "shipping_log": [
+        {
+          "id": "VC-DH05-1",
+          "time": "2026-11-20 17:00",
+          "status": "đã lấy hàng",
+          "note": "kiện nguyên vẹn"
+        },
+        {
+          "id": "VC-DH05-2",
+          "time": "2026-11-21 06:45",
+          "status": "tại kho trung chuyển",
+          "note": "bình thường"
+        },
+        {
+          "id": "VC-DH05-3",
+          "time": "2026-11-22 14:20",
+          "status": "giao thành công",
+          "note": "người nhận ký, ghi 'kiện nguyên vẹn'"
+        }
+      ],
+      "customer_claim": {
+        "id": "KH-DH05",
+        "time": "2026-11-22 14:50",
+        "text": "Đĩa vỡ đôi, thùng giao tới bị bẹp nặng mà shipper đi vội quá.",
+        "photo_description": "ảnh 1: thùng carton bẹp một mặt; ảnh 2: đĩa vỡ đôi trong xốp hơi"
+      }
+    },
+    {
+      "order_id": "DH06",
+      "product": "Chậu cây gốm nhỏ",
+      "fragile": true,
+      "value_vnd": 240000,
+      "carrier": "VC-B",
+      "packing_log": {
+        "id": "DG-DH06",
+        "time": "2026-11-06 09:00",
+        "packed_by": "nhân viên kho 2",
+        "materials": "bọc 2 lớp xốp hơi, chèn giấy vụn, thùng carton 5 lớp, dán nhãn HÀNG DỄ VỠ",
+        "video": true,
+        "check_note": "video đóng gói, chậu nguyên vẹn"
+      },
+      "shipping_log": [
+        {
+          "id": "VC-DH06-1",
+          "time": "2026-11-06 15:00",
+          "status": "đã lấy hàng",
+          "note": "kiện nguyên vẹn"
+        },
+        {
+          "id": "VC-DH06-2",
+          "time": "2026-11-07 08:00",
+          "status": "tại kho trung chuyển",
+          "note": "kiện bị rơi khi bốc xếp, móp đáy"
+        },
+        {
+          "id": "VC-DH06-3",
+          "time": "2026-11-08 10:00",
+          "status": "giao thành công",
+          "note": "người nhận ký, ghi 'thùng móp đáy'"
+        }
+      ],
+      "customer_claim": {
+        "id": "KH-DH06",
+        "time": "2026-11-08 11:00",
+        "text": "Chậu nứt dưới đáy, thùng cũng móp đáy luôn shop ạ.",
+        "photo_description": "ảnh 1: đáy thùng móp; ảnh 2: chậu nứt ở đáy"
+      }
+    },
+    {
+      "order_id": "DH07",
+      "product": "Cốc sứ in hình, màu xanh",
+      "fragile": true,
+      "value_vnd": 150000,
+      "carrier": "VC-A",
+      "packing_log": {
+        "id": "DG-DH07",
+        "time": "2026-11-22 10:00",
+        "packed_by": "nhân viên kho 1",
+        "materials": "bọc 2 lớp xốp hơi, hộp giấy, thùng carton 3 lớp",
+        "video": true,
+        "check_note": "video đóng gói, cốc nguyên vẹn, màu xanh"
+      },
+      "shipping_log": [
+        {
+          "id": "VC-DH07-1",
+          "time": "2026-11-22 16:00",
+          "status": "đã lấy hàng",
+          "note": "kiện nguyên vẹn"
+        },
+        {
+          "id": "VC-DH07-2",
+          "time": "2026-11-24 09:30",
+          "status": "giao thành công",
+          "note": "người nhận ký, không ghi chú"
+        }
+      ],
+      "customer_claim": {
+        "id": "KH-DH07",
+        "time": "2026-11-24 12:00",
+        "text": "Mình đặt màu hồng mà shop gửi màu xanh, đổi giúp mình.",
+        "photo_description": "ảnh 1: cốc nguyên vẹn, màu xanh"
+      }
+    }
+  ]
+}
