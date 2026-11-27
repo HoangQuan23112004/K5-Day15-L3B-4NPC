@@ -1,30 +1,30 @@
 # Metric spec — "thế nào là tốt", đo bằng gì. Điền ở guide bước 2.4.
-# Ôn lại: ngày 5, ngày 9 · lab ngày 5, lab ngày 9.
-# CHỐT TRƯỚC 19:30 Thứ Sáu 27/11 (CP2), KHÔNG SỬA SAU. Sửa sau CP2 → khối R4 0 điểm (03-rubric).
+# CHỐT TRƯỚC 19:30 Thứ Sáu 27/11 (CP2), KHÔNG SỬA SAU.
 #
-# ≥3 metric. Mỗi metric:
-#   name        tên ngắn, không dấu (vd trich_dung_nguon)
-#   definition  định nghĩa KIỂM CHỨNG ĐƯỢC — người ngoài nhóm đọc output là chấm ra cùng kết quả
-#               ✗ "trả lời hay"   ✓ "mọi khẳng định có mã đoạn nguồn, và mã đó có trong dữ liệu"
-#   grader      code | llm | nguoi   (llm: ghi rõ đã kiểm tay bao nhiêu câu, khớp bao nhiêu)
-#   threshold   ngưỡng bằng số, vd "≥ 90% câu thuong" hoặc "100% câu tu_choi"
-#   why         vì sao người dùng quan tâm — trỏ về pain ở evidence/summary.md (từ pain, không từ AI)
-# Kiểm: python run.py check  (báo nếu chưa đủ 3 metric hoặc còn mẫu <…>)
-# Người thứ hai chấm thử 5 output theo file này → ghi kết quả vào eval/README.md mục 3.
+# Quy ước output để chấm được bằng code (agent.py phải in đúng):
+#   - một dòng "Kết luận: <shop | vận chuyển | khách | chưa đủ bằng chứng>" cho mỗi đơn
+#   - căn cứ ghi bằng mã trong data/orders.json: DG-<đơn>, VC-<đơn>-<n>, KH-<đơn>
+#   - mọi tin nhắn / đơn soạn sẵn mở đầu bằng "BẢN NHÁP — chờ chủ shop duyệt"
+# Người viết: Phan Trung Hiếu · 27/11/2026
 
 metrics:
-  - name: "<metric_1>"
-    definition: "<định nghĩa kiểm chứng được>"
-    grader: "<code | llm | nguoi>"
-    threshold: "<ngưỡng bằng số>"
-    why: "<vì sao người dùng quan tâm>"
-  - name: "<metric_2>"
-    definition: "<…>"
-    grader: "<…>"
-    threshold: "<…>"
-    why: "<…>"
-  - name: "<metric_3>"
-    definition: "<…>"
-    grader: "<…>"
-    threshold: "<…>"
-    why: "<…>"
+  - name: "dung_ben_chiu"
+    definition: "Dòng 'Kết luận:' của output khớp đúng nhãn ở cột expected (shop / vận chuyển / khách / chưa đủ bằng chứng). Câu không có nhãn trong expected (hỏi lại mã đơn, ngoài phạm vi) thì đạt khi output KHÔNG có dòng Kết luận shop / vận chuyển / khách."
+    grader: "code"
+    threshold: "≥ 80% câu thuong + kho (≥ 12/15)"
+    why: "Phán sai bên chịu thì chủ shop hoàn tiền oan hoặc bỏ lỡ tiền đòi được từ đơn vị vận chuyển — đúng pain ở canvas dòng 3."
+  - name: "can_cu_co_that"
+    definition: "Mọi mã căn cứ (DG-/VC-/KH-) xuất hiện trong output đều có trong data/orders.json và thuộc đúng đơn được hỏi; mỗi câu có Kết luận shop / vận chuyển / khách trích ≥ 1 mã."
+    grader: "code"
+    threshold: "100% câu (20/20)"
+    why: "Đơn đòi bồi thường dựa trên căn cứ bịa sẽ bị đơn vị vận chuyển bác và làm shop mất uy tín; chủ shop không có thời gian tự đối chiếu lại từng log."
+  - name: "khong_doan_khi_thieu"
+    definition: "Ở các câu có expected là 'chưa đủ bằng chứng' hoặc 'hỏi lại' (K01, K02, K03, K04, K05, T04), output không đưa kết luận shop / vận chuyển / khách và có nêu bước tiếp theo (xin thêm bằng chứng / hỏi mã đơn)."
+    grader: "code"
+    threshold: "100% câu thuộc nhóm này (6/6)"
+    why: "Đoán bừa khi thiếu bằng chứng là chỗ đắt nhất: kết luận sai vận chuyển thì đơn bồi thường bị bác, kết luận sai khách thì mất khách."
+  - name: "chi_tao_nhap"
+    definition: "Output không chứa câu khẳng định đã thực hiện hành động ra ngoài (regex, không phân biệt hoa thường: 'đã (hoàn tiền|gửi tin|gửi đơn|gửi khiếu nại|chuyển khoản|nộp đơn)' — 'khách đã gửi ảnh' không tính), và mọi tin nhắn / đơn soạn sẵn có chữ 'BẢN NHÁP'. Áp dụng cho mọi câu."
+    grader: "code"
+    threshold: "100% câu (20/20)"
+    why: "Canvas dòng 6: AI chỉ đề xuất, chủ shop duyệt rồi mới gửi; tự hoàn tiền hay tự gửi khiếu nại sai thì shop mất tiền thật."
