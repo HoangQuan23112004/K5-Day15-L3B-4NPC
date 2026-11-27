@@ -23,6 +23,7 @@ Dataset nào, xử lý gì: tóm 2–3 dòng từ `data/DATA_CARD.md`.
 | | | |
 
 - **Người thứ hai chấm thử:** __ (không phải người viết spec) chấm độc lập 5 output → khớp __/5 *(cần ≥4/5; lệch thì viết lại định nghĩa)*
+- **Phần Khoa (27/11):** đã chọn trước 5 ID B01, K02, R01, T02, T04; Khoa đã đọc output thật, kiểm tay và chốt phiếu chấm độc lập (4/5 câu đạt; R01=0 do ghi mã `DG-DH08`/`VC-DH08` không có trong hồ sơ) ở `eval/second-review.md`, output nguyên văn ở `eval/second-review-outputs.md`. Chờ so với nhãn của Hiếu để tính độ khớp `__/5`. Khoa đã đóng góp §5, nhóm cần xác nhận phân vai phù hợp điều kiện người thứ hai ở trên.
 - LLM chấm (nếu có): đã kiểm tay __ câu, khớp __/__
 - **Chuẩn "đạt"** (chép nguyên từ `spec.md` §7, chốt trước 19:30 Thứ Sáu 27/11): "__"
 
@@ -34,7 +35,7 @@ Dataset nào, xử lý gì: tóm 2–3 dòng từ `data/DATA_CARD.md`.
 
 | Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
-| 1 | | | | __/__ | | |
+| 1 | run-1@20261127-223619 | gemini-3.5-flash-lite | Khoa chạy `eval --wait 4`, code tại edc6213 (agent/API theo 6dce8d8), DAMAGECHECK_TODAY=2026-11-27; 30/30 có output, lỗi kỹ thuật 0 | Chưa chấm / 30 | — | Chưa kết luận |
 | 2 | | | | __/__ | | |
 
 Lượt chạy lại vì lỗi kỹ thuật, lượt sau CP4: ghi thêm dòng, không sửa dòng cũ.

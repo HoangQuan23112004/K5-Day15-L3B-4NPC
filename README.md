@@ -108,14 +108,15 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 | Thành phần | Thật / Giả | Ghi chú |
 |---|---|---|
-| Lời gọi AI ở quyết định trung tâm | **Thật** (bắt buộc từ CP3) | Model: ____ |
+| Lời gọi AI ở quyết định trung tâm | **Thật** — đã gọi được API | Model: `gemini-3.5-flash-lite`; Khoa chạy thử 10 phiên, run `simulate-try@20261127-223433`, token lấy từ usage |
 |  |  |  |
 
 ## Dùng AI vào việc gì
 
 2–3 dòng (bắt buộc): nhóm dùng công cụ AI nào để làm gì, người kiểm lại phần nào. Chi tiết: [docs/ai-usage.md](docs/ai-usage.md). Coding agent đọc [AGENTS.md](AGENTS.md).
 
-____
+Nhóm dùng Claude Code hỗ trợ code/thiết kế theo khai báo từng thành viên trong `docs/ai-usage.md`; Codex hỗ trợ phần Khoa: persona, đặc tả §5, chạy API và soạn phiếu chấm 5 output.
+Khoa đã xác nhận kiểm tay 20 nhãn bằng chứng và chốt phiếu chấm độc lập 5 output lượt 1; chờ Hiếu chấm chính thức cả bộ và đối chiếu.
 
 ## File mẫu — điền ở bước nào
 

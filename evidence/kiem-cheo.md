@@ -42,7 +42,10 @@
 - A018 chỉ nói dễ bể; A053 không nói rõ có hư hỏng nên ghi `0`, không suy từ lời shop hoặc thiếu thông tin ra hàng vỡ khi giao.
 - Codex hỗ trợ soạn nhãn theo yêu cầu của Khoa,  Khoa kiểm tay. Trong các lượt làm việc trước, Codex đã thấy một số trích đoạn và diễn giải A006/A028 qua tài liệu/benchmark dự án; do đó lượt này **không phải kiểm mù hoàn toàn**, dù không mở file nhãn gốc trong lượt này. Chưa tính độ khớp với Vĩnh.
 
-## Kết quả (Vĩnh điền sau khi so)
+## Kết quả đối chiếu sau khi khóa nhãn (Vĩnh cần duyệt)
 
-- `vo_khi_giao` khớp: __/20 · `loi_do` khớp: __/__
-- Dòng lệch và cách xử lý: __
+- Đối chiếu tự động sau khi hai cột nhãn đã được lưu ở commit `edc6213`; chỉ từ bước này mới mở `evidence/shopee-reviews.csv`. Không thay nhãn trong bảng sau khi thấy nhãn gốc.
+- `vo_khi_giao` khớp: **20/20**. `loi_do` khớp: **7/8**, mẫu số là 8 dòng cả hai bên cùng ghi `vo_khi_giao = 1`; 12 dòng không vỡ không chấm nguyên nhân.
+- Quy đổi nhãn gốc: `nhac_vo_hong` → `vo_khi_giao`; khi có vỡ, `do_van_chuyen = 0/1/?` → `shop/vc/?`. Đây là phép so nhãn theo cùng định nghĩa, không phải chấm trách nhiệm thực tế.
+- Dòng lệch **A035**: Khoa ghi `shop`, Vĩnh ghi `?`. Khoa hiểu “sản phẩm như vậy cũng đem bán” là trách shop gửi hàng hỏng; nhãn gốc coi nguyên nhân chưa rõ. **Giữ nguyên hai nhãn, chờ Vĩnh/Khoa thống nhất cách hiểu**, chưa nhận là đã xử lý lệch.
+- Giới hạn kiểm mù và hỗ trợ AI ở ghi chú trên vẫn áp dụng; số khớp không thay thế kiểm độc lập của người phù hợp quy định.

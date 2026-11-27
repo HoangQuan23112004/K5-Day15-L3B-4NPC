@@ -1,52 +1,57 @@
-# Mô phỏng chi phí khi dùng thật — điền ở guide bước 4.2.
-# Ôn lại: ngày 13, ngày 1, ngày 14 · lab ngày 13, lab ngày 14.
-# Mọi số phải có nguồn (data / phỏng vấn / khảo sát / quy mô khoá có nguồn) hoặc ghi rõ "(tự ước tính)".
-# Chạy: python run.py simulate --try   (10 phiên, kiểm khung — làm trước CP3)
-#       python run.py simulate         (đủ số phiên dưới đây — bản nộp CP4)
-# Thay mọi dòng "(ví dụ)" bằng số và nguồn của nhóm; simulate nhắc nếu còn sót.
+# DamageCheck — cấu hình CP3 của Lê Viết Khoa, 27/11/2026.
+# Nguồn và cách suy ra: cost/README.md. Đây là kịch bản ước tính, chưa phải log dùng thật.
+# 1 người dùng = 1 chủ shop; 1 phiên = xử lý 1 yêu cầu khiếu nại hàng vỡ/hỏng.
+# 1 yêu cầu = 1 lượt answer(), có thể gọi model nhiều lần nếu hỏi nhiều đơn.
+# Chạy khi có .env hợp lệ: python run.py simulate --try (10 phiên, không tính nộp).
+sessions: 50
+seed: 42
 
-sessions: 50        # số phiên mô phỏng — bản nộp ≥50
-seed: 42            # giữ cố định để chạy lại ra cùng chuỗi phiên
+users:
+  low: 10
+  base: 50
+  high: 100
+  source: "(tự ước tính) 10/50/100 chủ shop online nhỏ là ba kịch bản triển khai thử, không phải số shop đã đăng ký hoặc quy mô toàn thị trường. Chưa có nguồn công khai xác nhận số shop sẽ dùng DamageCheck."
 
-users:              # số người dùng thật nếu đưa vào dùng — 3 kịch bản, ở quy mô thật của sản phẩm
-                    # track A: khoá học · track B–F: người dùng của sản phẩm / nhóm nhắm tới, nguồn công khai có link
-  low: 300
-  base: 700
-  high: 1000
-  source: "(ví dụ) track A — thay bằng số của nhóm. Cơ sở: lớp L3 hơn 700 học viên (README hackathon); thấp, cao: (tự ước tính)"
-
-personas:           # ≥3 kiểu người dùng; share cộng lại = 1
-  - name: dung_it
-    share: 0.5              # tỉ lệ người dùng kiểu này
-    uses_per_month: 4       # số phiên / người / tháng
-    turns_per_session: 1    # số lượt hỏi trong một phiên
-    source: "(ví dụ) phỏng vấn P1, P3 — thay bằng nguồn của nhóm"
-  - name: dung_vua
+# Tỉ lệ persona và số đơn/tháng: tự ước tính; share cộng bằng 1.
+# Tần suất = đơn/tháng × 0.0038 × 1 phiên/ca.
+# 0.0038 là A5 làm tròn trong evidence/summary.md (Vĩnh, 27/11/2026):
+# (205 / 18566) × (21 / 61) ≈ 0.0038.
+# Giả định mỗi đánh giá ≈ một đơn, mọi ca vỡ đều dùng sản phẩm, 1 lượt/ca.
+# Không làm tròn lên số nguyên: số thập phân là kỳ vọng phiên/người/tháng.
+personas:
+  - name: shop_it_don
+    share: 0.5
+    uses_per_month: 0.38
+    turns_per_session: 1
+    types: [thuong, kho]
+    source: "evidence/summary.md mục 2, A5 ≈0,38%; xem 27/11/2026. (tự ước tính) 100 đơn/shop/tháng, share 50%, 100% ca vỡ dùng DamageCheck và 1 phiên/ca → 100 × 0.0038 = 0.38 phiên/tháng."
+  - name: shop_vua_don
     share: 0.3
-    uses_per_month: 10
-    turns_per_session: 3
-    source: "(ví dụ) khảo sát n = 24, câu 3"
-  - name: dung_nhieu
+    uses_per_month: 1.14
+    turns_per_session: 1
+    types: [thuong, kho]
+    source: "evidence/summary.md mục 2, A5 ≈0,38%; xem 27/11/2026. (tự ước tính) 300 đơn/shop/tháng, share 30%, 100% ca vỡ dùng DamageCheck và 1 phiên/ca → 300 × 0.0038 = 1.14 phiên/tháng."
+  - name: shop_nhieu_don
     share: 0.2
-    uses_per_month: 20
-    turns_per_session: 5
-    source: "(ví dụ) data/preclass: đếm số lượt / người — cách đếm ở evidence/data-mining.md"
-# Mỗi lượt hỏi lấy ngẫu nhiên một đầu vào trong eval/benchmark.csv (type thuong và kho).
-# Persona hỏi kiểu riêng: thêm vào persona đó
-#     types: [thuong, kho, tu_choi]
-# hoặc
-#     inputs: ["câu hỏi kiểu 1", "câu hỏi kiểu 2"]
+    uses_per_month: 3.04
+    turns_per_session: 1
+    types: [thuong, kho]
+    source: "evidence/summary.md mục 2, A5 ≈0,38%; xem 27/11/2026. (tự ước tính) 800 đơn/shop/tháng, share 20%, 100% ca vỡ dùng DamageCheck và 1 phiên/ca → 800 × 0.0038 = 3.04 phiên/tháng."
 
-prices:             # USD / 1 triệu token — chép từ further-reading/model-prices.md của repo đề. ≥2 mức model
-  - model: gemini-3.1-flash-lite
-    input: 0.25
-    output: 1.50
-    source: "(ví dụ) https://ai.google.dev/gemini-api/docs/pricing · xem 25/11/2026"
+# USD / 1 triệu token, Standard/Paid Tier, input văn bản, output gồm thinking.
+# Đã đối chiếu further-reading/model-prices.md của repo đề ngày 27/11/2026.
+# BTC tra giá ngày 25/11/2026; chọn 2 tầng theo giá: Nhỏ và Lớn, không suy ra chất lượng.
+# Khoa chọn gemini-3.5-flash-lite để chạy; model còn lại dùng so giá, không phải kết quả eval đã đo.
+prices:
+  - model: gemini-3.5-flash-lite
+    input: 0.30
+    output: 2.50
+    source: "https://github.com/VinUni-AI20k/K5-L3-Day15-AI-Product-Hackathon/blob/main/further-reading/model-prices.md · mục Google Gemini, tầng Nhỏ · BTC tra 25/11/2026, Khoa đối chiếu 27/11/2026 · nguồn chính thức https://aistudio.google.com/docs/pricing#gemini-3.5-flash-lite"
   - model: gemini-4-hydrogen
     input: 1.50
     output: 7.50
-    source: "(ví dụ) https://ai.google.dev/gemini-api/docs/pricing · xem 25/11/2026"
+    source: "https://github.com/VinUni-AI20k/K5-L3-Day15-AI-Product-Hackathon/blob/main/further-reading/model-prices.md · mục Google Gemini, tầng Lớn · BTC tra 25/11/2026, Khoa đối chiếu 27/11/2026 · nguồn chính thức https://aistudio.google.com/docs/pricing#gemini-4-hydrogen"
 
-usd_to_vnd:         # tuỳ chọn: điền thì bản tóm tắt in thêm tiền Việt
+usd_to_vnd:
   rate:
   source:
