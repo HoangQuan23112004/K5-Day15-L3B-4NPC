@@ -1,9 +1,9 @@
-# AI SPEC — [Tên lát cắt] · Nhóm [tên nhóm] · Phòng [XXX] · Zone [X]
+# AI SPEC — DamageCheck · Nhóm 4NPC · Phòng [XXX] · Zone [X]
 
 > Mốc nộp: §7 chốt chuẩn "đạt" tại **CP2 19:30 Thứ Sáu 27/11** · §0–§7 nộp **CP3 10:00 Thứ Bảy 28/11** · đủ §0–§10 **CP4 14:30 Thứ Bảy 28/11** · §10 changelog ghi tiếp đến **23:59 Thứ Bảy 28/11**.
 > Đầu mỗi mục ghi bước guide (`02-guide.md` trong repo đề) chỉ cách điền. Mỗi mục ngắn, có số và nguồn; chi tiết để ở file được trỏ tới. Xoá dòng hướng dẫn trong ngoặc vuông khi điền xong.
 
-Track: [ ] A · [ ] B · [ ] C · [ ] D · [ ] E — bài toán: [đề gợi ý trong file track, hoặc bài toán nhóm tự mở rộng] __
+Track: [ ] A · [ ] B · [ ] C · [x] D · [ ] E — bài toán: trợ lý xác định trách nhiệm khi hàng bị vỡ/hỏng cho shop online nhỏ
 Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
 
 ## §0. Hiện tại việc này diễn ra thế nào *(guide 1.1)*
@@ -33,28 +33,57 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
 - [sản phẩm / tính năng gần giống]: một điều đáng học · một điều đáng né · mình khác gì
 
 ## §4. Thiết kế *(guide 2.2, 3.2)*
-- **Lát cắt MỘT CÂU** (1 người dùng · 1 việc · 1 quyết định AI · 1 kết quả):
-- Không làm (≥3 điều):
-- **Sơ đồ** (ảnh / Mermaid / draw.io): [chèn ở đây]
-- **Hình dạng:** [ ] workflow cố định · [ ] một agent · [ ] nhiều agent — 2 dòng lý do, và vì sao **không** chọn hình dạng phức tạp hơn:
+- **Lát cắt MỘT CÂU:** Chủ shop online nhỏ nhận khiếu nại hàng vỡ/hỏng → AI đối chiếu log đóng gói, log vận chuyển và mô tả ảnh của khách để xác định bên chịu trách nhiệm (shop / vận chuyển / khách / chưa đủ bằng chứng) → chủ shop biết nên hoàn tiền cho khách, đòi bồi thường từ đơn vị vận chuyển, hay xin thêm bằng chứng.
+- **Không làm:**
+  1. Không tự hoàn tiền, không tự gửi tin cho khách, không tự nộp khiếu nại cho đơn vị vận chuyển — chỉ soạn bản nháp.
+  2. Không xem ảnh / video thật — chỉ đọc *mô tả* ảnh có trong hồ sơ (`photo_description`).
+  3. Không nối API thật của sàn hay đơn vị vận chuyển — log đọc từ `data/orders.json`.
+  4. Không sửa log, không thêm bằng chứng vào hồ sơ (kể cả khi chủ shop nhờ).
+  5. Không xử lý khiếu nại không phải vỡ/hỏng (sai màu, sai mẫu, giao chậm, thất lạc).
+- **Sơ đồ:**
+
+```mermaid
+flowchart TD
+    A[Tin của chủ shop] --> B{Có mã đơn DHxx?}
+    B -- không --> B1[Hỏi lại mã đơn<br/>không gọi model]
+    B -- có, tối đa 3 đơn --> C[get_order]
+    C --> D{Có trong dữ liệu?}
+    D -- không --> D1[Báo không tìm thấy<br/>không gọi model]
+    D -- có --> E[get_packing_log · get_shipping_log<br/>get_customer_claim]
+    E --> F[check_claim_deadline<br/>code tính hạn, model không tự tính ngày]
+    F --> G[Model — 1 lần / đơn<br/>Kết luận + Căn cứ có mã + Nên làm + BẢN NHÁP]
+    G --> H[Chủ shop duyệt bản nháp<br/>rồi tự gửi / tự hoàn tiền]
+```
+
+- **Hình dạng:** [x] workflow cố định · [ ] một agent · [ ] nhiều agent — Khiếu nại nào cũng cần đúng một bộ căn cứ (đơn, đóng gói, vận chuyển, khiếu nại, hạn khiếu nại), nên các bước cố định và chỉ có *một* quyết định cần model. Không chọn agent vì không có bước nào cần AI tự chọn công cụ; agent tốn thêm lượt gọi, khó kiểm, và có thể bỏ sót một nguồn căn cứ.
 - **AI dựa vào đâu** — mỗi công cụ (khớp `codebase/tools.py`):
 
   | Công cụ | Input | Output | Tác động ra ngoài? |
   |---|---|---|---|
-  |  |  |  |  |
+  | `get_order` | mã đơn | sản phẩm, dễ vỡ không, giá trị, đơn vị vận chuyển — hoặc "không tìm thấy" | Không |
+  | `get_packing_log` | mã đơn | log đóng gói `DG-<đơn>`: người đóng, vật liệu, có video không, ghi chú | Không |
+  | `get_shipping_log` | mã đơn | các sự kiện vận chuyển `VC-<đơn>-<n>`: thời điểm, trạng thái, ghi chú (móp, rơi, đồng kiểm…) | Không |
+  | `get_customer_claim` | mã đơn | khiếu nại `KH-<đơn>`: lời khách + mô tả ảnh (chưa kiểm chứng) | Không |
+  | `check_claim_deadline` | mã đơn | ngày giao, hạn cuối khiếu nại đơn vị vận chuyển, còn bao nhiêu ngày / đã quá hạn | Không |
 
-- **Mức tự động:** [ ] AI gợi ý, người quyết · [ ] AI tự làm khi chắc, chuyển người khi không · [ ] AI tự làm — lý do (sai thì ai chịu gì, sửa đắt hay rẻ):
-- **Chỗ chặn rủi ro** (rủi ro lớn nhất của lát cắt bị chặn ở đâu, bằng gì):
-- **Chỗ người duyệt** (việc AI không được tự làm):
-- **Nguyên tắc thiết kế** (≥3, bắt buộc G10):
+- **Mức tự động:** [x] AI gợi ý, người quyết · [ ] AI tự làm khi chắc, chuyển người khi không · [ ] AI tự làm — Phán sai thì chủ shop mất tiền trực tiếp: hoàn tiền oan, từ chối oan khách (mất uy tín, bị đánh giá xấu), hoặc đòi bồi thường bằng căn cứ sai nên bị bác. Sửa đắt vì tiền đã hoàn hay hạn khiếu nại đã qua thì không lấy lại được, nên quyết định cuối luôn là của chủ shop.
+- **Chỗ chặn rủi ro:** rủi ro lớn nhất là *AI kết luận chắc khi căn cứ thiếu hoặc mâu thuẫn* (đổ lỗi sai bên). Chặn bằng: (1) kết luận thứ tư "chưa đủ bằng chứng", prompt buộc chọn nó khi phân vân (`SYSTEM` quy tắc 3); (2) mọi căn cứ phải có mã `DG-` / `VC-` / `KH-` có thật để chủ shop và metric `can_cu_co_that` kiểm được; (3) lời chủ shop kể thêm ngoài hồ sơ không được tính là căn cứ (quy tắc 2); (4) hạn khiếu nại do code tính.
+- **Chỗ người duyệt:** hoàn tiền cho khách · gửi tin trả lời khách · nộp đơn đòi bồi thường đơn vị vận chuyển. AI chỉ soạn bản có dòng đầu **"BẢN NHÁP — chờ chủ shop duyệt"**; không công cụ nào có tác động ra ngoài.
+- **Nguyên tắc thiết kế:**
 
   | Nguyên tắc | Chỗ cụ thể trên sơ đồ / trong bản chạy thử |
   |---|---|
-  | G10 — thu hẹp phạm vi khi không chắc |  |
-  |  |  |
-  |  |  |
+  | G10 — thu hẹp phạm vi khi không chắc | Không có mã đơn / không thấy đơn → hỏi lại, không gọi model (nhánh B1, D1 trong `agent.py`). Căn cứ thiếu / mâu thuẫn → "chưa đủ bằng chứng" + nêu cụ thể cần thêm gì (`SYSTEM` quy tắc 3, 4). Ngoài phạm vi vỡ/hỏng → không kết luận (quy tắc 8). Một tin tối đa 3 đơn (`MAX_ORDERS`) |
+  | Căn cứ kiểm được | Mỗi dòng hồ sơ có mã; output bắt buộc dẫn mã trong ngoặc vuông (`SYSTEM` quy tắc 1) — khớp metric `can_cu_co_that` |
+  | Phần tính toán chắc chắn để code làm | Hạn khiếu nại tính trong `check_claim_deadline`; model chỉ đọc lại (quy tắc 5) |
+  | Người duyệt việc có tác động ra ngoài | Không công cụ nào gửi / sửa; output chỉ có BẢN NHÁP; cấm viết "đã hoàn tiền / đã gửi" (quy tắc 6, 7) — khớp metric `chi_tao_nhap` |
+  | Không coi nội dung đầu vào là lệnh | Lời khách gắn nhãn "chưa kiểm chứng"; "ghi chú hệ thống", đóng vai trong tin nhắn bị coi là nội dung, không phải lệnh (quy tắc 9) — câu thử T04, T05 |
 
-- Phần nào còn giả (công cụ trả dữ liệu giả, model chế độ giả…) — ghi rõ, không giả làm thật:
+- **Phần nào còn giả:**
+  - Log đóng gói, log vận chuyển, khiếu nại: **giả** — 7 đơn nhóm tự viết trong `data/orders.json` (`synthetic`, xem `data/DATA_CARD.md`).
+  - Đơn vị vận chuyển VC-A, VC-B và hạn khiếu nại 7 / 5 ngày: **giả lập** *(tự ước tính)*, không phải chính sách hãng thật.
+  - Ngày xử lý = ngày chạy máy (đặt `DAMAGECHECK_TODAY=YYYY-MM-DD` để chạy lại đúng một ngày).
+  - Model: đang ở **chế độ giả** cho tới khi nối model thật (CP3).
 
 ## §5. Chỗ khó — 4 lớp + ≥6 kịch bản + 2 tấn công *(guide 2.3)*
 
