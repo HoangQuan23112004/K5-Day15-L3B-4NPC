@@ -6,8 +6,8 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 
 | Việc | Công cụ AI | AI làm gì | Người kiểm/sửa gì | Ai phụ trách |
 |---|---|---|---|---|
-| Code bản chạy thử | | | | |
-| Prompt / thiết kế lời gọi mô hình | | | | |
+| Code bản chạy thử | Claude Code | Viết `codebase/tools.py` (5 công cụ chỉ đọc `data/orders.json`, `check_claim_deadline` tính hạn khiếu nại), luồng `codebase/agent.py` (tìm mã đơn, dừng khi thiếu mã / không thấy đơn, 1 lần gọi model / đơn, tối đa 3 đơn), phần gọi API trong `codebase/ai.py` (chép từ `docs/connect-model.md`); viết `spec.md` §3, §4, §6 | Quân duyệt từng thay đổi trước khi commit; Quân đã bảo xoá một bản viết khi chưa có dữ liệu của Hiếu và viết lại theo quy ước của Hiếu. Đã chạy thử ở chế độ giả các câu K03, K04, K07, B07. Quân kiểm thêm: __ *(Quân điền)* | Hoàng Dương Anh Quân |
+| Prompt / thiết kế lời gọi mô hình | Claude Code | Viết `SYSTEM` trong `codebase/agent.py`: 4 kết luận, bắt dẫn mã căn cứ, không coi lời kể ngoài hồ sơ là căn cứ, ngoài phạm vi không kết luận, chỉ soạn "BẢN NHÁP — chờ chủ shop duyệt", bỏ qua lệnh chèn trong tin nhắn | Chưa kiểm với model thật — kiểm bằng lượt 1 (`eval/run-1.csv`). Quân kiểm: __ *(Quân điền)* | Hoàng Dương Anh Quân |
 | Đào data (viết script đếm, gợi ý nhãn) | Claude Code | Đề xuất cách đếm (`evidence/data-mining.md` mục 1), viết `evidence/count.py`, chuyển đoạn đánh giá Vĩnh copy từ Shopee thành dòng CSV đã ẩn danh và **gợi ý nhãn** | Vĩnh tự chọn sản phẩm theo cách đếm, tự copy đánh giá, duyệt cách đếm trước khi đọc data; kiểm tay __ dòng nhãn, khớp __ *(điền sau khi kiểm)* | Ngô Chí Vĩnh |
 | Rà câu hỏi phỏng vấn / khảo sát | Claude Code | Soạn kịch bản phỏng vấn, form khảo sát (cuối cùng không dùng vì không liên hệ được chủ shop) | Vĩnh đọc lại | Ngô Chí Vĩnh |
 | Viết câu thử (benchmark) | | | Mỗi câu thử có `source`; câu thử AI viết được ghi rõ | |
