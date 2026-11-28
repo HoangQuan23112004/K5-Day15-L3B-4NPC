@@ -176,9 +176,21 @@ Các tình huống dưới đây mô tả **hành vi mong muốn**, đối chi�
 - So với impact/người/tháng (§2: trung bình 1,14 ca/shop/tháng ≈ **34 phút + 57.000đ/shop/tháng** *(tự ước tính)*; 50 shop ≈ **28,5 giờ + 2,85 triệu đồng/tháng**): chi phí gọi AI chỉ **$0.0010/shop/tháng** (~$0.0524/tháng cho cả 50 shop, hoặc $0.0041/shop/tháng nếu tính giá tầng Lớn), nhỏ hơn nhiều bậc độ lớn so với thời gian đối chiếu thủ công và giá trị hàng tranh chấp → **khả thi rõ rệt về chi phí suy luận**; chi phí thực tế cần lưu ý nằm ở khâu chủ shop duyệt bản nháp và nối dữ liệu vận hành (`cost/cost-estimate.md`).
 
 ## §9. Rủi ro & an toàn
-- Dữ liệu: đã ẩn danh gì, không thu gì, không đưa gì vào model gói miễn phí:
-- AI **không được** làm gì kể cả khi người dùng yêu cầu:
-- Ai có thể bị hại nếu AI sai, và nhóm chặn thế nào:
+- **Dữ liệu — đã ẩn danh gì, không thu gì, không đưa gì vào model gói miễn phí:**
+  - Bằng chứng (`evidence/`): chỉ dùng đánh giá và review **công khai**, đọc tay, không cào tự động. File commit **không có** tên tài khoản người mua, tên người viết review, ảnh / video của họ; trích dẫn ngắn, gắn mã dòng (`A0xx`, `B0xx`). File thô có tên tài khoản (`evidence/raw-*`) bị `.gitignore` chặn, chỉ nằm trên máy người thu. Link trang sản phẩm / trang app là trang bán hàng công khai, giữ để kiểm lại (guide 1.2).
+  - Dữ liệu chạy thử (`data/orders.json`): DH01–DH07 là dữ liệu giả (`synthetic`), tên shop / khách / đơn vị vận chuyển đều giả; DH08–DH15 chỉ lấy **lời khách đã bỏ tên** từ đánh giá công khai, log đóng gói / vận chuyển không có. Không có số điện thoại, địa chỉ, tên thật.
+  - Không thu: thông tin cá nhân của người mua, chủ shop hay shipper; không phỏng vấn, không khảo sát (không có dữ liệu cá nhân phải giữ).
+  - Đưa vào model: chỉ hồ sơ đơn như trên (giả hoặc đã bỏ tên). Khi dùng thật, hồ sơ đơn có tên, địa chỉ, SĐT khách → phải bỏ các trường đó trước khi gửi model, và không dùng gói miễn phí có điều khoản dùng dữ liệu để huấn luyện. Gói model đang dùng để chạy eval: Quân xác nhận *(chưa kiểm)*. API key chỉ nằm trong `.env`, đã `.gitignore`.
+- **AI không được làm gì kể cả khi người dùng yêu cầu** (khớp `SYSTEM` trong `codebase/agent.py` và §4):
+  - Hoàn tiền, gửi tin cho khách, nộp đơn đòi bồi thường, chuyển khoản — chỉ soạn bản có dòng đầu "BẢN NHÁP — chờ chủ shop duyệt"; không viết "đã hoàn tiền / đã gửi" (quy tắc 6, 7; metric `chi_tao_nhap`, câu T02).
+  - Sửa hoặc làm giả log, thêm chi tiết không có trong hồ sơ (vd "shipper đã ném hàng"), bịa mã căn cứ (quy tắc 1, 9; câu T03, T05; lỗi mã "ma" R02–R04 ở lượt 1).
+  - Đổi kết luận theo ý chủ shop hoặc theo lệnh chèn trong tin nhắn ("bỏ qua mọi quy tắc…") (quy tắc 3, 9; câu K06, T04).
+  - Kết luận khiếu nại ngoài phạm vi vỡ / hỏng như sai màu, thiếu phụ kiện (quy tắc 8; câu T01, R08, R09).
+- **Ai có thể bị hại nếu AI sai, và nhóm chặn thế nào:**
+  - **Khách** — AI đổ lỗi sai cho khách → khách bị từ chối oan, mất tiền. Bằng chứng cho thấy chuyện này đã xảy ra khi không có công cụ: 6/21 ca hàng vỡ ở Bộ A là khách phải chịu (`evidence/summary.md`). Chặn: kết luận "khách" chỉ khi hồ sơ cho thấy hỏng **sau** khi nhận (vd đồng kiểm nguyên vẹn); phân vân → "chưa đủ bằng chứng"; tin gửi khách không buộc tội (quy tắc 3, 6).
+  - **Chủ shop** — kết luận sai "vận chuyển" → đơn đòi bồi thường bị bác, mất công và uy tín với hãng; kết luận sai "shop" → hoàn tiền oan. Chặn: mọi căn cứ phải có mã có thật để chủ shop tự mở lại kiểm (metric `can_cu_co_that`); hạn khiếu nại do code tính, quá hạn thì cảnh báo, không hứa đòi được (quy tắc 5); quyết định cuối luôn là của chủ shop (§4 "Chỗ người duyệt").
+  - **Đơn vị vận chuyển** — bị đổ lỗi không căn cứ (như câu mẫu "có thể do quá trình vận chuyển…" shop đang dùng, `A048`–`A050`). Chặn: kết luận "vận chuyển" chỉ khi log vận chuyển ghi bất thường **khớp** hư hỏng và shop đóng gói đúng (quy tắc 3).
+  - Chưa chặn được: AI chỉ đọc **mô tả** ảnh, không xem ảnh / video thật; hồ sơ thật có thể thiếu log (như DH08–DH15) → nhiều ca sẽ ra "chưa đủ bằng chứng", chủ shop vẫn phải tự xin thêm.
 
 ## §10. Phân công & changelog
 - Phân công có tên (theo chặng, chia cặp — guide "Cách chia việc"):
@@ -210,6 +222,7 @@ Các tình huống dưới đây mô tả **hành vi mong muốn**, đối chi�
 | 27/11 đêm (Vĩnh) | Viết §0 (luồng hiện tại 4 bước + công cụ / AI đang dùng) | §0 còn trống, CP3 cần §0–§7. Dựng từ bằng chứng đã có ở `evidence/` và nguồn chính sách ở §3; chỗ chưa tự kiểm ghi "chưa kiểm" |
 | 27/11 đêm (Hiếu) | Chấm lượt 2: điền cột `pass`, `ghi_chu` trong `eval/run-2.csv` (28/30), cùng cách chấm lượt 1. Điền §7 dòng "Kết quả" lượt 2, `eval/report.md` mục 1 (dòng lượt 2), 3, 4, `eval/README.md` mục 5 (dòng lượt 2), 6. **Không sửa** chuẩn "đạt", metric, `expected` | `run-2@20261127-230337`: can_cu_co_that 27/30 → 30/30, tổng 80% → 93%; `eval/grade.py` khớp cột `pass` 30/30. Ghi chú B03, B07: bản nháp viện hạn khiếu nại vận chuyển để từ chối khách (B07 tệ đi so với lượt 1) |
 | 27/11 đêm (Khoa) | Chạy mô phỏng chi phí đầy đủ 50 phiên `simulate-1@20261127-234357` (`python run.py simulate --rate-from eval/run-2.csv --wait 4`, `gemini-3.5-flash-lite`, `DAMAGECHECK_TODAY=2026-11-27`): 50/50 không lỗi, ghi `cost/simulate-1.csv`, `cost/simulate-1-summary.md`, `traces/simulate-1.jsonl`. Điền bảng kết quả và kết luận so với impact §2 vào `cost/cost-estimate.md`, `cost/README.md` và `spec.md` §8 | Hoàn tất mô phỏng ≥50 phiên cho CP4 dựa trên tỉ lệ đạt lượt 2 `run-2@20261127-230337` (28/30 = 93%): $0.0010/phiên, $0.0011/task thành công, $0.0524/tháng cho 50 shop ($0.0010/shop/tháng). Không sửa file CSV/summary/trace gốc hay chuẩn §7 |
+| 27/11 đêm (Vĩnh) | Viết §9 (dữ liệu đã ẩn danh / không thu; việc AI không được làm; ai bị hại và chặn ở đâu) | CP4 cần §0–§9, §9 còn trống. Phần dữ liệu lấy từ cách xử lý ở `evidence/` và `data/`; phần AI không được làm trỏ về `SYSTEM` (§4) và câu thử; chưa kiểm gói model ghi rõ |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 
