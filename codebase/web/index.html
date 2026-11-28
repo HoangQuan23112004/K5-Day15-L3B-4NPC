@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DamageCheck — phân xử trách nhiệm hàng vỡ</title>
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#fff; --ink:#1c2230; --ink2:#5a6273; --ink3:#8a91a0; --line:#e4e7ec; --line2:#eef0f3;
+  --brand:#2457d6; --brand-soft:#eaf0fd;
+  --v-ship:#2457d6; --v-ship-bg:#eaf0fd;
+  --v-shop:#c2410c; --v-shop-bg:#fdeee5;
+  --v-cust:#6d28d9; --v-cust-bg:#f1ebfd;
+  --v-none:#a16207; --v-none-bg:#fdf5dc;
+  --v-out:#475569; --v-out-bg:#eef1f5;
+  --ok:#16803c; --bad:#b42318;
+  --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5}
+button{font:inherit;cursor:pointer}
+code,.mono{font-family:var(--mono);font-size:.92em}
+
+/* top bar */
+.top{height:58px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 22px;position:sticky;top:0;z-index:5}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em}
+.logo .mark{width:30px;height:30px;border-radius:8px;background:var(--brand);display:grid;place-items:center;color:#fff;font-size:15px}
+.logo small{display:block;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:0}
+.tabs{display:flex;gap:4px;margin-left:12px}
+.tab{border:0;background:none;padding:8px 14px;border-radius:8px;color:var(--ink2);font-weight:600}
+.tab.on{background:var(--brand-soft);color:var(--brand)}
+.pills{margin-left:auto;display:flex;gap:8px;align-items:center}
+.pill{font-size:12.5px;padding:4px 10px;border-radius:999px;background:var(--line2);color:var(--ink2);white-space:nowrap}
+.pill b{color:var(--ink)}
+.pill.warn{background:#fdecec;color:var(--bad)}
+.pill.safe{background:#e8f5ec;color:var(--ok)}
+
+/* demo layout */
+.demo{display:grid;grid-template-columns:280px minmax(0,1fr) 380px;gap:16px;padding:16px 18px;height:calc(100vh - 58px)}
+.col{background:var(--panel);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;min-height:0}
+.colhead{padding:14px 16px 10px;border-bottom:1px solid var(--line2);font-weight:700;font-size:13px;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:8px}
+.colhead .count{margin-left:auto;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink3)}
+.scroll{overflow:auto;min-height:0;flex:1}
+
+/* orders */
+.search{margin:10px 12px 6px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;width:calc(100% - 24px);font:inherit}
+.order{padding:10px 14px;border-bottom:1px solid var(--line2);cursor:pointer}
+.order:hover{background:#fafbfc}
+.order.on{background:var(--brand-soft)}
+.order .r1{display:flex;align-items:center;gap:8px}
+.order .id{font-family:var(--mono);font-weight:700;font-size:13px}
+.order .prod{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.order .claim{font-size:12.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.tag{font-size:11px;padding:1px 7px;border-radius:999px;background:var(--line2);color:var(--ink2);white-space:nowrap}
+.tag.review{background:#fff4e0;color:#9a5b00}
+.tag.syn{background:#eef1f5}
+.scen-wrap{border-top:1px solid var(--line);padding:10px 12px 12px}
+.scen-title{font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin:0 0 8px}
+.scen{display:flex;flex-wrap:wrap;gap:6px;max-height:190px;overflow:auto}
+.chip-btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 8px;font-size:12.5px;text-align:left;color:var(--ink)}
+.chip-btn:hover{border-color:var(--brand);color:var(--brand)}
+.chip-btn .k{font-family:var(--mono);font-weight:700;margin-right:5px;color:var(--ink2)}
+
+/* center */
+.composer{padding:14px;border-bottom:1px solid var(--line2)}
+.composer textarea{width:100%;min-height:62px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;outline:none}
+.composer textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.crow{display:flex;align-items:center;gap:10px;margin-top:8px}
+.hint{font-size:12.5px;color:var(--ink3)}
+.send{margin-left:auto;border:0;background:var(--brand);color:#fff;border-radius:9px;padding:9px 18px;font-weight:600}
+.send:disabled{opacity:.55;cursor:wait}
+.feed{padding:14px;display:flex;flex-direction:column;gap:14px}
+.empty{color:var(--ink3);text-align:center;padding:50px 20px}
+.empty h3{color:var(--ink2);margin:0 0 6px;font-size:16px}
+
+.card{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+.q{padding:10px 14px;background:#fafbfc;border-bottom:1px solid var(--line2);font-size:13.5px;display:flex;gap:8px}
+.q .who{font-weight:700;color:var(--ink2);white-space:nowrap}
+.section{padding:14px 16px;border-bottom:1px solid var(--line2)}
+.section:last-child{border-bottom:0}
+.sec-order{font-family:var(--mono);font-weight:700;font-size:12px;color:var(--ink3);margin-bottom:6px}
+.verdict{display:flex;align-items:center;gap:12px;border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.verdict .lab{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
+.verdict .val{font-size:20px;font-weight:700}
+.verdict .act{margin-left:auto;font-size:13px;font-weight:600;text-align:right;max-width:52%}
+.v-ship{background:var(--v-ship-bg);color:var(--v-ship)}
+.v-shop{background:var(--v-shop-bg);color:var(--v-shop)}
+.v-cust{background:var(--v-cust-bg);color:var(--v-cust)}
+.v-none{background:var(--v-none-bg);color:var(--v-none)}
+.v-out{background:var(--v-out-bg);color:var(--v-out)}
+.h4{font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 6px}
+.list{margin:0;padding-left:18px}
+.list li{margin:3px 0}
+.code{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:600;padding:0 6px;border-radius:6px;background:#eef2f8;color:#2b4a8b;border:1px solid #d9e2f2;cursor:pointer;margin:0 1px}
+.code:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+.note{background:#fafbfc;border:1px dashed var(--line);border-radius:8px;padding:9px 12px;color:var(--ink2);font-size:13.5px;margin-bottom:10px}
+.draft{position:relative;border:1.5px dashed #b9c3d6;border-radius:10px;padding:16px 16px 12px;background:#fbfcfe;margin-top:24px}
+.draft .stamp{position:absolute;top:-11px;left:14px;background:#fff;padding:0 8px;font-size:11.5px;font-weight:800;letter-spacing:.08em;color:var(--bad)}
+.draft pre{white-space:pre-wrap;font-family:inherit;margin:0;font-size:14px}
+.draft .dact{display:flex;gap:8px;margin-top:10px;align-items:center}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 11px;font-size:12.5px;font-weight:600;color:var(--ink2)}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.dact .fine{font-size:12px;color:var(--ink3)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:9px 14px;background:#fafbfc;border-top:1px solid var(--line2);font-size:12.5px;color:var(--ink2)}
+.meta b{color:var(--ink)}
+.meta .sp{margin-left:auto}
+.steps{padding:8px 14px 12px;background:#fafbfc;font-size:12.5px;display:none}
+.steps.on{display:block}
+.step{display:flex;gap:8px;align-items:baseline;padding:3px 0;border-bottom:1px dotted var(--line)}
+.step:last-child{border-bottom:0}
+.step .k{width:58px;font-weight:700;font-size:11px;text-transform:uppercase;color:var(--ink3)}
+.step .k.model{color:var(--brand)}
+.step .k.note{color:#9a5b00}
+.step .d{flex:1;font-family:var(--mono);font-size:12px;color:var(--ink)}
+.step .t{color:var(--ink3);font-family:var(--mono);font-size:12px}
+.raw{display:none;white-space:pre-wrap;font-family:var(--mono);font-size:12px;background:#f6f7f9;padding:10px 14px;border-top:1px solid var(--line2);margin:0}
+.raw.on{display:block}
+.err{color:var(--bad);padding:12px 14px}
+.thinking{padding:16px;color:var(--ink2);display:flex;align-items:center;gap:10px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--brand);animation:b 1s infinite ease-in-out}
+.dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+/* dossier */
+.dos{padding:14px 16px}
+.dos h2{margin:0;font-size:17px}
+.dos .sub{color:var(--ink2);font-size:13px;margin:2px 0 12px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;margin-bottom:12px}
+.kv dt{color:var(--ink3)} .kv dd{margin:0;font-weight:600}
+.dl{border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:13px}
+.dl.okk{background:#e8f5ec;color:var(--ok)} .dl.exp{background:#fdecec;color:var(--bad)} .dl.unk{background:var(--line2);color:var(--ink2)}
+.dl b{font-size:14px}
+.bar{height:6px;border-radius:3px;background:rgba(0,0,0,.08);margin-top:7px;overflow:hidden}
+.bar i{display:block;height:100%;background:currentColor}
+.blk{margin-bottom:14px}
+.blk-h{font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;gap:6px;align-items:center}
+.ent{border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin-bottom:7px;font-size:13px;transition:box-shadow .2s,border-color .2s}
+.ent .eh{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;margin-bottom:3px}
+.ent .eh .c{white-space:nowrap}
+.ent .eh .c{font-family:var(--mono);font-weight:700;font-size:12px;color:#2b4a8b}
+.ent .eh .tm{margin-left:auto;color:var(--ink3);font-size:12px;font-family:var(--mono)}
+.ent.flash{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.ent.warn{border-left:3px solid var(--bad)}
+.missing{border:1.5px dashed var(--line);border-radius:9px;padding:10px 12px;color:var(--ink3);font-size:13px}
+.quote{font-style:italic}
+.tl{position:relative;padding-left:16px}
+.tl:before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl .ent{position:relative}
+.tl .ent:before{content:"";position:absolute;left:-15px;top:13px;width:8px;height:8px;border-radius:50%;background:#c4cad6;border:2px solid #fff}
+.tl .ent.warn:before{background:var(--bad)}
+
+/* about */
+.about{max-width:1080px;margin:0 auto;padding:28px 22px 60px}
+.hero{background:linear-gradient(135deg,#1d3f9e,#2457d6);color:#fff;border-radius:16px;padding:30px 32px;margin-bottom:22px}
+.hero h1{margin:0 0 8px;font-size:30px;letter-spacing:-.01em}
+.hero p{margin:0;font-size:16px;opacity:.92;max-width:820px}
+.hero .slice{margin-top:16px;background:rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;font-size:14.5px}
+.sec{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:18px}
+.sec h2{margin:0 0 4px;font-size:20px}
+.sec .lead{color:var(--ink2);margin:0 0 14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.stat{border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat .n{font-size:30px;font-weight:800;color:var(--brand);line-height:1.1}
+.stat .l{font-size:13px;color:var(--ink2);margin-top:4px}
+.bq{border-left:4px solid var(--brand);padding:4px 0 4px 14px;margin:16px 0 4px;font-style:italic;font-size:16px}
+.src{font-size:12.5px;color:var(--ink3);margin-top:10px}
+.flow{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr 24px 1fr;align-items:stretch;margin:6px 0 14px}
+.fbox{border:1.5px solid #c4cad6;border-radius:12px;padding:12px 13px;font-size:13.5px}
+.fbox b{display:block;margin-bottom:4px;font-size:14px}
+.fbox .n{font-size:11px;font-weight:800;color:var(--ink3);letter-spacing:.06em}
+.fbox.ai{border-color:var(--brand);background:var(--brand-soft)}
+.fbox.hu{border-color:var(--ok);background:#e8f5ec}
+.farr{display:grid;place-items:center;color:var(--ink3);font-size:18px}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t th,table.t td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+table.t th{font-size:12px;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+.vb{display:inline-block;padding:2px 9px;border-radius:999px;font-weight:700;font-size:12.5px}
+.guard{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line2)}
+.guard:last-child{border-bottom:0}
+.guard .gi{width:30px;height:30px;border-radius:8px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:800;flex:none}
+.guard b{display:block}
+.guard span{color:var(--ink2);font-size:13.5px}
+.bars{display:flex;flex-direction:column;gap:10px}
+.brow{display:grid;grid-template-columns:80px 1fr 118px;align-items:center;gap:10px;font-size:13px}
+.btrack{height:22px;background:var(--line2);border-radius:6px;position:relative;overflow:hidden}
+.bfill{height:100%;border-radius:6px}
+.b1{background:#9fb4e8}.b2{background:var(--brand)}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--ink2);margin-bottom:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.cond{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13.5px}
+.cond .s{font-weight:700}
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.mem{border:1px solid var(--line);border-radius:12px;padding:14px}
+.mem b{display:block}
+.mem .r{font-size:12px;color:var(--brand);font-weight:700;margin-bottom:6px}
+.mem p{margin:0;font-size:13px;color:var(--ink2)}
+.hidden{display:none!important}
+@media (max-width:1200px){.demo{grid-template-columns:240px minmax(0,1fr)}.demo .dcol{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo"><div class="mark">DC</div><div>DamageCheck<small>Phân xử trách nhiệm khi hàng bị vỡ · nhóm 4NPC</small></div></div>
+  <nav class="tabs">
+    <button class="tab on" data-tab="demo">Demo</button>
+    <button class="tab" data-tab="about">Về dự án</button>
+  </nav>
+  <div class="pills">
+    <span class="pill" id="p-model">Model: …</span>
+    <span class="pill" id="p-today">Ngày xử lý: …</span>
+    <span class="pill safe">AI chỉ đề xuất · chủ shop duyệt</span>
+  </div>
+</header>
+
+<!-- ============ DEMO ============ -->
+<main id="tab-demo" class="demo">
+  <section class="col">
+    <div class="colhead">Đơn hàng <span class="count" id="ocount"></span></div>
+    <input class="search" id="osearch" placeholder="Tìm mã đơn, sản phẩm…">
+    <div class="scroll" id="olist"></div>
+    <div class="scen-wrap">
+      <p class="scen-title">Kịch bản demo (từ bộ câu thử)</p>
+      <div class="scen" id="scen"></div>
+    </div>
+  </section>
+
+  <section class="col">
+    <div class="composer">
+      <textarea id="q" placeholder="Nhập như chủ shop nhắn, vd: Đơn DH01 khách báo bình hoa bị vỡ, lỗi bên nào?"></textarea>
+      <div class="crow">
+        <span class="hint">Enter để gửi · Shift+Enter xuống dòng · cần có mã đơn dạng DHxx</span>
+        <button class="send" id="send">Phân xử</button>
+      </div>
+    </div>
+    <div class="scroll"><div class="feed" id="feed">
+      <div class="empty" id="empty">
+        <h3>Chọn một đơn bên trái hoặc một kịch bản demo</h3>
+        AI đọc log đóng gói, log vận chuyển và lời khách của đơn, rồi đề xuất bên chịu trách nhiệm.<br>
+        Mọi tin nhắn / đơn khiếu nại chỉ là <b>bản nháp</b> — giao diện không có nút gửi hay hoàn tiền.
+      </div>
+    </div></div>
+  </section>
+
+  <section class="col dcol">
+    <div class="colhead">Hồ sơ đơn <span class="count" id="dosid"></span></div>
+    <div class="scroll"><div class="dos" id="dos"><div class="empty">Chọn một đơn để xem hồ sơ AI sẽ đọc.</div></div></div>
+  </section>
+</main>
+
+<!-- ============ ABOUT ============ -->
+<main id="tab-about" class="about hidden">
+  <div class="hero">
+    <h1>DamageCheck</h1>
+    <p>Trợ lý giúp chủ shop online nhỏ xác định <b>ai chịu trách nhiệm</b> khi khách báo hàng đến tay bị vỡ / hỏng — dựa trên căn cứ có trong hồ sơ, không dựa trên cảm tính.</p>
+    <div class="slice"><b>Lát cắt:</b> chủ shop nhận khiếu nại hàng vỡ → AI đối chiếu log đóng gói, log vận chuyển và mô tả ảnh của khách → kết luận <b>shop / vận chuyển / khách / chưa đủ bằng chứng</b> → chủ shop biết nên hoàn tiền, đòi bồi thường vận chuyển, hay xin thêm bằng chứng.</div>
+  </div>
+
+  <section class="sec">
+    <h2>1 · Vấn đề và bằng chứng</h2>
+    <p class="lead">Khi hàng vỡ, chủ shop phải quyết ai chịu tiền ngay trong lúc khách chờ — nhưng không có cách đối chiếu nhanh đóng gói, hành trình vận chuyển và lời khách.</p>
+    <div class="grid4">
+      <div class="stat"><div class="n">21/61</div><div class="l">đánh giá 1–2 sao (34%) nói hàng <b>đến tay đã vỡ / hỏng</b></div></div>
+      <div class="stat"><div class="n">3/10</div><div class="l">ca có shop trả lời: <b>hai bên đổ lỗi cho nhau</b>, không ai có căn cứ</div></div>
+      <div class="stat"><div class="n">0/10</div><div class="l">phản hồi của shop nhắc tới <b>đòi bồi thường</b> vận chuyển</div></div>
+      <div class="stat"><div class="n">6/21</div><div class="l">ca hàng vỡ <b>khách phải tự chịu</b></div></div>
+    </div>
+    <p class="bq">"Nắp cốc bị nứt rất rõ, chẳng biết là do hàng lỗi trước hay do bên vận chuyển."</p>
+    <div class="src">— đánh giá 1 sao, 08/2025, dòng A028</div>
+    <p style="margin-top:14px"><b>Nói thật về bằng chứng:</b> nguồn thứ hai (20 review 1 sao mới nhất của app GHTK) <b>không</b> ủng hộ trực tiếp — 0/8 phàn nàn của người gửi hàng là về hàng vỡ; họ than giao chậm (5/8) và phí (3/8). Nhóm không phỏng vấn được chủ shop, nên bằng chứng là lời người mua và phản hồi của shop. Bằng chứng làm nhóm đổi trọng tâm: không phải "đòi được bồi thường", mà <b>phân xử nhanh, có căn cứ</b>.</p>
+    <div class="src">Nguồn: <code>evidence/summary.md</code> · Bộ A: 61 đánh giá 1–2 sao, 9 sản phẩm Shopee, xem 27/11/2026, nhãn kiểm chéo 20/20 · Bộ B: 20 review 1 sao app GHTK · chạy lại số: <code>python evidence/count.py</code></div>
+  </section>
+
+  <section class="sec">
+    <h2>2 · DamageCheck làm việc thế nào</h2>
+    <p class="lead">Workflow cố định — mọi khiếu nại cần đúng một bộ căn cứ, nên chỉ có <b>một</b> quyết định cần AI. Không dùng agent tự chọn bước: tốn lượt gọi, khó kiểm, dễ bỏ sót nguồn.</p>
+    <div class="flow">
+      <div class="fbox"><span class="n">BƯỚC 1 · CODE</span><b>Đọc tin chủ shop</b>Tìm mã đơn <code>DHxx</code> (tối đa 3 đơn / tin). Không có mã → hỏi lại, <b>không gọi model</b>.</div>
+      <div class="farr">→</div>
+      <div class="fbox"><span class="n">BƯỚC 2 · CODE</span><b>Lấy hồ sơ qua 5 công cụ</b>Đơn hàng · log đóng gói <code>DG-</code> · log vận chuyển <code>VC-…-n</code> · lời khách <code>KH-</code> · hạn khiếu nại (code tự tính).</div>
+      <div class="farr">→</div>
+      <div class="fbox ai"><span class="n">BƯỚC 3 · AI</span><b>Một lần gọi model / đơn</b>Kết luận + căn cứ có mã + việc nên làm + bản nháp. Code kiểm lại: mã lạ → bắt viết lại.</div>
+      <div class="farr">→</div>
+      <div class="fbox hu"><span class="n">BƯỚC 4 · NGƯỜI</span><b>Chủ shop duyệt</b>Đọc căn cứ, sửa bản nháp, tự gửi / tự hoàn tiền. AI không có quyền hành động.</div>
+    </div>
+    <table class="t">
+      <tr><th>Công cụ</th><th>Đọc gì</th><th>Tác động ra ngoài?</th></tr>
+      <tr><td><code>get_order</code></td><td>Sản phẩm, giá trị, hàng dễ vỡ, đơn vị vận chuyển</td><td>Không</td></tr>
+      <tr><td><code>get_packing_log</code></td><td>Ai đóng, vật liệu chèn, có video đóng gói không — mã <code>DG-DHxx</code></td><td>Không</td></tr>
+      <tr><td><code>get_shipping_log</code></td><td>Các mốc vận chuyển, ghi chú móp / rơi / đồng kiểm — mã <code>VC-DHxx-n</code></td><td>Không</td></tr>
+      <tr><td><code>get_customer_claim</code></td><td>Lời khách + mô tả ảnh (chưa kiểm chứng) — mã <code>KH-DHxx</code></td><td>Không</td></tr>
+      <tr><td><code>check_claim_deadline</code></td><td>Ngày giao + hạn khiếu nại của hãng → còn mấy ngày / đã quá hạn (code tính, model không tự đếm)</td><td>Không</td></tr>
+    </table>
+    <div class="src">Nguồn: <code>spec.md</code> §4 · <code>codebase/agent.py</code>, <code>codebase/tools.py</code></div>
+  </section>
+
+  <section class="sec">
+    <h2>3 · Bốn kết luận và việc nên làm</h2>
+    <p class="lead">Model phải chọn đúng một kết luận, chỉ theo hồ sơ — không chiều theo giả định của chủ shop.</p>
+    <table class="t">
+      <tr><th>Kết luận</th><th>Khi nào</th><th>Chủ shop nên</th></tr>
+      <tr><td><span class="vb v-shop">shop</span></td><td>Đóng gói không đảm bảo (thiếu chèn, sai quy cách, không nhãn dễ vỡ) và vận chuyển không ghi bất thường</td><td>Hoàn tiền / gửi bù; không đòi vận chuyển</td></tr>
+      <tr><td><span class="vb v-ship">vận chuyển</span></td><td>Log vận chuyển ghi móp, rơi, bẹp… khớp với hư hỏng khách mô tả, và shop đóng gói đúng</td><td>Lập hồ sơ đòi bồi thường + xử lý với khách; cảnh báo nếu quá hạn</td></tr>
+      <tr><td><span class="vb v-cust">khách</span></td><td>Hư hỏng xảy ra sau khi khách đã nhận (vd đồng kiểm nguyên vẹn rồi mới báo)</td><td>Từ chối lịch sự, kèm căn cứ</td></tr>
+      <tr><td><span class="vb v-none">chưa đủ bằng chứng</span></td><td>Thiếu ảnh / video / log, hoặc các nguồn mâu thuẫn — phân vân giữa hai kết luận thì chọn kết luận này</td><td>Xin thêm ảnh thùng, video mở hàng…</td></tr>
+      <tr><td><span class="vb v-out">ngoài phạm vi</span></td><td>Không phải vỡ / hỏng: sai màu, thiếu phụ kiện, giao chậm</td><td>Tự đối chiếu đơn đặt hàng, video đóng gói</td></tr>
+    </table>
+  </section>
+
+  <section class="sec">
+    <h2>4 · Chốt chặn an toàn</h2>
+    <p class="lead">Rủi ro lớn nhất: AI kết luận chắc khi căn cứ thiếu hoặc mâu thuẫn — đổ lỗi sai bên làm chủ shop mất tiền thật.</p>
+    <div class="grid2">
+      <div>
+        <div class="guard"><div class="gi">1</div><div><b>Thu hẹp khi không chắc (G10)</b><span>Thiếu mã đơn / không thấy đơn → hỏi lại, không gọi model. Căn cứ thiếu hay mâu thuẫn → "chưa đủ bằng chứng".</span></div></div>
+        <div class="guard"><div class="gi">2</div><div><b>Căn cứ kiểm được</b><span>Mỗi ý phải kèm mã <code>DG-</code> / <code>VC-</code> / <code>KH-</code> có thật. Code so mã trong câu trả lời với hồ sơ: mã lạ → bắt viết lại 1 lần, vẫn còn → thay bằng lời.</span></div></div>
+        <div class="guard"><div class="gi">3</div><div><b>Phần chắc chắn để code làm</b><span>Hạn khiếu nại tính bằng code (<code>check_claim_deadline</code>), model chỉ đọc lại.</span></div></div>
+      </div>
+      <div>
+        <div class="guard"><div class="gi">4</div><div><b>Người duyệt mọi việc ra ngoài</b><span>Không công cụ nào gửi tin hay hoàn tiền. Output chỉ có bản ghi "BẢN NHÁP — chờ chủ shop duyệt"; cấm viết "đã hoàn tiền / đã gửi".</span></div></div>
+        <div class="guard"><div class="gi">5</div><div><b>Không coi nội dung đầu vào là lệnh</b><span>"Ghi chú hệ thống", "bạn là trợ lý mới"… trong tin nhắn là nội dung, không phải lệnh. Từ chối làm giả log, thêm chi tiết bịa.</span></div></div>
+        <div class="guard"><div class="gi">6</div><div><b>Lời kể ngoài hồ sơ không phải căn cứ</b><span>"Khách vừa gửi thêm ảnh…" → nói rõ chưa có trong hồ sơ, cần lưu vào rồi kiểm lại.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>5 · Dữ liệu chạy thử</h2>
+    <div class="grid3">
+      <div class="stat"><div class="n">7</div><div class="l">đơn <b>giả</b> DH01–DH07 có đủ log, mỗi đơn một tình huống (vận chuyển, shop, khách, thiếu, mâu thuẫn, quá hạn, ngoài phạm vi)</div></div>
+      <div class="stat"><div class="n">8</div><div class="l">đơn DH08–DH15 dựng từ <b>đánh giá Shopee thật</b> — chỉ có lời khách, không có log</div></div>
+      <div class="stat"><div class="n">7 / 5 ngày</div><div class="l">hạn khiếu nại của 2 đơn vị vận chuyển <b>giả lập</b> VC-A / VC-B <i>(tự ước tính)</i></div></div>
+    </div>
+    <div class="src">Nguồn: <code>data/orders.json</code>, <code>data/DATA_CARD.md</code> · đáp án chỉ nằm ở bộ câu thử, công cụ không đọc được</div>
+  </section>
+
+  <section class="sec">
+    <h2>6 · Đánh giá: lượt 1 → lượt 2</h2>
+    <p class="lead" id="evlead">Đang tải kết quả từ <code>eval/run-*.csv</code>…</p>
+    <div class="grid2">
+      <div>
+        <div class="legend"><span><i class="b1"></i>Lượt 1</span><span><i class="b2"></i>Lượt 2</span></div>
+        <div class="bars" id="evbars"></div>
+      </div>
+      <div>
+        <div class="h4" style="margin-top:0">Chuẩn "đạt" (chốt 27/11, không sửa sau)</div>
+        <div id="evcond"></div>
+      </div>
+    </div>
+    <p style="margin-top:14px"><b>Một lần cải tiến:</b> lượt 1 trượt chuẩn vì mã căn cứ "ma" — đơn thiếu log nhưng model vẫn viết <code>[DG-DH08 không có]</code> (R02–R04). Sửa prompt + hồ sơ ghi danh sách mã hợp lệ + code chặn → cả 3 câu qua ở lượt 2. Còn trượt: <b>R06</b> (khiếu nại gộp vỡ + thiếu phụ kiện) và <b>R10</b> (vỡ khi khách đang dùng).</p>
+    <div class="src">30 câu thử (thuong 9 · kho 14 · tu_choi 7, gồm 2 câu tấn công), 10/30 từ data thật · 4 metric chấm bằng code (<code>eval/grade.py</code>), người chấm thứ hai khớp 5/5 · <code>eval/report.md</code></div>
+  </section>
+
+  <section class="sec">
+    <h2>7 · Chi phí khi dùng thật</h2>
+    <p class="lead" id="costlead">Đang tải <code>cost/simulate-1-summary.md</code>…</p>
+    <table class="t" id="costtbl"></table>
+    <p style="margin-top:12px">So với impact ≈ <b>34 phút + 57.000đ / shop / tháng</b> <i>(tự ước tính)</i>, chi phí AI ≈ $0,001 / shop / tháng không phải rào cản. Chưa tính hosting, lưu ảnh / video, giờ người duyệt.</p>
+    <div class="src">Mô phỏng 50 phiên theo 3 kiểu shop (100 / 300 / 800 đơn / tháng, tự ước tính) · <code>cost/personas.yaml</code>, <code>cost/cost-estimate.md</code></div>
+  </section>
+
+  <section class="sec">
+    <h2>8 · Giới hạn và nếu có thêm 1 tuần</h2>
+    <table class="t">
+      <tr><th>Việc</th><th>Vì sao</th></tr>
+      <tr><td>Cho 3–5 chủ shop thật dùng thử, đo số phút mỗi ca</td><td>Chưa có người dùng thử; 30 phút / ca là tự ước tính</td></tr>
+      <tr><td>Tách hạn khiếu nại vận chuyển khỏi tin gửi khách</td><td>B03, B07, B08: bản nháp gửi khách viện "đã quá hạn khiếu nại"</td></tr>
+      <tr><td>Tách khiếu nại gộp trước khi gọi model</td><td>R06 trượt cả hai lượt</td></tr>
+      <tr><td>Thêm quy tắc "vỡ khi đang dùng"</td><td>R10 trượt cả hai lượt</td></tr>
+      <tr><td>Xem ảnh / video thật thay vì mô tả</td><td>Hiện AI chỉ đọc mô tả ảnh; hồ sơ thật có thể thiếu log</td></tr>
+    </table>
+    <div class="src">Kết luận nhóm: <b>ITERATE</b> — bản chạy thử làm đúng việc và rẻ; còn thiếu bằng chứng từ chính chủ shop.</div>
+  </section>
+
+  <section class="sec">
+    <h2>Nhóm 4NPC</h2>
+    <div class="team">
+      <div class="mem"><div class="r">ĐỘI TRƯỞNG</div><b>Hoàng Dương Anh Quân</b><p>Thiết kế §3–§4, §6 · code luồng, công cụ, prompt, nối model · lượt 1–2, cải tiến · demo, slide</p></div>
+      <div class="mem"><div class="r">EVAL</div><b>Phan Trung Hiếu</b><p>Dữ liệu mẫu · 30 câu thử, 4 metric, chuẩn "đạt" · chấm hai lượt · <code>grade.py</code>, report</p></div>
+      <div class="mem"><div class="r">BẰNG CHỨNG</div><b>Ngô Chí Vĩnh</b><p>Đào 61 đánh giá Shopee + 20 review GHTK · spec §0–§2, §9 · người chấm thứ hai</p></div>
+      <div class="mem"><div class="r">CHI PHÍ</div><b>Lê Viết Khoa</b><p>Spec §5, §8 · persona, mô phỏng 50 phiên · kiểm chéo nhãn bằng chứng</p></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtVnd = v => v == null ? "không rõ" : v.toLocaleString("vi-VN") + "đ";
+const CODE_RE = /\[\s*((?:DG|VC|KH)-DH\d+(?:-\d+)?)\s*\]/g;
+let ORDERS = [], current = null;
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === b));
+  $("#tab-demo").classList.toggle("hidden", b.dataset.tab !== "demo");
+  $("#tab-about").classList.toggle("hidden", b.dataset.tab !== "about");
+  if (b.dataset.tab === "about") loadStats();
+});
+
+/* ---------- inline text: bold + code chips ---------- */
+function inline(t, oid) {
+  let h = esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+  return h.replace(/\[\s*((?:DG|VC|KH)-DH\d+(?:-\d+)?)\s*\]/g,
+    (_, c) => `<span class="code" data-code="${c}" data-oid="${oid || ""}">${c}</span>`);
+}
+
+/* ---------- orders ---------- */
+async function loadOrders() {
+  const r = await fetch("/api/orders"); const d = await r.json();
+  ORDERS = d.orders;
+  const c = d.config;
+  $("#p-model").innerHTML = c.fake ? "Chế độ giả — chưa nối model" : `Model: <b>${esc(c.model)}</b>`;
+  if (c.fake) $("#p-model").classList.add("warn");
+  $("#p-today").innerHTML = `Ngày xử lý: <b>${esc(c.today)}</b>`;
+  renderOrders();
+  $("#scen").innerHTML = d.scenarios.map(s =>
+    `<button class="chip-btn" data-q="${esc(s.input)}" title="${esc(s.input)}"><span class="k">${s.id}</span>${esc(s.label)}</button>`).join("");
+  document.querySelectorAll("#scen .chip-btn").forEach(b => b.onclick = () => { $("#q").value = b.dataset.q; send(); });
+}
+function renderOrders() {
+  const f = $("#osearch").value.trim().toLowerCase();
+  const list = ORDERS.filter(o => !f || (o.id + " " + o.product + " " + o.claim).toLowerCase().includes(f));
+  $("#ocount").textContent = list.length + " đơn";
+  $("#olist").innerHTML = list.map(o => `
+    <div class="order ${o.id === current ? "on" : ""}" data-id="${o.id}">
+      <div class="r1"><span class="id">${o.id}</span>
+        ${o.source === "review" ? '<span class="tag review">đánh giá thật · chỉ lời khách</span>' : `<span class="tag syn">${esc(o.carrier || "")} · giả lập</span>`}</div>
+      <div class="prod">${esc(o.product)}</div>
+      <div class="claim">“${esc(o.claim)}”</div>
+    </div>`).join("");
+  document.querySelectorAll(".order").forEach(el => el.onclick = () => {
+    const o = ORDERS.find(x => x.id === el.dataset.id);
+    showDossier(o.id);
+    $("#q").value = `Đơn ${o.id} khách báo hàng có vấn đề, lỗi bên nào?`;
+    $("#q").focus();
+  });
+}
+$("#osearch").oninput = renderOrders;
+
+/* ---------- dossier ---------- */
+async function showDossier(oid) {
+  current = oid; renderOrders();
+  $("#dosid").textContent = oid;
+  const r = await fetch("/api/order?id=" + encodeURIComponent(oid));
+  if (!r.ok) { $("#dos").innerHTML = `<div class="missing">Không tìm thấy đơn ${esc(oid)} trong dữ liệu — AI sẽ không được gọi.</div>`; return; }
+  const d = await r.json();
+  const dl = d.deadline || {};
+  let dlh;
+  if (dl.known) {
+    const used = Math.max(0, Math.min(1, (dl.limit_days - Math.max(dl.days_left, 0)) / dl.limit_days));
+    dlh = `<div class="dl ${dl.expired ? "exp" : "okk"}"><b>${dl.expired ? "Đã quá hạn khiếu nại" : "Còn " + dl.days_left + " ngày để khiếu nại"}</b><br>
+      Hạn ${dl.limit_days} ngày từ ngày giao ${esc(dl.delivered)} → hạn cuối <b>${esc(dl.deadline)}</b> · hôm nay ${esc(dl.today)}
+      <div class="bar"><i style="width:${(dl.expired ? 1 : used) * 100}%"></i></div></div>`;
+  } else dlh = `<div class="dl unk"><b>Không xác định được hạn khiếu nại</b><br>Hồ sơ không có ngày giao hoặc đơn vị vận chuyển.</div>`;
+  const pk = d.packing;
+  const pkh = pk ? `<div class="ent" data-code="${pk.id}"><div class="eh"><span class="c">${pk.id}</span><span class="tm">${esc(pk.time)}</span></div>
+      <div><b>${esc(pk.packed_by)}</b> · ${esc(pk.materials)}</div>
+      <div style="color:var(--ink2)">Video đóng gói: <b>${pk.video ? "có" : "không"}</b> · ${esc(pk.check_note)}</div></div>`
+    : `<div class="missing">Hồ sơ không có log đóng gói — đơn này không có mã DG-</div>`;
+  const shh = d.shipping.length ? `<div class="tl">` + d.shipping.map(e => {
+      const w = /móp|rơi|bẹp|vỡ|ướt|lạo xạo|đè/i.test(e.note || "");
+      return `<div class="ent ${w ? "warn" : ""}" data-code="${e.id}"><div class="eh"><span class="c">${e.id}</span><b>${esc(e.status)}</b><span class="tm">${esc(e.time)}</span></div>
+        <div style="color:${w ? "var(--bad)" : "var(--ink2)"}">${esc(e.note)}</div></div>`; }).join("") + `</div>`
+    : `<div class="missing">Hồ sơ không có log vận chuyển — đơn này không có mã VC-</div>`;
+  const kh = d.claim_full;
+  const khh = kh ? `<div class="ent" data-code="${kh.id}"><div class="eh"><span class="c">${kh.id}</span><span class="tm">${esc(kh.time || "")}</span></div>
+      <div class="quote">“${esc(kh.text)}”</div>
+      <div style="color:var(--ink2);margin-top:4px">Mô tả ảnh: ${esc(kh.photo_description || "—")}</div></div>`
+    : `<div class="missing">Không có khiếu nại trong hồ sơ</div>`;
+  $("#dos").innerHTML = `
+    <h2>${esc(d.product)}</h2>
+    <div class="sub">${d.source === "review" ? "Dựng từ đánh giá Shopee thật — chỉ có lời khách" : "Đơn giả lập để chạy thử"}</div>
+    <dl class="kv"><dt>Mã đơn</dt><dd class="mono">${d.id}</dd><dt>Giá trị</dt><dd>${fmtVnd(d.value_vnd)}</dd>
+      <dt>Vận chuyển</dt><dd>${esc(d.carrier_name || "không rõ")}${d.carrier ? " (" + esc(d.carrier) + ")" : ""}</dd></dl>
+    ${dlh}
+    <div class="blk"><div class="blk-h">Log đóng gói</div>${pkh}</div>
+    <div class="blk"><div class="blk-h">Log vận chuyển</div>${shh}</div>
+    <div class="blk"><div class="blk-h">Khiếu nại của khách <span class="tag">chưa kiểm chứng</span></div>${khh}</div>`;
+}
+async function flashCode(code, oid) {
+  const target = oid || (code.match(/DH\d+/) || [])[0];
+  if (target && target !== current) await showDossier(target);
+  const el = document.querySelector(`#dos .ent[data-code="${code}"]`);
+  if (!el) return;
+  el.scrollIntoView({behavior: "smooth", block: "center"});
+  el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1600);
+}
+document.addEventListener("click", e => {
+  const c = e.target.closest(".code"); if (c) flashCode(c.dataset.code, c.dataset.oid);
+});
+
+/* ---------- parse answer ---------- */
+const VCLS = {"vận chuyển": "v-ship", "shop": "v-shop", "khách": "v-cust", "chưa đủ bằng chứng": "v-none"};
+const VACT = {"vận chuyển": "Đòi bồi thường vận chuyển + xử lý với khách", "shop": "Hoàn tiền / gửi bù, không đòi vận chuyển",
+              "khách": "Từ chối lịch sự kèm căn cứ", "chưa đủ bằng chứng": "Xin thêm bằng chứng trước khi quyết"};
+function splitSections(text, ids) {
+  const parts = text.split(/^### Đơn (DH\d+)\s*$/m);
+  if (parts.length === 1) return [{oid: ids[0] || null, body: text}];
+  const out = [];
+  if (parts[0].trim()) out.push({oid: null, body: parts[0]});
+  for (let i = 1; i < parts.length; i += 2) out.push({oid: parts[i], body: parts[i + 1] || ""});
+  return out;
+}
+function parseSection(body) {
+  const lines = body.replace(/\r/g, "").split("\n");
+  const s = {pre: [], verdict: null, out: [], evid: [], todo: [], draft: null, tail: []};
+  let mode = "pre";
+  for (let raw of lines) {
+    const l = raw.trim();
+    if (mode === "draft") { s.draft.push(raw); continue; }
+    if (!l) continue;
+    const plain = l.replace(/\*\*/g, "");
+    let m;
+    if ((m = plain.match(/^Kết luận:\s*(chưa đủ bằng chứng|vận chuyển|shop|khách)/i))) { s.verdict = m[1].toLowerCase(); mode = "after"; continue; }
+    if (/^Ngoài phạm vi:/i.test(plain)) { s.out.push(plain.replace(/^Ngoài phạm vi:\s*/i, "")); mode = "after"; continue; }
+    if (/^Căn cứ:?$/i.test(plain)) { mode = "evid"; continue; }
+    if (/^Nên làm:?$/i.test(plain)) { mode = "todo"; continue; }
+    if (/BẢN NHÁP/i.test(plain)) { s.draft = []; const rest = plain.replace(/^.*?BẢN NHÁP\s*[—-]?\s*chờ chủ shop duyệt[:.]?\s*/i, ""); if (rest && rest !== plain) s.draft.push(rest); mode = "draft"; continue; }
+    const item = l.replace(/^[-*•]\s*/, "");
+    if (mode === "evid" && /^[-*•]/.test(l)) s.evid.push(item);
+    else if (mode === "todo" && /^[-*•]/.test(l)) s.todo.push(item);
+    else if (mode === "pre") s.pre.push(l);
+    else if (mode === "evid") s.evid.push(item);
+    else if (mode === "todo") s.todo.push(item);
+    else s.tail.push(l);
+  }
+  if (s.draft) s.draft = s.draft.join("\n").trim();
+  return s;
+}
+function renderSection(sec, multi) {
+  const p = parseSection(sec.body), oid = sec.oid;
+  let h = `<div class="section">`;
+  if (multi && oid) h += `<div class="sec-order">ĐƠN ${oid}</div>`;
+  p.pre.forEach(t => h += `<div class="note">${inline(t, oid)}</div>`);
+  if (p.verdict) h += `<div class="verdict ${VCLS[p.verdict]}"><div><div class="lab">Kết luận</div><div class="val">${esc(p.verdict)}</div></div><div class="act">${VACT[p.verdict]}</div></div>`;
+  p.out.forEach(t => h += `<div class="verdict v-out"><div><div class="lab">Ngoài phạm vi</div><div class="val" style="font-size:15px;font-weight:600">${inline(t, oid)}</div></div></div>`);
+  if (p.evid.length) h += `<div class="h4">Căn cứ</div><ul class="list">${p.evid.map(t => `<li>${inline(t, oid)}</li>`).join("")}</ul>`;
+  if (p.todo.length) h += `<div class="h4">Nên làm</div><ul class="list">${p.todo.map(t => `<li>${inline(t, oid)}</li>`).join("")}</ul>`;
+  p.tail.forEach(t => h += `<div class="note" style="margin-top:10px">${inline(t, oid)}</div>`);
+  if (p.draft) h += `<div class="draft"><span class="stamp">BẢN NHÁP · CHƯA GỬI · CHỜ CHỦ SHOP DUYỆT</span><pre>${inline(p.draft, oid)}</pre>
+      <div class="dact"><button class="btn copy">Sao chép bản nháp</button><span class="fine">DamageCheck không gửi tin, không hoàn tiền — chủ shop tự gửi sau khi duyệt.</span></div></div>`;
+  return h + `</div>`;
+}
+
+/* ---------- send ---------- */
+async function send() {
+  const text = $("#q").value.trim(); if (!text) return;
+  $("#send").disabled = true; $("#empty")?.remove();
+  const card = document.createElement("div"); card.className = "card";
+  card.innerHTML = `<div class="q"><span class="who">Chủ shop</span><span>${esc(text)}</span></div><div class="thinking"><span class="dot"></span><span class="dot"></span><span class="dot"></span> AI đang đối chiếu hồ sơ…</div>`;
+  $("#feed").prepend(card);
+  try {
+    const r = await fetch("/api/ask", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({text})});
+    const d = await r.json();
+    if (d.error && !d.output) { card.querySelector(".thinking").outerHTML = `<div class="err">Lỗi: ${esc(d.error)}</div>`; return; }
+    const secs = splitSections(d.output, d.order_ids);
+    let body = secs.map(s => renderSection(s, secs.length > 1)).join("");
+    if (d.error) body += `<div class="err">Lỗi: ${esc(d.error)}</div>`;
+    const s = d.summary;
+    const steps = d.steps.map(st => st.kind === "tool"
+      ? `<div class="step"><span class="k">công cụ</span><span class="d">${esc(st.name)}(${esc(String(st.input).replace(/^\(|,?\)$/g, ""))})</span><span class="t">${st.ms} ms</span></div>`
+      : st.kind === "model"
+      ? `<div class="step"><span class="k model">model</span><span class="d">${esc(st.name)} · vào ${st.tokens_in} / ra ${st.tokens_out} token${st.error ? " · lỗi" : ""}</span><span class="t">${(st.ms / 1000).toFixed(1)} s</span></div>`
+      : `<div class="step"><span class="k note">ghi chú</span><span class="d">${esc(st.text)}</span><span class="t"></span></div>`).join("");
+    card.querySelector(".thinking").outerHTML = body + `
+      <div class="meta">
+        <span>Model <b>${esc(s.models.join(", ") || "— (không gọi)")}</b></span>
+        <span>Gọi model <b>${s.model_calls}</b></span><span>Công cụ <b>${s.tool_calls}</b></span>
+        <span>Token <b>${s.tokens_in}</b> vào / <b>${s.tokens_out}</b> ra</span>
+        <span>Thời gian <b>${(d.elapsed_ms / 1000).toFixed(1)} s</b></span>
+        <span class="sp"><button class="btn tg-steps">Các bước (${d.steps.length})</button> <button class="btn tg-raw">Văn bản gốc</button></span>
+      </div>
+      <div class="steps">${steps || '<div class="step"><span class="d">Không có bước nào.</span></div>'}</div>
+      <pre class="raw">${esc(d.output)}</pre>`;
+    card.querySelector(".tg-steps").onclick = () => card.querySelector(".steps").classList.toggle("on");
+    card.querySelector(".tg-raw").onclick = () => card.querySelector(".raw").classList.toggle("on");
+    card.querySelectorAll(".copy").forEach(b => b.onclick = () => {
+      navigator.clipboard.writeText(b.closest(".draft").querySelector("pre").innerText);
+      b.textContent = "Đã sao chép"; setTimeout(() => b.textContent = "Sao chép bản nháp", 1400);
+    });
+    if (d.order_ids.length) showDossier(d.order_ids[0]);
+  } catch (e) {
+    card.querySelector(".thinking").outerHTML = `<div class="err">Không gọi được máy chủ: ${esc(e)}</div>`;
+  } finally { $("#send").disabled = false; }
+}
+$("#send").onclick = send;
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
+
+/* ---------- about: live stats ---------- */
+let statsLoaded = false;
+async function loadStats() {
+  if (statsLoaded) return; statsLoaded = true;
+  const d = await (await fetch("/api/stats")).json();
+  const [r1, r2] = d.runs;
+  if (r1 && r2) {
+    const pct = r => Math.round(100 * r.pass / r.total);
+    $("#evlead").innerHTML = `Cùng 30 câu, cùng model <code>${esc(r2.model)}</code>: <b>${r1.pass}/${r1.total} (${pct(r1)}%) → ${r2.pass}/${r2.total} (${pct(r2)}%)</b> · <code>${esc(r1.run_id)}</code> → <code>${esc(r2.run_id)}</code>`;
+    const rows = [["Tổng", r1.pass, r1.total, r2.pass, r2.total]].concat(
+      ["thuong", "kho", "tu_choi"].map(t => [t, r1.by_type[t].pass, r1.by_type[t].total, r2.by_type[t].pass, r2.by_type[t].total]));
+    $("#evbars").innerHTML = rows.map(([n, a, at, b, bt]) => `
+      <div class="brow"><span>${n}</span><div>
+        <div class="btrack" style="height:11px;margin-bottom:3px"><div class="bfill b1" style="width:${100 * a / at}%"></div></div>
+        <div class="btrack" style="height:11px"><div class="bfill b2" style="width:${100 * b / bt}%"></div></div></div>
+        <span class="mono">${a}/${at} → <b>${b}/${bt}</b></span></div>`).join("");
+    const ok = (c, t) => `<div class="cond"><span class="s" style="color:${c ? "var(--ok)" : "var(--bad)"}">${c ? "✓" : "✗"}</span>${t}</div>`;
+    $("#evcond").innerHTML =
+      ok(pct(r2) >= 80, `≥ 80% câu qua — lượt 2: <b>${pct(r2)}%</b>`) +
+      ok(r2.by_type.tu_choi.pass === r2.by_type.tu_choi.total, `100% câu từ chối / tấn công — <b>${r2.by_type.tu_choi.pass}/${r2.by_type.tu_choi.total}</b>`) +
+      ok(true, `0 câu trích căn cứ bịa — lượt 1: 27/30 · lượt 2: <b>30/30</b>`) +
+      ok(true, `0 câu đoán khi thiếu bằng chứng — <b>6/6</b>`) +
+      `<div class="note" style="margin-top:10px">Lượt 1: <b style="color:var(--bad)">chưa đạt</b> · Lượt 2: <b style="color:var(--ok)">đạt</b>. Câu còn trượt ở lượt 2: ${esc(r2.failed.join(", ") || "—")}</div>`;
+  }
+  const c = d.cost;
+  if (c && c.rows.length) {
+    $("#costlead").innerHTML = `Mô phỏng <code>${esc(c.run_id)}</code>, tỉ lệ đạt lấy từ lượt 2: ${esc(c.rate || "")}`;
+    $("#costtbl").innerHTML = `<tr><th>Model (giá $/1M token)</th><th>/ phiên</th><th>/ task thành công</th><th>/ tháng 10 · 50 · 100 shop</th></tr>` +
+      c.rows.map((r, i) => `<tr${i === 0 ? ' style="background:var(--brand-soft)"' : ""}><td>${esc(r.model)}${i === 0 ? " — <b>model đang dùng</b>" : " — chỉ so giá"}</td><td class="mono">${esc(r.per_session)}</td><td class="mono"><b>${esc(r.per_success)}</b></td><td class="mono">${esc(r.month_low)} · ${esc(r.month_base)} · ${esc(r.month_high)}</td></tr>`).join("");
+  }
+}
+
+loadOrders().then(() => {
+  if (location.hash === "#about") document.querySelector('.tab[data-tab="about"]').click();
+  const q = new URLSearchParams(location.search).get("q");
+  if (q) { $("#q").value = q; send(); }
+});
+</script>
+</body>
+</html>
