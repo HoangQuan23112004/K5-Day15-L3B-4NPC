@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>4NPC — DamageCheck</title>
+<style>
+  @page { size: 1280px 720px; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #1f2430; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .slide { width: 1280px; height: 720px; padding: 56px 72px 48px; position: relative; overflow: hidden;
+           page-break-after: always; break-after: page; background: #fff; }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+  .kicker { font-size: 18px; letter-spacing: .08em; text-transform: uppercase; color: #2f6fdb; font-weight: 600; margin: 0 0 10px; }
+  h1 { font-size: 40px; line-height: 1.2; margin: 0 0 26px; font-weight: 700; max-width: 1100px; }
+  h2 { font-size: 22px; margin: 0 0 10px; font-weight: 600; }
+  p, li { font-size: 21px; line-height: 1.45; }
+  ul { margin: 0; padding-left: 26px; }
+  li { margin-bottom: 8px; }
+  .muted { color: #5b6272; }
+  .small { font-size: 16px; line-height: 1.4; }
+  .foot { position: absolute; left: 72px; right: 72px; bottom: 22px; display: flex; justify-content: space-between;
+          font-size: 14px; color: #7a8090; border-top: 1px solid #e3e6ec; padding-top: 8px; }
+  .row { display: flex; gap: 28px; }
+  .col { flex: 1; }
+  .big { display: flex; gap: 22px; margin-bottom: 26px; }
+  .stat { flex: 1; border: 1px solid #dfe3ea; border-radius: 10px; padding: 18px 20px; }
+  .stat .n { font-size: 46px; font-weight: 700; color: #2f6fdb; line-height: 1.05; }
+  .stat .l { font-size: 18px; line-height: 1.35; margin-top: 6px; }
+  .quote { border-left: 4px solid #2f6fdb; padding: 6px 0 6px 18px; font-size: 22px; font-style: italic; margin: 0 0 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 18px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e3e6ec; vertical-align: top; }
+  th { color: #5b6272; font-weight: 600; font-size: 16px; }
+  .hl { background: #eef4ff; }
+  .tag { display: inline-block; font-size: 15px; padding: 2px 10px; border-radius: 12px; background: #eef1f5; color: #3b4252; margin-right: 6px; }
+  .ok { color: #1f7a3e; font-weight: 600; }
+  .bad { color: #b23a3a; font-weight: 600; }
+  .flow { display: flex; align-items: stretch; gap: 0; margin: 8px 0 26px; }
+  .box { flex: 1; border: 1.5px solid #9aa3b5; border-radius: 10px; padding: 12px 14px; font-size: 17px; line-height: 1.35; background: #fff; }
+  .box b { display: block; font-size: 18px; margin-bottom: 4px; }
+  .box.ai { border-color: #2f6fdb; background: #eef4ff; }
+  .box.human { border-color: #1f7a3e; background: #eef8f1; }
+  .arrow { width: 34px; display: flex; align-items: center; justify-content: center; color: #7a8090; font-size: 26px; }
+  pre { font-family: Consolas, "Courier New", monospace; font-size: 14.5px; line-height: 1.38; background: #f6f7f9; border: 1px solid #e3e6ec;
+        border-radius: 8px; padding: 12px 14px; margin: 6px 0 0; white-space: pre-wrap; }
+  .verdict { font-size: 30px; font-weight: 700; color: #2f6fdb; margin: 0 0 18px; }
+  .title-slide h1 { font-size: 54px; margin-top: 120px; }
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="slide">
+  <p class="kicker">1 · Người dùng &amp; pain</p>
+  <h1>Chủ shop nhỏ bán hàng dễ vỡ không có căn cứ để phân xử khi khách báo hàng vỡ</h1>
+  <div class="big">
+    <div class="stat"><div class="n">21/61</div><div class="l">đánh giá 1–2 sao nói hàng <b>đến tay đã vỡ / hỏng</b> (34%)</div></div>
+    <div class="stat"><div class="n">5/10</div><div class="l">shop có trả lời thì <b>đổ cho vận chuyển</b>, thường bằng câu mẫu</div></div>
+    <div class="stat"><div class="n">0/10</div><div class="l">phản hồi nhắc tới <b>khiếu nại / đòi bồi thường</b> đơn vị vận chuyển</div></div>
+  </div>
+  <p class="quote">"Nắp cốc bị nứt rất rõ, chẳng biết là do hàng lỗi trước hay do bên vận chuyển."</p>
+  <p class="muted small" style="margin:0 0 16px">— người mua, đánh giá 1 sao, 08/2025, dòng A028</p>
+  <p class="small">Chủ shop: <b>chủ shop online nhỏ</b>, tự đóng gói, tự trả lời khách. Kết cục theo cảm tính: shop tự gánh 4/21 ca, khách chịu 6/21, 3/10 ca hai bên đổ lỗi cho nhau.
+  <span class="muted">Nguồn thứ hai không ủng hộ trực tiếp: 0/8 phàn nàn của người gửi hàng trên app GHTK là về hàng vỡ.</span></p>
+  <div class="foot"><span>Nguồn: <code>evidence/summary.md</code> — Bộ A: 61 đánh giá 1–2 sao, 9 sản phẩm Shopee (xem 27/11/2026) · Bộ B: 20 review 1 sao app GHTK</span><span>1/8</span></div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <p class="kicker">2 · Vì sao chọn bài này</p>
+  <h1>Chọn phân xử "ai chịu" vì đây là việc duy nhất cần một quyết định có phán đoán — và làm kịp</h1>
+  <table>
+    <tr><th>Hướng</th><th>Bằng chứng</th><th>Mỗi tháng (1 shop ~300 đơn)</th><th>Quyết định</th></tr>
+    <tr class="hl"><td><b>1. Phân xử ai chịu khi hàng vỡ</b></td><td>21/61 đánh giá xấu là hàng vỡ (Bộ A)</td><td>≈ 1,1 ca × ~30 phút + ~50.000đ / ca</td><td class="ok">Chọn</td></tr>
+    <tr><td>2. Giục đơn lấy / giao chậm</td><td>5/8 phàn nàn Bộ B</td><td>Có thể lớn hơn — chưa đo</td><td>Loại: cần dữ liệu hành trình thật, không có quyết định cho AI</td></tr>
+    <tr><td>3. Kiểm phí ship, đối soát COD</td><td>3/8 phàn nàn Bộ B</td><td>Chưa định lượng</td><td>Loại: là phép tính, làm bằng code</td></tr>
+    <tr><td>4. Soạn trả lời đánh giá xấu</td><td>205 / 18.566 đánh giá là 1–2 sao (1%)</td><td>Thấp</td><td>Loại: đổi câu chữ, không đổi ai chịu tiền</td></tr>
+  </table>
+  <div class="row" style="margin-top:14px">
+    <div class="col"><p><b>Impact hướng 1:</b> ≈ <b>34 phút + 57.000đ / shop / tháng</b> · 50 shop ≈ <b>28,5 giờ + 2,85 triệu đ / tháng</b> <span class="muted">(tự ước tính: số shop, phút / ca)</span></p></div>
+    <div class="col"><p class="muted">Đọc thật thà: impact mỗi shop nhỏ. Ban đầu nhóm nghĩ giá trị là "đòi được bồi thường"; bằng chứng đổi trọng tâm sang <b>phân xử có căn cứ, nhanh</b>.</p></div>
+  </div>
+  <div class="foot"><span>Nguồn: <code>spec.md</code> §2 · tỉ lệ 0,38% ca vỡ / đơn = A5 trong <code>evidence/summary.md</code> · số shop khớp <code>cost/personas.yaml</code></span><span>2/8</span></div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <p class="kicker">3 · Giải pháp</p>
+  <h1>AI đối chiếu 3 nguồn hồ sơ và đề xuất bên chịu — chủ shop duyệt rồi mới làm</h1>
+  <div class="flow">
+    <div class="box"><b>Tin chủ shop</b>"DH01 khách báo bình vỡ, lỗi ai?"</div>
+    <div class="arrow">→</div>
+    <div class="box"><b>Code đọc hồ sơ</b>log đóng gói DG- · log vận chuyển VC- · lời khách KH- · hạn khiếu nại (code tính)</div>
+    <div class="arrow">→</div>
+    <div class="box ai"><b>AI: 1 lần gọi</b>Kết luận: shop / vận chuyển / khách / <u>chưa đủ bằng chứng</u> + căn cứ có mã</div>
+    <div class="arrow">→</div>
+    <div class="box human"><b>Chủ shop duyệt</b>BẢN NHÁP tin trả lời khách / đơn đòi bồi thường — tự gửi</div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h2>AI tự làm đến đâu</h2>
+      <ul>
+        <li><b>AI gợi ý, người quyết.</b> AI không hoàn tiền, không gửi tin, không nộp khiếu nại.</li>
+        <li>Phán sai thì chủ shop mất tiền thật (hoàn oan, từ chối oan, đòi bằng căn cứ sai) — sửa đắt.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h2>Chặn rủi ro</h2>
+      <ul>
+        <li>Thiếu / mâu thuẫn căn cứ → <b>"chưa đủ bằng chứng"</b> (G10).</li>
+        <li>Không có mã đơn / không thấy đơn → hỏi lại, <b>không gọi model</b>.</li>
+        <li>Mã căn cứ lạ → code bắt viết lại.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Nguồn: <code>spec.md</code> §4 · workflow cố định <code>codebase/agent.py</code> · model <code>gemini-3.5-flash-lite</code></span><span>3/8</span></div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <p class="kicker">4 · Demo</p>
+  <h1>Một ca thường và một ca khó — output thật của lượt 2</h1>
+  <div class="row">
+    <div class="col">
+      <h2><span class="tag">B01 · thường</span>"Đơn DH01 khách báo bình hoa bị vỡ, lỗi bên nào?"</h2>
+<pre>Kết luận: vận chuyển
+Căn cứ:
+- Shop đóng gói kỹ: bọc 3 lớp xốp hơi, chèn mút góc,
+  thùng carton 5 lớp, dán nhãn hàng dễ vỡ [DG-DH01].
+- Log vận chuyển ghi kiện bị móp góc, có tiếng lạo xạo
+  tại kho trung chuyển [VC-DH01-2].
+- Khách ký nhận, ghi chú 'thùng móp' [VC-DH01-3] …
+Nên làm:
+- Lập hồ sơ đòi bồi thường đơn vị vận chuyển …
+
+BẢN NHÁP — chờ chủ shop duyệt …</pre>
+    </div>
+    <div class="col">
+      <h2><span class="tag">K02 · khó</span>"DH05 đĩa sứ vỡ, ai chịu?"</h2>
+<pre>Kết luận: chưa đủ bằng chứng
+Căn cứ:
+- Log đóng gói: bọc xốp hơi, kẹp bìa cứng, thùng
+  5 lớp, dán nhãn dễ vỡ [DG-DH05]
+- Khi giao, người nhận ký ghi kiện nguyên vẹn [VC-DH05-3]
+- Khách nói thùng bẹp nặng, đĩa vỡ đôi [KH-DH05]
+- Hai nguồn mâu thuẫn nhau
+Nên làm:
+- Hỏi lại khách, xin video khui hàng nếu có.</pre>
+    </div>
+  </div>
+  <p class="muted small" style="margin-top:14px">Demo live chạy <code>python run.py</code>. Mạng hỏng → video dự phòng (link trong README, hạng mục 7).</p>
+  <div class="foot"><span>Nguồn: <code>eval/run-2.csv</code> (run-2@20261127-230337), câu B01 và K02 trong <code>eval/benchmark.csv</code> · output rút gọn</span><span>4/8</span></div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <p class="kicker">5 · Đánh giá thế nào</p>
+  <h1>Một lần cải tiến đưa lượt 2 lên 28/30 và đạt chuẩn "đạt"</h1>
+  <div class="row">
+    <div class="col" style="flex:1.05">
+      <ul class="small" style="padding-left:20px">
+        <li><b>Dữ liệu:</b> 15 đơn — DH01–DH07 giả (đủ log), DH08–DH15 dựng từ đánh giá Shopee thật (chỉ có lời khách).</li>
+        <li><b>Bộ câu thử:</b> 30 câu · thuong 9 · kho 14 · tu_choi 7 (2 câu tấn công) · <b>10/30 từ data thật</b>.</li>
+        <li><b>4 metric chấm bằng code:</b> đúng bên chịu · căn cứ có thật · không đoán khi thiếu · chỉ tạo nháp. Người chấm thứ hai khớp <b>5/5</b>.</li>
+        <li><b>Chuẩn "đạt"</b> (chốt 27/11): ≥80% câu qua, 100% tu_choi, 0 căn cứ bịa, 0 đoán khi thiếu bằng chứng.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <table>
+        <tr><th></th><th>Lượt 1</th><th>Lượt 2</th></tr>
+        <tr><td>Run ID</td><td class="small">run-1@20261127-222917</td><td class="small">run-2@20261127-230337</td></tr>
+        <tr class="hl"><td><b>Tổng</b></td><td>24/30 (80%)</td><td><b>28/30 (93%)</b></td></tr>
+        <tr><td>Căn cứ có thật</td><td class="bad">27/30</td><td class="ok">30/30</td></tr>
+        <tr><td>tu_choi</td><td>7/7</td><td>7/7</td></tr>
+        <tr><td>Không đoán khi thiếu</td><td>6/6</td><td>6/6</td></tr>
+        <tr class="hl"><td><b>Chuẩn "đạt"</b></td><td class="bad">Chưa đạt</td><td class="ok">Đạt</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="small" style="margin-top:16px"><b>Lỗi đau nhất lượt 1:</b> mã căn cứ "ma" — thiếu log nhưng model vẫn viết [DG-DH08 không có] (R02–R04). Cải tiến: prompt + hồ sơ ghi mã hợp lệ + code chặn → <b>3/3 câu sửa được</b>. Còn trượt: R06 (khiếu nại gộp), R10 (vỡ khi đang dùng).</p>
+  <div class="foot"><span>Nguồn: <code>eval/README.md</code>, <code>eval/report.md</code>, <code>python run.py score eval/run-2.csv</code></span><span>5/8</span></div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <p class="kicker">6 · Chi phí khi dùng thật</p>
+  <h1>Khoảng $0,0011 cho mỗi ca phân xử đạt — chi phí AI không phải rào cản</h1>
+  <div class="big">
+    <div class="stat"><div class="n">$0,0010</div><div class="l">mỗi phiên (gemini-3.5-flash-lite, đo token thật)</div></div>
+    <div class="stat"><div class="n">$0,0011</div><div class="l">mỗi task thành công (= chi phí / phiên ÷ tỉ lệ đạt 93%)</div></div>
+    <div class="stat"><div class="n">$0,05</div><div class="l">mỗi tháng cho <b>50 shop</b> (kịch bản cơ sở)</div></div>
+  </div>
+  <table>
+    <tr><th>Model (giá)</th><th>/ phiên</th><th>/ task thành công</th><th>/ tháng 10 · 50 · 100 shop</th></tr>
+    <tr class="hl"><td>gemini-3.5-flash-lite (vào 0,3 · ra 2,5 $/1M)</td><td>$0.0010</td><td>$0.0011</td><td>$0.0105 · $0.0524 · $0.1048</td></tr>
+    <tr><td>gemini-4-hydrogen (vào 1,5 · ra 7,5 $/1M) — chỉ so giá</td><td>$0.0040</td><td>$0.0043</td><td>$0.0406 · $0.2029 · $0.4057</td></tr>
+  </table>
+  <p class="small" style="margin-top:16px"><b>So với impact:</b> ~$0,001 / shop / tháng so với ≈ 34 phút + 57.000đ / shop / tháng <span class="muted">(tự ước tính)</span>. Chưa tính hosting, lưu ảnh / video, giờ người duyệt. Số shop 10 / 50 / 100 là kịch bản tự ước tính.</p>
+  <div class="foot"><span>Nguồn: <code>cost/simulate-1-summary.md</code> (simulate-1@20261127-234357, 50/50 phiên không lỗi, tỉ lệ đạt từ run-2) · <code>cost/cost-estimate.md</code></span><span>6/8</span></div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <p class="kicker">7 · Kết luận</p>
+  <p class="verdict">ITERATE — chưa GO</p>
+  <h1 style="font-size:34px">Bản chạy thử làm đúng việc và rẻ; điều còn thiếu là bằng chứng từ chính chủ shop</h1>
+  <div class="row">
+    <div class="col">
+      <h2 class="ok">Đã chứng minh</h2>
+      <ul>
+        <li>Đạt chuẩn "đạt": <b>28/30</b>, 0 căn cứ bịa, 7/7 câu từ chối / tấn công (trang 5).</li>
+        <li>Chi phí ~<b>$0,0011</b> / task thành công (trang 6).</li>
+        <li>Pain có thật trong đánh giá: 21/61 ca vỡ, 0/10 shop nhắc đòi bồi thường (trang 1).</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h2 class="bad">Chưa chứng minh</h2>
+      <ul>
+        <li>Bằng chứng chỉ là <b>lời người mua</b>; chưa phỏng vấn, chưa có chủ shop dùng thử.</li>
+        <li>Impact mỗi shop nhỏ (≈ 34 phút / tháng) và là tự ước tính.</li>
+        <li>Hồ sơ log vẫn là dữ liệu giả; shop thật có thể không ghi log đủ như vậy.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Nguồn: trang 1, 5, 6 · <code>evidence/summary.md</code> mục 5 · <code>spec.md</code> §2</span><span>7/8</span></div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <p class="kicker">8 · Nếu có thêm 1 tuần</p>
+  <h1>Năm việc tiếp theo: ba lỗi còn lại và hai điều chưa biết</h1>
+  <table>
+    <tr><th style="width:44%">Việc</th><th>Vì sao (câu thử / bằng chứng)</th></tr>
+    <tr><td><b>1. Cho 3–5 chủ shop thật dùng thử</b>, đo số phút mỗi ca</td><td>Chưa có người dùng thử; 30 phút / ca là tự ước tính</td></tr>
+    <tr><td><b>2. Tách hạn khiếu nại vận chuyển khỏi tin gửi khách</b></td><td>B03, B07, B08: bản nháp gửi khách viện "đã quá hạn khiếu nại" — vẫn đạt metric nhưng sai ý</td></tr>
+    <tr><td><b>3. Tách khiếu nại gộp</b> (vỡ + thiếu phụ kiện) trước khi gọi model</td><td>R06 trượt cả hai lượt: mất kết luận cho phần bể</td></tr>
+    <tr><td><b>4. Thêm quy tắc "vỡ khi đang dùng"</b></td><td>R10 trượt cả hai lượt</td></tr>
+    <tr><td><b>5. Chạy lại vài lượt</b> cùng cấu hình</td><td>R07 qua ở lượt 2 dù không sửa — cần biết là ổn định hay may</td></tr>
+  </table>
+  <div class="foot"><span>Nguồn: <code>eval/report.md</code> mục 3–4 · <code>validation/log.md</code> (chưa thực hiện người dùng thử)</span><span>8/8</span></div>
+</section>
+
+</body>
+</html>

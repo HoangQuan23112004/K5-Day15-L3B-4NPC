@@ -181,8 +181,13 @@ Các tình huống dưới đây mô tả **hành vi mong muốn**, đối chi�
 - Ai có thể bị hại nếu AI sai, và nhóm chặn thế nào:
 
 ## §10. Phân công & changelog
-- Phân công có tên (theo chặng, chia cặp — guide "Cách chia việc"): __
-- Dùng AI vào việc gì (2–3 dòng; chi tiết `docs/ai-usage.md`):
+- Phân công có tên (theo chặng, chia cặp — guide "Cách chia việc"):
+  - **Hoàng Dương Anh Quân** (đội trưởng): §3, §4, §6 · code `codebase/` (luồng, công cụ, prompt, nối model) · chạy lượt 1, lượt 2 và một lần cải tiến · demo, video, slide `demo-slides.pdf`.
+  - **Phan Trung Hiếu**: dữ liệu mẫu `data/` + `DATA_CARD.md` · bộ câu thử, 4 metric, chuẩn "đạt" §7 · chấm lượt 1, lượt 2 · `eval/grade.py`, `eval/report.md`, `eval/README.md`.
+  - **Ngô Chí Vĩnh**: bằng chứng `evidence/` (Bộ A Shopee, Bộ B app GHTK) · §0, §1, §2, §9 · người chấm thứ hai lượt 1.
+  - **Lê Viết Khoa**: §5, §8 · persona và mô phỏng chi phí `cost/` · kiểm chéo nhãn bằng chứng · kịch bản người dùng thử `validation/`.
+  - Chia cặp kiểm nhau: Hiếu ↔ Vĩnh (cột `pass` ↔ người chấm thứ hai, khớp 5/5) · Vĩnh ↔ Khoa (nhãn bằng chứng ↔ kiểm chéo, 20/20 và 7/8) · Hiếu → Quân (nhóm lỗi lượt 1 → cải tiến lượt 2).
+- Dùng AI vào việc gì (2–3 dòng; chi tiết `docs/ai-usage.md`): Claude Code hỗ trợ Quân (code, prompt, §3–§4, §6, slide), Hiếu (câu thử, dữ liệu DH01–DH07, `grade.py`, đề xuất chấm), Vĩnh (cách đếm, `count.py`, gợi ý nhãn); Codex hỗ trợ Khoa (persona, §5, chạy mô phỏng, phiếu chấm). Mỗi người duyệt phần có tên mình trước khi commit; cột `pass` do người chấm tay quyết.
 - Nhật ký thay đổi — **mọi thay đổi sau CP2 19:30 Thứ Sáu 27/11 phải có dòng ở đây**:
 
 **CP2 → CP4** (vd thu hẹp lát cắt, hỏi thêm người dùng, lần cải tiến trước lượt 2)
